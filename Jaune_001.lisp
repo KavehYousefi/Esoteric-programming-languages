@@ -28,7 +28,7 @@
 ;;                    | number, "$"
 ;;                    | number, "@" ;
 ;;    number         := literalNumber | "v" ;
-;;    literalNumber  := digit, { digit } ;
+;;    literalNumber  := [ "+" | "-" ], digit, { digit } ;
 ;;    digit          := "0" | "1" | "2" | "3" | "4"
 ;;                    | "5" | "6" | "7" | "8" | "9" ;
 ;; 
@@ -46,13 +46,6 @@
 ;;         5^.
 ;;       which bears no significance concerning the literal number 5, is
 ;;       yet tolerated.
-;;   (3) The minus or hyphen character ('-') not being mentioned in the
-;;       original description, negative literal numbers are not
-;;       possible, whereas a cell, including the special "hold" cell,
-;;       might be reduced to that range by the various operations.
-;;       In accordance with this restriction, the input obtained by
-;;       querying the user must also relate to an unsigned integer
-;;       value.
 ;; 
 ;; 
 ;; Implementation
@@ -311,15 +304,8 @@
                 (declare (type T input))
                 ;; Did the user input an integer number?
                 (unless (integerp input)
-                  (error "Command ``v'' expected a non-negative ~
-                          integer number as the user input, but ~
-                          received ~s."
-                    input))
-                ;; Was the user-supplied integer a positive value?
-                (unless (>= input 0)
-                  (error "Command ``v'' expected a non-negative ~
-                          integer number as the user input, but ~
-                          received ~s."
+                  (error "Command ``v'' expected an integer number as ~
+                          the user input, but received ~s."
                     input))
                 (process-numeric-command input)))
             
