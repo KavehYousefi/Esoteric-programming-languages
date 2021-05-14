@@ -46,6 +46,11 @@
 ;;         5^.
 ;;       which bears no significance concerning the literal number 5, is
 ;;       yet tolerated.
+;;   (3) Numeric values are restricted to signed integer numbers,
+;;       unbounded in their range. An extension to floating-point
+;;       numbers is, at the moment at least, encumbered by the
+;;       significance of the dot ('.') character as the main program
+;;       terminator.
 ;; 
 ;; 
 ;; Implementation
@@ -61,8 +66,6 @@
 ;; This implementation forgoes several error checks, including that
 ;; concerning the omission of the concluding dot ('.') or
 ;; semicolon (';'), for the sake of simplicity.
-;; 
-;; One of the few 
 ;; 
 ;; --------------------------------------------------------------------
 ;; 
@@ -90,13 +93,52 @@
    last digit."
   (declare (type string source))
   (declare (type fixnum start))
-  ;; The number either ends immediately before the first non-digit
-  ;; character in the SOURCE or at its desinent position.
-  (let ((end (or (position-if-not #'digit-char-p source :start start)
-                 (length source))))
-    (declare (type fixnum end))
-    (values (parse-integer source :start start :end end)
-            (1- end))))
+  (let ((is-signed (member (char source start) '(#\+ #\-))))
+    (declare (type T is-signed))
+    ;; The number either ends immediately before the first non-digit
+    ;; character in the SOURCE or at its desinent position.
+    (let ((end (or (position-if-not #'digit-char-p source
+                     :start (if is-signed (1+ start) start))
+                   (length source))))
+      (declare (type fixnum end))
+      (values (parse-integer source :start start :end end)
+              (1- end)))))
+
+;;; -------------------------------------------------------
+
+(defun find-label (source start label-name command)
+  "Searches in the SOURCE, starting at the START position, for the
+   label associated with the LABEL-NAME followed by the COMMAND
+   character, and returns the position in the SOURCE of the COMMAND."
+  (declare (type string    source))
+  (declare (type fixnum    start))
+  (declare (type integer   label-name))
+  (declare (type character command))
+  (let ((source-length (length source)))
+    (declare (type fixnum source-length))
+    (the (or null fixnum)
+      (loop
+        with  token-index of-type fixnum    = start
+        for   character   of-type character = (char source token-index)
+        while (< token-index source-length)
+        do
+        (if (digit-char-p character)
+          (multiple-value-bind (number end-position)
+              (read-number source token-index) 
+            (declare (type integer number))
+            (declare (type fixnum  end-position))
+            ;; Check whether
+            ;;   (a) the LABEL-NAME matches the parsed NUMBER and
+            ;;   (b) a character follows the NUMBER and
+            ;;   (c) this suffix character matches the COMMAND.
+            (if (and (= label-name number)
+                     (< end-position (1- source-length))
+                     (char= (char source (1+ end-position)) command))
+              (return (1+ end-position))
+              ;; Either the NUMBER or the command following it does not
+              ;; match.
+              (setf token-index (1+ end-position))))
+          (incf token-index 1))))))
 
 ;;; -------------------------------------------------------
 
@@ -105,25 +147,10 @@
    subroutine declaration associated with the SUBROUTINE-NUMBER and
    returns the position in the SOURCE of the ampersand ('$') symbol
    demarcating the discovered subroutine declaration."
-  (declare (type string        source))
-  (declare (type fixnum        start))
-  (declare (type (integer 0 *) subroutine-number))
-  (the (or null fixnum)
-    (loop
-      with  token-index of-type fixnum    = start
-      for   character   of-type character = (char source token-index)
-      while (< token-index (length source))
-      do
-      (if (digit-char-p character)
-        (multiple-value-bind (number end-position)
-            (read-number source token-index) 
-          (declare (type (integer 0 *) number))
-          (declare (type fixnum        end-position))
-          (if (and (= subroutine-number number)
-                   (char= (char source (1+ end-position)) #\$))
-            (return (+ end-position 1))
-            (setf token-index (+ end-position 1))))
-        (incf token-index 1)))))
+  (declare (type string  source))
+  (declare (type fixnum  start))
+  (declare (type integer subroutine-number))
+  (the (or null fixnum) (find-label source start subroutine-number #\$)))
 
 ;;; -------------------------------------------------------
 
@@ -132,25 +159,10 @@
    goto label declaration associated with the GOTO-NUMBER and
    returns the position in the SOURCE of the colon (':') symbol
    demarcating the discovered goto label declaration."
-  (declare (type string        source))
-  (declare (type fixnum        start))
-  (declare (type (integer 0 *) goto-number))
-  (the (or null fixnum)
-    (loop
-      with  token-index of-type fixnum    = start
-      for   character   of-type character = (char source token-index)
-      while (< token-index (length source))
-      do
-      (if (digit-char-p character)
-        (multiple-value-bind (number end-position)
-            (read-number source token-index) 
-          (declare (type (integer 0 *) number))
-          (declare (type fixnum        end-position))
-          (if (and (= goto-number number)
-                   (char= (char source (1+ end-position)) #\:))
-            (return (+ end-position 1))
-            (setf token-index (+ end-position 1))))
-        (incf token-index 1)))))
+  (declare (type string  source))
+  (declare (type fixnum  start))
+  (declare (type integer goto-number))
+  (the (or null fixnum) (find-label source start goto-number #\:)))
 
 
 
@@ -167,7 +179,7 @@
    arbitrarily to reflect the brainfuck language's default. However, any
    integer value greater or equal to one (1) carries validity. Please
    bear in mind that the underlying memory array can enumerate its
-   elements merely insode of the range of the ``fixnum'' type, which
+   elements merely inside of the range of the ``fixnum'' type, which
    might be far less than the ``integer'' range. Refer to the
    Common Lisp constant variable ``array-total-size-limit'' to obtain
    the actual maximum number of elements that an array may hold.")
@@ -220,7 +232,7 @@
              POSITION to the index of portion following this goto label.
              If the goto label declaration position is not yet stored
              in the GOTO-LABELS hash table, it is entered in the same."
-            (declare (type (integer 0 *) name))
+            (declare (type integer name))
             (multiple-value-bind (label-position contains-label)
                 (gethash name goto-labels)
               (declare (type (or null fixnum) label-position))
@@ -237,7 +249,7 @@
              POSITION in the SUBROUTINE stack for later return, and
              updates the POSITION to the index in the CODE where the
              subroutine body commences."
-            (declare (type (integer 0 *) name))
+            (declare (type integer name))
             (multiple-value-bind (subroutine-position contains-subroutine)
                 (gethash name subroutine-labels)
               (declare (type (or null fixnum) subroutine-position))
@@ -249,7 +261,7 @@
                   (setf (gethash name subroutine-labels)
                         subroutine-position)
                   (error "Cannot find a subroutine with the name ~d."
-                    name)))
+                         name)))
               (push position subroutine-stack)
               (setf position subroutine-position)))
            
@@ -306,7 +318,7 @@
                 (unless (integerp input)
                   (error "Command ``v'' expected an integer number as ~
                           the user input, but received ~s."
-                    input))
+                         input))
                 (process-numeric-command input)))
             
             ((char= char #\>)
@@ -323,9 +335,12 @@
             ((char= char #\&)
               (incf (aref memory pointer) hold-cell))
             
-            ((digit-char-p char)
+            ((or (digit-char-p char)
+                 (member char '(#\+ #\-)))
               (multiple-value-bind (number new-position)
                   (read-number code position)
+                (declare (type integer number))
+                (declare (type fixnum  new-position))
                 ;; Set the POSITION to the last character of the parsed
                 ;; NUMBER.
                 (setf position new-position)
@@ -340,7 +355,7 @@
             (T
               (error "The command ~s is either invalid or not yet ~
                       implemented."
-                char)))
+                     char)))
           
           (incf position 1)
           
@@ -353,6 +368,7 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+#|
 ;; Adder in its most simple version.
 (parse-jaune "v+v+^.")
 
@@ -363,12 +379,19 @@
 (parse-jaune "v+>v+1@^.1$#<&;")
 
 ;; Adder utilizing goto labels to implement loops.
+;; NOTE: The program does not operate correctly if the second input
+;;       constitutes a negative number. The etiology remains yet to be
+;;       resolved.
 (parse-jaune "v+>v+1:1-<1+>1?<^.")
 
 ;; Multiplier.
+;; NOTE: The program does not operate correctly if the first input
+;;       constitutes a negative number. The etiology remains yet to be
+;;       resolved.
 (parse-jaune "v+>v+#<1-1?1:>&<1-1?>^.")
 
 ;;; -------------------------------------------------------
 
 ;; Truth machine.
 (parse-jaune "v+1:^1?.")
+|#
