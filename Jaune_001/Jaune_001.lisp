@@ -293,7 +293,7 @@
                   (#\! (incf position 1)
                        (when (zerop (aref memory pointer))
                          (jump-to-goto-label number)))
-                   
+                  
                   ;; Jump to subroutine.
                   (#\@ (incf position 1)
                        (jump-to-subroutine number)))))))
@@ -347,7 +347,11 @@
                 (process-numeric-command number)))
             
             ((char= char #\;)
-              (setf position (pop subroutine-stack)))
+              (if subroutine-stack
+                (setf position (pop subroutine-stack))
+                (error "Attempted to return from a subroutine, but ~
+                        found no return position. Possibly a ~
+                        superfluous ';' caused this anomaly.")))
             
             ((char= char #\%)
               (setf (aref memory pointer) 0))
@@ -368,7 +372,6 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 ;; Adder in its most simple version.
 (parse-jaune "v+v+^.")
 
@@ -394,4 +397,3 @@
 
 ;; Truth machine.
 (parse-jaune "v+1:^1?.")
-|#
