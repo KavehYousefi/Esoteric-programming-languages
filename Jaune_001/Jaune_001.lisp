@@ -87,7 +87,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun read-number (source start)
-  "Reads from the SOURCE, starting at the START position, an unsigned
+  "Reads from the SOURCE, starting at the START position, a signed
    integer number and returns two values: (1) the parsed integer number
    and (2) the position in the SOURCE of the parsed integer number's
    last digit."
