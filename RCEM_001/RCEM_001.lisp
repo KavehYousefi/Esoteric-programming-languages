@@ -53,7 +53,7 @@
 ;; around any decimal value n, intended to be translated into its ASCII
 ;; counterpart, using the formula
 ;;   n_new = n modulo 256
-;; at least caters for a reasonable solution to this dispute.
+;; at least caters for a reasonable solution to this contention.
 ;; 
 ;; In order to fixate the specification, we apportion the principles of
 ;; least astonishment to the first issue by assuming a two's complement
@@ -139,7 +139,7 @@
             "Checks whether the next characters of the CODE, starting at
              the current POSITION, match those of the TOKEN, advancing
              the POSITION in the process. If a mismatch occurs betwixt
-             a CODE character and a TOKEN element, an error is signaled,
+             a CODE character and a TOKEN element, an error is signaled;
              otherwise the POSITION is set to the index of the character
              immediately following the match in the CODE."
             (declare (type string token))
@@ -175,7 +175,7 @@
              index of the character immediately following the TERMINATOR
              character which, taken nesting into account, corresponds to
              the INITIATOR. This allows to skip code sections ensconced
-             by a iteration constructor, for instance ``<x_o_>''."
+             by an iteration constructor, for instance ``<x_o_>''."
             (declare (type character initiator))
             (declare (type character terminator))
             (let ((nesting-level 0))
@@ -329,18 +329,27 @@
             (let ((next-character (char code position)))
               (declare (type character next-character))
               (case next-character
-                (#\+ (incf i-cell 1)
-                     (incf position))
-                (#\- (decf i-cell 1)
-                     (incf position))
-                (#\p (format T "~d" i-cell)
-                     (incf position))
-                (#\o (format T "~c" (code-char I-cell))
-                     (incf position))
-                (#\i (let ((input (read)))
-                       (declare (type T input))
-                       (setf i-cell input)
-                       (incf position)))
+                (#\+
+                  (incf i-cell 1)
+                  (incf position))
+                
+                (#\-
+                  (decf i-cell 1)
+                  (incf position))
+                
+                (#\p
+                  (format T "~d" i-cell)
+                  (incf position))
+                
+                (#\o
+                  (format T "~c" (code-char I-cell))
+                  (incf position))
+                
+                (#\i
+                  (let ((input (read)))
+                    (declare (type T input))
+                    (setf i-cell input)
+                    (incf position)))
                 (#\:
                   (expect-token "::")
                   (let ((start-cell-index 0)
@@ -439,7 +448,6 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 ;; Infinite loop.
 ;; ---
 ;; Note that this eventually causes an error because of the finite size
@@ -488,4 +496,3 @@
 ;; Version of the above which prints the I-Cell value.
 ;; 
 (parse-rcem "<m->mp")
-|#
