@@ -124,7 +124,7 @@
 ;; -- Implementation of public operations.                         -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun parse-RCEM (code)
+(defun parse-rcem (code)
   "Parses and interprets the RCEM code and returns the ``NIL'' value."
   (declare (type string code))
   (let ((position 0)
