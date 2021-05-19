@@ -245,6 +245,8 @@
 ;;; -------------------------------------------------------
 
 (defun make-interpreter (code)
+  "Creates and returns a new ``Interpreter'' used in parsing the Jaune
+   CODE."
   (declare (type string code))
   (the Interpreter (make-instance 'Interpreter :code code)))
 
