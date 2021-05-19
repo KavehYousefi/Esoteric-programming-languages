@@ -350,13 +350,14 @@
                     (declare (type T input))
                     (setf i-cell input)
                     (incf position)))
+                
                 (#\:
                   (expect-token "::")
                   (let ((start-cell-index 0)
                         (end-cell-index   0)
                         (new-i-cell-value 0))
                     (declare (type fixnum  start-cell-index))
-                    (declare (type fixnum  start-cell-index))
+                    (declare (type fixnum  end-cell-index))
                     (declare (type integer new-i-cell-value))
                     
                     (setf start-cell-index (read-integer))
