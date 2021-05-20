@@ -338,8 +338,8 @@
 (defun jump-to-goto-label (interpreter name)
   "Finds the goto label in the INTERPRETER's code, starting at the
    current position and identified by the NAME, and updates the
-   INTERPRETER's position to the index of portion following this goto
-   label. If the goto label declaration position is not yet stored
+   INTERPRETER's position to the index of the portion following this
+   goto label. If the goto label declaration position is not yet stored
    in the GOTO-LABELS hash table, it is entered in the same."
   (declare (type Interpreter interpreter))
   (declare (type integer     name))
