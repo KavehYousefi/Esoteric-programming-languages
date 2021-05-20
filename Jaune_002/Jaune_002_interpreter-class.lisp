@@ -311,7 +311,7 @@
 ;;; -------------------------------------------------------
 
 (defun find-subroutine (interpreter start subroutine-number)
-  "Searches in the INTERPETER's code, starting at the START position,
+  "Searches in the INTERPRETER's code, starting at the START position,
    for the subroutine declaration associated with the SUBROUTINE-NUMBER
    and returns the position in the code of the ampersand ('$') symbol
    demarcating the discovered subroutine declaration."
