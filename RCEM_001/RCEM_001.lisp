@@ -245,7 +245,7 @@
               (incf pointer number-of-steps))
               
               (when (>= pointer (length memory))
-                (setf memory (adjust-array code (1+ pointer)))))
+                (setf memory (adjust-array memory (1+ pointer)))))
           
           (#\l
             (incf position)
@@ -366,6 +366,9 @@
                     
                     (check-cell-indices start-cell-index end-cell-index)
                     
+                    (when (>= end-cell-index (length memory))
+                      (setf memory (adjust-array memory (+ end-cell-index 2))))
+                    
                     (loop
                       for cell-index of-type integer from end-cell-index downto start-cell-index
                       for cell-value of-type trit    = (aref memory cell-index)
@@ -376,6 +379,7 @@
                             (2 (setf (ldb (byte 1 bit-index) new-i-cell-value) 1))
                             (T (error "Invalid cell value in cell ~d: ~d." cell-index cell-value))))
                     (setf i-cell new-i-cell-value)))
+                
                 (otherwise
                   (error "Invalid command: ``m~c''." next-character)))))
           
@@ -393,11 +397,18 @@
               
               (check-cell-indices start-cell-index end-cell-index)
               
+              (when (>= end-cell-index (length memory))
+                (setf memory (adjust-array memory (+ end-cell-index 2))))
+              
               (loop
-                for cell-index of-type fixnum
-                               from    start-cell-index
-                               to      end-cell-index
-                for i-cell-bit-index of-type bit from 0 by 1
+                for cell-index
+                    of-type fixnum
+                    from    start-cell-index
+                    to      end-cell-index
+                for i-cell-bit-index
+                    of-type fixnum
+                    from    0
+                    by      1
                 do  (setf (aref memory cell-index)
                           (if (logbitp i-cell-bit-index i-cell)
                               1
