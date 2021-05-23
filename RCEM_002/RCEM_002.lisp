@@ -19,7 +19,7 @@
 ;; ilk does not concomitantly generate a new hash table entry. Only
 ;; explicit modifications, such as setting, incrementing or decrementing
 ;; a tape cell, generate new entries. Even a pointer movement to an
-;; index not responding to a table entry key does not actutate a new
+;; index not responding to a table entry key does not actuate a new
 ;; cell's establishment. In this regard, the tape implementation as a
 ;; hash table is not unlike a sparse matrix, which trades a more
 ;; resourceful design for reduced memory consumption.
@@ -27,7 +27,7 @@
 ;; In summary, the hash table approach, in juxtaposition to a vector
 ;; representation of the tape, offers the following benefits:
 ;;   (1) Definition of arbitrary cell indices:
-;;       Cell positions may be modeled with more fidelity to the RCEM
+;;         Cell positions may be modeled with more fidelity to the RCEM
 ;;       standard by permitting negative values, as well as a larger
 ;;       range. Hash tables are not restricted in their tally of
 ;;       entries, enabling a nearly "infinite" quantity of such. With
@@ -39,21 +39,25 @@
 ;;       only reference their elements by fixnum subscripts, which, per
 ;;       definition, imposes a --- implementation-dependent --- limit on
 ;;       their count.
-;;   (2) As stated above, the hash table implementation, generating
+;;   (2) Sparse structure:
+;;         As stated above, the hash table implementation, generating
 ;;       entries as cell representatives only upon necessity, ultimately
 ;;       defines a sparse structure. Arrays, at least expressively, are
 ;;       not capable of tolerating gaps inside of their bounds. Both
-;;       feasiblity of memory impositions render hash tables in this
-;;       matter a superior choice.
+;;       feasiblity in storage capacity and handling of memory
+;;       impositions render hash tables in this matter a superior
+;;       choice.
 ;; On the other hand, the following disadvantages ought be levied
 ;; against a hash table approach versus the array or vector:
-;;   (1) Hash tables, being objects with a certain convolution in their
-;;       implementation, when compared to the rather plain array
+;;   (1) Initial higher cost:
+;;         Hash tables, being objects with a certain convolution in
+;;       their implementation, when compared to the rather plain array
 ;;       substance, usually impose penalties for the stewardship of
 ;;       their state. These time and memory appropriations might, for a
 ;;       small number of modeled cells, be detrimental. It is, however,
 ;;       left to be hoped that the discriminations are slight at worst.
-;;   (2) A vector, by nature conceited to be enumerated numerically,
+;;   (2) Unnatural modeling:
+;;         A vector, by nature conceited to be enumerated numerically,
 ;;       more closely links to one's notion of a tape: a series of
 ;;       adjacent cells. In physical concerns, a hash table merely
 ;;       contains "randomly" arranged key-value, or position-cell,
