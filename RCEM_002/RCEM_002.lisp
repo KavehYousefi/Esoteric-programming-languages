@@ -230,12 +230,12 @@
      value. Initially empty, entries are added only if explicitly
      desired or necessary: If the value of the current cell or one at
      a particular position is set, incremented, or decremented, a
-     lacking is defined in the hash table. If a cell at the current or
+     mapping is defined in the hash table. If a cell at the current or
      any other position is queried for its value, and no entry exists
      yet to model it, the default value zero (0) is returned. In this
      fashion, the hash table acts as a sparse data structure, similar
      to a sparse matrix that contains non-zero entries. Of course, in
-     the tape's hash table, zero entries may exist. Additionally, no
+     the tape's hash table zero entries may exist. Additionally, no
      entries are removed, even the aforementioned zero-keyed ones."))
 
 ;;; -------------------------------------------------------
