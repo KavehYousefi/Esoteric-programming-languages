@@ -13,7 +13,7 @@
 ;; key as the former, associating unambiguously with its value as that
 ;; of the cell --- hence, one tape cell constitutes one table entry.
 ;; 
-;; Querying an non-existing entry by a cell position not yet defined
+;; Querying a non-existing entry by a cell position not yet defined
 ;; does not pose a difficulty, as such a request is replied to with the
 ;; default zero (0) value. It is important to note that a query of this
 ;; ilk does not concomitantly generate a new hash table entry. Only
@@ -68,7 +68,7 @@
 ;; from the hash table, even if amounting to a zero-valued cell, which,
 ;; as the default value, could be very well omitted. This fact finds
 ;; solely vindication in the simplicity of implementation. More
-;; sophisticated versions of this program might implement some
+;; sophisticated versions of this program might introduce some
 ;; optimization strategy.
 ;; 
 ;; Cases of unspecified or underspecified formulations in the RCEM
