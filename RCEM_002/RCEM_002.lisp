@@ -47,7 +47,7 @@
 ;;       feasiblity in storage capacity and handling of memory
 ;;       impositions render hash tables in this matter a superior
 ;;       choice.
-;; On the other hand, the following disadvantages ought be levied
+;; On the other hand, the following disadvantages ought to be levied
 ;; against a hash table approach versus the array or vector:
 ;;   (1) Initial higher cost:
 ;;         Hash tables, being objects with a certain convolution in
@@ -122,7 +122,7 @@
 ;; explicated above by foregoing a particular handling of problematic
 ;; values in the version of the program at hand. It is expected that an
 ;; error, originating in the Common Lisp implementation's native
-;; library, is signaled for a non-negative character code.
+;; library, is signaled for a negative character code.
 ;; 
 ;; Loops define control structures that can either be entered, and
 ;; hence executed, or skipped entirely. If the introducing character,
@@ -235,8 +235,9 @@
      yet to model it, the default value zero (0) is returned. In this
      fashion, the hash table acts as a sparse data structure, similar
      to a sparse matrix that contains non-zero entries. Of course, in
-     the tape's hash table zero entries may exist. Additionally, no
-     entries are removed, even the aforementioned zero-keyed ones."))
+     the tape's hash table zero-valued entries may exist. Additionally,
+     no entries are removed, even the aforementioned otiose ones mapping
+     to a value of zero."))
 
 ;;; -------------------------------------------------------
 
@@ -292,7 +293,7 @@
   "Sets the value of the TAPE cell located at the CELL-INDEX to the
    NEW-CELL-VALUE, possibly adjusting the same to be in the valid trit
    range [0, 2], and returns the ultimate new value of the cell.
-      ---
+   ---
    If the NEW-CELL-VALUE exceeds the valid range of a ternary digit, or
    trit, of [0, 2], it is adjusted prior to its use, then utilized to
    update the current cell."
