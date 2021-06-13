@@ -16,7 +16,7 @@
 ;; One of the most conspicuous features of Coeus, apart from its very
 ;; homogeneous command syntax, resides in the processing of code by
 ;; more than one program, albeit in a subordinate fashion instead of
-;; parallel, but, however, endowed this its own set of registers as its
+;; parallel, but, however, endowed with its own set of registers as its
 ;; state's delegate. This facility is requested only upon the sole
 ;; iteration instruction.
 ;; 
@@ -42,12 +42,11 @@
 ;; pointer past the processed code; hence, the parsing function must
 ;; return its current position in the code. The signature of
 ;; ``parse-coeus'' thus must conform to:
-;; conforms to
 ;;   lambda(code program start) => end
 ;; Where CODE is the Coeus code string, PROGRAM the responsible
 ;; ``Program'' object, defaulting to the main program instance, START
-;; the non-negative integer index into CODE demarcating the position at
-;; which the PROGRAM shall start reading the same, and END the
+;; the non-negative integer index into the CODE demarcating the position
+;; at which the PROGRAM shall start reading the same, and END the
 ;; non-negative integer index into the CODE where the PROGRAM has
 ;; terminated processing the same.
 ;; 
@@ -125,8 +124,8 @@
 
 (defun parse-coeus (code &optional (program (make-program)) (start 0))
   "Parses and interprets the CODE, starting at the START position, using
-   the PROGRAM, and returns position in the CODE where the processing
-   has terminated."
+   the PROGRAM, and returns the position in the CODE where the
+   processing has terminated."
   (declare (type string  code))
   (declare (type Program program))
   (declare (type fixnum  start))
