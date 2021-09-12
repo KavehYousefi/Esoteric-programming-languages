@@ -1510,3 +1510,17 @@
 ;; 99 bottles.
 (execute-kolmogorov-file
   "Kolmogorov/resources/99-bottles-of-beer.kolmogorov")
+
+;;; -------------------------------------------------------
+
+;; Cat program: copies a character from the standard input to the
+;; standard output.
+;; Note that this is an infinite loop, hence, the program must be
+;; aborted irregularly.
+(execute-kolmogorov-code
+  "a\\1\\1 \"Create a dummy node at edge address 1 with a non-zero value for infinite repetitions.\"
+   [\\1    \"Ensure an infinite loop by referring to the constant non-zero dummy node at edge 1.\"
+     -*p*  \"Set the active node to zero by deducing from it its own value.\"
+     +*i   \"Read a character from the user and store its ASCII code in the active node.\"
+     o*    \"Output the active node's byte value, which contains the input ASCII character code.\"
+   ]")
