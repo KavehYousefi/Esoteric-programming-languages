@@ -1,4 +1,3 @@
-
 ;; Date: 2021-09-12
 ;; 
 ;; Sources:
@@ -254,20 +253,6 @@
 
 ;;; -------------------------------------------------------
 
-#|
-let fromNode                  = graph.nodeAt (fromAddress)
-let toNode                    = graph.nodeAt (toAddress)
-let currentNeighborOfFromNode = fromNode.getDestination (edgeValue)
-
-if currentNeighborOfFromNode = null then
-  graph.connect (fromNode, toNode, edgeValue)
-else if currentNeighborOfFromNode != toNode then
-  fromNode.removeEdge (edgeValue)
-  graph.connect (fromNode, toNode, edgeValue)
-else
-  Do nothing
-end if
-|#
 (defun node-connect-to (origin destination edge-value)
   "Connects the ORIGIN to the DESTINATION node by a new edge storing the
    EDGE-VALUE, and returns a ``boolean'' result equal to ``T'' if the
