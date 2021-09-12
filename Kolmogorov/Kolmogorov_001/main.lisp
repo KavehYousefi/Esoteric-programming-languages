@@ -1131,15 +1131,24 @@
 
 (defclass AST-Visitor ()
   ()
-  (:documentation ""))
+  (:documentation
+    "The ``AST-Visitor'' interface describes an entity which processes
+     an abstract syntax tree (AST)."))
 
 ;;; -------------------------------------------------------
 
-(defgeneric ast-visitor-visit (visitor node-type tree))
+(defgeneric ast-visitor-visit (visitor node-type tree)
+  (:documentation
+    "Processes the abstract syntax TREE node of the NODE-TYPE by the
+     VISITOR, returning a result suitable for the respective
+     NODE-TYPE."))
 
 ;;; -------------------------------------------------------
 
 (defun dispatch-visitor (visitor tree)
+  "Analyzes the abstract syntax TREE node and invokes the matching
+   ``ast-visitor-visit'' method on the VISITOR, the TREE, and the
+   node type contained in the latter, returning the method's result."
   (declare (type AST-Visitor visitor))
   (declare (type tree        tree))
   (funcall #'ast-visitor-visit
@@ -1154,17 +1163,23 @@
     :initarg       :graph
     :initform      (make-graph)
     :type          Graph
-    :documentation ""))
-  (:documentation ""))
+    :documentation "The Kolmogorov graph being operated upon."))
+  (:documentation
+    "The ``Interpreter'' class implements an ``AST-Visitor'' for
+     processing an abstract syntax tree (AST) and applying its commands
+     on the internally maintained Kolmogorov graph."))
 
 ;;; -------------------------------------------------------
 
 (defun make-interpreter ()
+  "Creates and returns a new ``Interpreter''."
   (the Interpreter (make-instance 'Interpreter)))
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :program)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :program))
+                              tree)
   (let ((statements (tree-get-property tree :statements)))
     (declare (type (list-of tree) statements))
     (dolist (statement statements)
@@ -1173,7 +1188,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :addition)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :addition))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1192,7 +1209,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :address)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :address))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1200,7 +1219,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :assign)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :assign))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1218,7 +1239,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :byte-value)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :byte-value))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1226,7 +1249,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :edge-loop)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :edge-loop))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1245,7 +1270,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :input)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :input))
+                              tree)
   (declare (ignore interpreter))
   (declare (ignore node-type))
   (declare (ignore tree))
@@ -1258,7 +1285,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :join)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :join))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1280,7 +1309,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :node-loop)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :node-loop))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1299,7 +1330,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :output)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :output))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1314,7 +1347,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :peek)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :peek))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1328,7 +1363,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :remove-edge)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :remove-edge))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1343,7 +1380,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :remove-node)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :remove-node))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1358,7 +1397,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :seek)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :seek))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
@@ -1373,7 +1414,9 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod ast-visitor-visit ((interpreter Interpreter) (node-type (eql :subtraction)) tree)
+(defmethod ast-visitor-visit ((interpreter Interpreter)
+                              (node-type   (eql :subtraction))
+                              tree)
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
