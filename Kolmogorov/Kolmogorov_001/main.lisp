@@ -190,41 +190,41 @@
 
 ;;; -------------------------------------------------------
 
-(defun node-set-destination (node new-destination address)
+(defun node-set-destination (origin new-destination address)
   "Sets the NEW-DESTINATION node reached by an edge with the ADDRESS
-   value leaving from the NODE, and returns the modified NODE.
+   value leaving from the ORIGIN, and returns the modified ORIGIN.
    ---
    If an edge amenable to the ADDRESS exists among the outgoing edges
-   of the NODE, its association in the latter will be overridden,
+   of the ORIGIN, its association in the latter will be overridden,
    otherwise a new entry will be created. In any case, the
    NEW-DESTINATION node will not be modified, consigning this task to
    the programmer's own efforts."
-  (declare (type Node    node))
+  (declare (type Node    origin))
   (declare (type Node    new-destination))
   (declare (type address address))
-  (with-slots (destinations) node
+  (with-slots (destinations) origin
     (declare (type (hash-table-of address Node) destinations))
     (setf (gethash address destinations) new-destination))
-  (the Node node))
+  (the Node origin))
 
 ;;; -------------------------------------------------------
 
 (defun node-remove-destination (node address)
   "Removes from the NODE the outgoing edge identified by the ADDRESS and
-   returns a generalized boolean which resolves to true if the edge
-   could be found and removed, otherwise yielding ``NIL''."
+   returns a ``boolean'' value of ``T'' if the edge could be found and
+   removed, otherwise yielding ``NIL''."
   (declare (type Node    node))
   (declare (type address address))
   (with-slots (destinations) node
     (declare (type (hash-table-of address Node) destinations))
-    (remhash address destinations)))
+    (the boolean (not (null (remhash address destinations))))))
 
 ;;; -------------------------------------------------------
 
 (defun node-set-origin (destination origin address)
-  "Sets the DESTINATION's, associated with the incoming edge amenable to
-   the ADDRESS and issuing from the ORIGIN node, and returns the
-   modified DESTINATION.
+  "Sets the DESTINATION's origin node, associated with the incoming edge
+   amenable to the ADDRESS and issuing from the ORIGIN node, and returns
+   the modified DESTINATION.
    ---
    If an edge amenable to the ADDRESS exists among the incoming edges
    of the DESTINATION, its association in the latter will be overridden,
@@ -286,7 +286,7 @@
        return true
      else
        return false
-    end if"
+     end if"
   (declare (type Node    origin))
   (declare (type Node    destination))
   (declare (type address edge-value))
@@ -298,7 +298,7 @@
            (values)))
     ;; CURRENT-NEIGHBOR-OF-ORIGIN: The current node reached by leaving
     ;;   the ORIGIN with an edge of the address EDGE-VALUE. It may be
-    ;;   the ``NIL''.
+    ;;   ``NIL''.
     (let ((current-neighbor-of-origin
             (node-get-destination origin edge-value)))
       (declare (type (or null Node) current-neighbor-of-origin))
@@ -332,6 +332,7 @@
    edges, clears its own connections, and returns the modified NODE."
   (declare (type Node node))
   (with-slots (origins) node
+    (declare (type (hash-table-of address Node) origins))
     ;; Remove all edges pointing into the NODE.
     (maphash
       #'(lambda (address origin)
@@ -342,6 +343,7 @@
     ;; Remove all outgoing edges.
     (clrhash origins))
   (with-slots (destinations) node
+    (declare (type (hash-table-of address Node) destinations))
     ;; Remove all edges pointing away from the NODE.
     (maphash
       #'(lambda (address destination)
@@ -563,6 +565,7 @@
 ;;; -------------------------------------------------------
 
 (defun make-token (type value)
+  "Creates and returns a new ``Token'' of the TYPE and value."
   (declare (type (or null keyword) type))
   (declare (type T                 value))
   (the Token (make-instance 'Token :type type :value value)))
@@ -628,6 +631,10 @@
   (declare (type Lexer lexer))
   (with-slots (source source-end current-position current-character)
       lexer
+    (declare (type string              source))
+    (declare (type fixnum              source-end))
+    (declare (type fixnum              current-position))
+    (declare (type (or null character) current-character))
     (cond
       ((plusp (length source))
         (setf source-end        (1- (length source)))
@@ -648,6 +655,9 @@
 ;;; -------------------------------------------------------
 
 (defun lexer-advance (lexer)
+  "Moves the LEXER's pointer to the current position in the source to
+   the next index, updating the LEXER state in the process, and finally
+   returns the modified LEXER."
   (declare (type Lexer lexer))
   (with-slots (source source-end current-position current-character)
       lexer
@@ -1120,6 +1130,8 @@
 ;;; -------------------------------------------------------
 
 (defun parser-parse (parser)
+  "Parses a piece of Kolmogorov source code using the PARSER and returns
+   the thus generated abstract syntax tree (AST)."
   (declare (type Parser parser))
   (the tree (parser-parse-program parser)))
 
@@ -1513,7 +1525,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Cat program: copies a character from the standard input to the
+;; Cat program: Copies a character from the standard input to the
 ;; standard output.
 ;; Note that this is an infinite loop, hence, the program must be
 ;; aborted irregularly.
