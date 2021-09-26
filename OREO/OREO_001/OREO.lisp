@@ -162,7 +162,7 @@
             (incf (aref memory pointer)))
           
           (#\O
-            (setf pointer (fill-pointer memory))
+            (incf pointer)
             (vector-push-extend 0 memory))
           
           (#\&
