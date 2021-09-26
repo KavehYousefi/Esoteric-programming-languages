@@ -86,7 +86,7 @@
 ;;       active one, with any new cell sharing this minimum.
 ;;   (2) The cell value is not restricted to any range and is hence
 ;;       allowed to rise infinitely. The obviation of conflicts with the
-;;       ASCII character code range constitute the programmer's onus.
+;;       ASCII character code range constitutes the programmer's onus.
 ;;   (3) Whitespaces betwixt commands are permitted, which include the
 ;;       following:
 ;;         - Space
@@ -137,7 +137,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun interpret-OREO (code)
-  "Executes the OREO code and returns ``NIL''."
+  "Executes the OREO CODE and returns ``NIL''."
   (declare (type string code))
   (let ((memory  (make-array 0
                    :element-type '(integer 0 *)
@@ -263,6 +263,7 @@ ORERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERE&O
 
 ;;; -------------------------------------------------------
 
+;; Print "Hello, world!"
 (interpret-OREO
 "ORERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERE&O
 ORERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERERE&O
