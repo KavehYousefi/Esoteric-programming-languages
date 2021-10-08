@@ -56,14 +56,14 @@
         (declare (type fixnum           previous-position))
         (declare (type (or null fixnum) detailedFuck-command-position))
         (the string
-          (with-output-to-string (output)
-            (declare (type string-stream output))
+          (with-output-to-string (translated-content)
+            (declare (type string-stream translated-content))
             (loop do
               (setf detailedFuck-command-position
                 (search detailedFuck-command source
                   :start2 previous-position
                   :test   #'string-equal))
-              (write-string source output
+              (write-string source translated-content
                 :start previous-position
                 :end   (or detailedFuck-command-position source-length))
               (cond
@@ -71,7 +71,7 @@
                   (setf previous-position
                     (+ detailedFuck-command-position
                        detailedFuck-command-length))
-                  (write-string brainfuck-command output))
+                  (write-string brainfuck-command translated-content))
                 (T
                   (loop-finish))))))))))
 
@@ -85,12 +85,12 @@
   "Translates the DETAILEDFUCK-CODE into a piece of brainfuck code
    and returns the resulting string."
   (declare (type string detailedFuck-code))
-  (let ((output detailedFuck-code))
-    (declare (type string output))
+  (let ((brainfuck-code detailedFuck-code))
+    (declare (type string brainfuck-code))
     (dolist (translation *translations*)
       (declare (type (cons string string) translation))
-      (setf output (translate-command output translation)))
-    (the string output)))
+      (setf brainfuck-code (translate-command brainfuck-code translation)))
+    (the string brainfuck-code)))
 
 
 
