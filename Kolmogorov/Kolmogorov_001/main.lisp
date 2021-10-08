@@ -1,4 +1,166 @@
-;; Date: 2021-09-12
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; This program implements a simple parser and interpreter for the
+;; esoteric programming language "Kolmogorov", invented by Johnny
+;; Thorbjorn Morrice.
+;; 
+;; Concept
+;; =======
+;; The Kolmogorov programming language is based upon the
+;; Kolmogorov-Uspensky machine, also referred to in a simpler form as
+;; Kolmogorov machine and abbreviated to KUM. The Kolmogorov-Uspensky
+;; machine adheres to the group of abstract machines, of which the
+;; Turing machine constitutes the most prominent specimen.
+;; 
+;; == KOLMOGOROV-USPENSKY AS AN ABSTRACT MACHINE ==
+;; A Turing machine operates on a tape compact of linearly arranged
+;; cells and traversed by a cursor known as the "head", which may move
+;; at each step either to the left, to right, or not at all.
+;; 
+;; The Kolmogorov-Uspensky machine, on the other hand, barters the
+;; rather plain tape for a graph in conjunction with a cursor known as
+;; the "active node", the currently selected vertex in respect to the
+;; same all available actions are defined.
+;; 
+;; == KOLMOGOROV GRAPH STRUCTURE ==
+;; Several variations of the same idea exist to concretize the
+;; characteristics of this graph; for the sake of simplicity, we resort
+;; to the most simple alternative, one chosen to be in close concord
+;; with the traits of the Kolmogorov programming language. A universal
+;; among the various designs, a Kolmogorov graph consists of one or more
+;; vertices and zero or more edges, the mandatory minimum vertex tally
+;; accounting for the active node, that is, the vertex currently in the
+;; focus. As with any graph, a vertex can be connected to zero or more
+;; other nodes by edges, and both classes of entities may store a value;
+;; particular to Kolmogorov's type, these vertices indeed store the
+;; program's data, while the edges act as addresses, similar to indices
+;; from one endpoint to another.
+;; 
+;; == EDGES ARE INDICES TO NEIGHBOR NODES ==
+;; The Kolmogorov graph is a directed graph; each node thus
+;; discriminates betwixt incoming and outgoing edges, the former being
+;; those edges from other nodes into that node, the latter comprising
+;; edges leaving from the node towards a neighbor. Analogously, an edge
+;; distinguishes its two endpoints into the origin, whence it leaves,
+;; and the destination, into which it enters.
+;; 
+;; As a vertex distinguishes incoming and outgoing edges, and navigation
+;; in a Kolmogorov graph always proceeds from an origin to a destination
+;; node, never otherthwart, the same edge value may be used by more than
+;; one edge and even at the same time for an edge's incoming and
+;; outgoing connection without ambiguity. An incoming edge value, if
+;; stored in the vertex at all, which is actually not required, is never
+;; queried; only outgoing edges are of significance.
+;; 
+;; Given a node and an edge value, the opposite point along the edge
+;; can be located unambiguously, if an edge with the respective element
+;; is present. In corollary, a mapping exists associating each compound
+;; of a vertex and an edge to zero or one vertex. Note that edge values
+;; are unique per vertex but not across the whole graph. The reason for
+;; this resides in the fact that every operation is considered in the
+;; context of the active node. A tape in the Turing machine might be
+;; imagined as a vector, the integer subscripts of which, from zero to
+;; infinity, uniquely locate a certain cell. The KUM exclusively sees
+;; the active node, regarding it, in some way, as the current tape, the
+;; edge values being the integer subscripts. As every other node is
+;; simply not addressable, an index (or edge value) can only be
+;; interpreted as being an edge leaving from the active node.
+;; 
+;; == ACTIONS ARE INTERPRETED IN RELATION TO THE ACTIVE NODE ==
+;; Any action applicable to the KUM is defined in terms of the active
+;; node and its vicinage. The quintuple of choices for proceeding
+;; accounts for the following:
+;;   (1) Insertion of a new node.
+;;   (2) Insertion of a new edge from the active node to an extant one.
+;;   (3) Removal of a node adjacent to the active node.
+;;   (4) Removal of an edge incident to the active node.
+;;   (5) Halting of the Kolmogorov-Upsensky machine.
+;; If we command, for instance: "Delete the node at the edge storing the
+;; number 15", we automatically wist that:
+;;   (a) The specified edge must be connected to the active node.
+;;   (b) The specified edge must be an outgoing edge of the active node.
+;;   (c) There exists at most one outgoing edge from the active node
+;;       maintaining the number 15.
+;; We would, hence, never assume that the edge could be specified for a
+;; node other than the currently active one; likewise we would never be
+;; confounded whether an outgoing or incoming edge, if coincidentally
+;; sharing the value 15, would be targeted.
+;; 
+;; 
+;; Architecture of the "Kolmogorov" Programming Language
+;; =====================================================
+;; The "Kolmogorov" programming language attends to a simulation of
+;; Kolmogorov-Uspensky machines by operating on a modifiable graph.
+;; 
+;; The graph is directed and asymmetric, thus composed of directed
+;; edges only, with no imposition of any relations between the edges of
+;; a node. A node may contain zero to 255 incoming edges and zero to 255
+;; outgoing edges, each edge storing a value from the range [0, 255],
+;; with the edge values being unique inside of each such set, but not
+;; necessitated to be distinct across both.
+;; 
+;; At any instant at least one node is guaranteed to be present, this
+;; minimum entity defined as the active node, in the context of which
+;; all operations are comprehended.
+;; 
+;; Two types of data are distinguished: byte values and addresses.
+;; All data applied to the purpose of computations is stored in the
+;; nodes in the form of unsigned bytes in the range [0, 255],
+;; interpreted, depending upon the particulars of a command, either in
+;; its numeric form or as an ASCII character code.
+;; 
+;; Addresses, on the other hand, actually establish an extension of the
+;; byte values, conforming to its characteristics, however including
+;; the asterisk symbol ``*'' as a special member. An address always
+;; determines the value of an outgoing edge from a specific node,
+;; being unique among the thus departing connections. The additional
+;; symbol ``*'' represents an implicit, omnipresent and inalienable
+;; connection of a node to itself, that is, a loop or self-loop.
+;; 
+;; 
+;; Implementation
+;; ==============
+;; The Kolmogorov language's central data structure, the graph, is
+;; manifested in the form of a directed graph, permissive of loops and
+;; parallel edges.
+;; 
+;; The graph and its vertices are described by classes, while the edges
+;; manifest as entries in a hash table, with no custom class dedicated.
+;; 
+;; The most elaborate entity, the ``Node'' class, stores its element in
+;; conjunction with one hash table of outgoing edges and another such
+;; mapping for the incoming. Each hash table represents the connections,
+;; with an entry defining one edge. Common to both tables, a key stores
+;; an ``address'' object, which stands for the edge value; the
+;; associated entry designates the ``Node'' instance opposite to the
+;; maintaining vertex object.
+;; 
+;; In the table of outgoing edges, the key thus designates an outgoing
+;; edge's address, the mapped entry value being the destination node
+;; reached by leaving the maintaining vertex along this edge. The
+;; special case of the keyword symbol ``:active-node'' permanently
+;; persisting in the table as a key referring to the maintaining node
+;; itself reflects the language's active node address ``*''.
+;; 
+;; For a vertex' incoming connections, the key denotes the entering
+;; edge's address, associated with the origin node. The special key
+;; ``:active-node'' does not exist. While conceptually logical, this
+;; piece of information would be superfluous in practical matters.
+;; 
+;; The ``Graph'' class exclusively maintains the active node as a datum.
+;; Disencumbered from the usual necessity of a graph implementation, the
+;; provision of access to a collection of vertices and edges, by
+;; requiring the context of the currently selected node only, any
+;; maintenance of its constituents and connection information is
+;; exported into the ``Node'' objects themselves.
+;; 
+;; The graph is initialized with a single node, that being the active
+;; node, destitute of any connections yet, the loop exempted.
+;; 
+;; --------------------------------------------------------------------
+;; 
+;; Author: Kaveh Yousefi
+;; Date:   2021-09-12
 ;; 
 ;; Sources:
 ;;   -> "https://esolangs.org/wiki/Kolmogorov"
@@ -8,10 +170,16 @@
 ;;       o Note that the source code, according to the posting author,
 ;;         seems to have been distorted: Each occurrence of the byte
 ;;         value ``\0'' was substituted by the phrase "{CODE}".
+;;   -> "https://en.wikipedia.org/wiki/Pointer_machine"
+;;       o Describes pointer machines, a category of abstract machines
+;;         embracing that of Kolmogorov-Uspensky.
+;;   -> "https://en.wikipedia.org/wiki/Abstract_machine"
+;;       o Defines the term "abstract machine".
 ;;   -> "https://ruslanspivak.com/lsbasi-part1/"
 ;;       o Describes the implementation of an interpreter for the
 ;;         programming language Pascal in Python.
 ;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
@@ -374,7 +542,7 @@
     :initform      (make-node 0)
     :type          Node
     :documentation "The active node, represented in the Kolmogorov
-                    programming languages by the asterisk '*', and in
+                    programming language by the asterisk '*', and in
                     this implementation by the keyword symbol
                     ``:active-node''."))
   (:documentation
@@ -410,7 +578,8 @@
    to the error message."
   (declare (type address edge-value))
   (declare (type T       prefix))
-  (error "~:[Invalid edge:~;~:*~a~] No edge with value ~a leaves from the active node."
+  (error "~:[Invalid edge:~;~:*~a~] No edge with value ~a leaves ~
+          from the active node."
     prefix
     edge-value))
 
@@ -451,9 +620,9 @@
    edge extending from the former to the latter, storing itself the
    EDGE-VALUE, and returns the GRAPH.
    ---
-   If any of the two addresses FROM-ADDRESS and TO-ADDRESS cannot be
-   detected among the active node's outgoing edges, a ``simple-error''
-   is signaled."
+   An error of the type ``simple-error'' occurs if any of the two
+   addresses FROM-ADDRESS and TO-ADDRESS cannot be detected among the
+   active node's outgoing edges."
   (declare (type Graph      graph))
   (declare (type address    from-address))
   (declare (type address    to-address))
@@ -505,8 +674,8 @@
   "Removes from the GRAPH's active node the outgoing edge storing the
    EDGE-VALUE, returning the GRAPH.
    ---
-   If no outgoing edge from the active node exists being associated with
-   the EDGE-VALUE, a ``simple-error'' is signaled."
+   An error of the type ``simple-error'' occurs if no outgoing edge from
+   the active node exists being associated with the EDGE-VALUE."
   (declare (type Graph      graph))
   (declare (type byte-value edge-value))
   (with-slots (active-node) graph
@@ -526,8 +695,8 @@
    by the outgoing edge amenable to the ADDRESS, and returns the
    modified GRAPH.
    ---
-   If the active node does not contain an outgoing edge with the
-   ADDRESS, a ``simple-error'' is signaled."
+   An error of the type ``simple-error'' occurs if the active node does
+   not contain an outgoing edge with the ADDRESS."
   (declare (type Graph   graph))
   (declare (type address address))
   (with-slots (active-node) graph
@@ -539,6 +708,60 @@
       (setf active-node new-active-node)))
   (the Graph graph))
 
+;;; -------------------------------------------------------
+
+(defun graph-peek (graph address)
+  "Returns the byte value stored in the neighbor node of the GRAPH's
+   active node amenable to the ADDRESS.
+   ---
+   An error of the type ``simple-error'' occurs if the active node does
+   not contain an outgoing edge with the ADDRESS."
+  (declare (type Graph   graph))
+  (declare (type address address))
+  (let ((addressed-node (graph-get-node-at graph address)))
+    (declare (type (or null Node) addressed-node))
+    (unless addressed-node
+      (throw-missing-edge-error address "Cannot peek this node."))
+    (the byte-value (node-value addressed-node))))
+
+;;; -------------------------------------------------------
+
+(defun graph-add (graph augend-address addend)
+  "Adds to the node specified by the AUGEND-ADDRESS relative to the
+   active node the ADDEND and returns the GRAPH.
+   ---
+   An error of the type ``simple-error'' occurs if the active node does
+   not contain an outgoing edge with the AUGEND-ADDRESS."
+  (declare (type Graph      graph))
+  (declare (type address    augend-address))
+  (declare (type byte-value addend))
+  (let ((augend-node (graph-get-node-at graph augend-address)))
+    (declare (type (or null Node) augend-node))
+    (unless augend-node
+      (throw-missing-edge-error augend-address
+        "Cannot augment this node."))
+    (incf (node-value augend-node) addend))
+  (the Graph graph))
+
+;;; -------------------------------------------------------
+
+(defun graph-minus (graph minuend-address subtrahend)
+  "Subtracts from the node specified by the MINUEND-ADDRESS relative to
+   the active node the SUBTRAHEND and returns the GRAPH.
+   ---
+   An error of the type ``simple-error'' occurs if the active node does
+   not contain an outgoing edge with the MINUEND-ADDRESS."
+  (declare (type Graph      graph))
+  (declare (type address    minuend-address))
+  (declare (type byte-value subtrahend))
+  (let ((minuend-node (graph-get-node-at graph minuend-address)))
+    (declare (type (or null Node) minuend-node))
+    (unless minuend-node
+      (throw-missing-edge-error minuend-address
+        "Cannot decrement this node."))
+    (decf (node-value minuend-node) subtrahend))
+  (the Graph graph))
+  
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -737,18 +960,27 @@
   (declare (type Lexer lexer))
   (with-slots (current-character) lexer
     (declare (type (or null character) current-character))
-    (let ((byte-value
-            (parse-integer
-              (with-output-to-string (digits)
-                (declare (type string-stream digits))
-                (loop
-                  while (and current-character
-                             (digit-char-p current-character))
-                  do    (write-char current-character digits)
-                        (lexer-advance lexer))))))
-      (unless (<= 0 byte-value 255)
-        (error "Invalid byte value: ~a." byte-value))
-      (the byte-value byte-value))))
+    (let ((byte-digits
+            (with-output-to-string (digits)
+              (declare (type string-stream digits))
+              (loop
+                while (and current-character
+                           (digit-char-p current-character))
+                do    (write-char current-character digits)
+                      (lexer-advance lexer)))))
+      (declare (type string byte-digits))
+      ;; No digits following the backslash '\'?
+      ;; => Invalid byte value.
+      (unless (plusp (length byte-digits))
+        (error "Expected digits while reading a byte value, but ~
+                encountered character ~s at position ~d."
+          current-character
+          (slot-value lexer 'current-position)))
+      (let ((byte-value (parse-integer byte-digits)))
+        (declare (type integer byte-value))
+        (unless (<= 0 byte-value 255)
+          (error "Invalid byte value: ~a." byte-value))
+        (the byte-value byte-value)))))
 
 ;;; -------------------------------------------------------
 
@@ -950,6 +1182,8 @@
   (declare (type Parser  parser))
   (declare (type keyword expected-token-type))
   (with-slots (lexer current-token) parser
+    (declare (type Lexer           lexer))
+    (declare (type (or null Token) current-token))
     (cond
       ((token-is-of-type current-token expected-token-type)
         (setf current-token (lexer-get-next-token lexer)))
@@ -996,8 +1230,8 @@
       
       ((token-is-of-type current-token :minus)
         (parser-eat parser :minus)
-        (let* ((minuend    (parser-parse-expression parser))
-               (subtrahend (parser-parse-expression parser)))
+        (let ((minuend    (parser-parse-expression parser))
+              (subtrahend (parser-parse-expression parser)))
           (declare (type tree minuend))
           (declare (type tree subtrahend))
           (make-tree :subtraction :minuend minuend :subtrahend subtrahend)))
@@ -1008,8 +1242,8 @@
       
       ((token-is-of-type current-token :plus)
         (parser-eat parser :plus)
-        (let* ((augend (parser-parse-expression parser))
-               (addend (parser-parse-expression parser)))
+        (let ((augend (parser-parse-expression parser))
+              (addend (parser-parse-expression parser)))
           (declare (type tree augend))
           (declare (type tree addend))
           (make-tree :addition :augend augend :addend addend)))
@@ -1033,8 +1267,8 @@
         
         ((token-is-of-type current-token :small-a)
           (parser-eat parser :small-a)
-          (let* ((destination-value (parser-parse-expression parser))
-                 (edge-value        (parser-parse-expression parser)))
+          (let ((destination-value (parser-parse-expression parser))
+                (edge-value        (parser-parse-expression parser)))
             (declare (type tree destination-value))
             (declare (type tree edge-value))
             (setf tree (make-tree :assign
@@ -1043,9 +1277,9 @@
         
         ((token-is-of-type current-token :small-j)
           (parser-eat parser :small-j)
-          (let* ((origin      (parser-parse-expression parser))
-                 (destination (parser-parse-expression parser))
-                 (edge-value  (parser-parse-expression parser)))
+          (let ((origin      (parser-parse-expression parser))
+                (destination (parser-parse-expression parser))
+                (edge-value  (parser-parse-expression parser)))
             (declare (type tree origin))
             (declare (type tree destination))
             (declare (type tree edge-value))
@@ -1089,8 +1323,8 @@
         
         ((token-is-of-type current-token :left-brace)
           (parser-eat parser :left-brace)
-          (let* ((test-edge (parser-parse-expression parser))
-                 (body      (parser-parse-statements parser)))
+          (let ((test-edge (parser-parse-expression parser))
+                (body      (parser-parse-statements parser)))
             (declare (type tree           test-edge))
             (declare (type (list-of tree) body))
             (parser-eat parser :right-brace)
@@ -1206,17 +1440,22 @@
   (declare (type Interpreter interpreter))
   (declare (ignore           node-type))
   (declare (type tree        tree))
-  (let* ((augend-tree (tree-get-property tree :augend))
-         (addend-tree (tree-get-property tree :addend)))
+  (let ((augend-tree (tree-get-property tree :augend))
+        (addend-tree (tree-get-property tree :addend)))
     (declare (type tree augend-tree addend-tree))
-    (let* ((augend-address (dispatch-visitor interpreter augend-tree))
-           (addend-value   (dispatch-visitor interpreter addend-tree)))
+    (let ((augend-address (dispatch-visitor interpreter augend-tree))
+          (addend-value   (dispatch-visitor interpreter addend-tree)))
       (declare (type address    augend-address))
       (declare (type byte-value addend-value))
-      (with-slots (graph) interpreter
-        (let ((augend-node (graph-get-node-at graph augend-address)))
-          (declare (type Node augend-node))
-          (incf (node-value augend-node) addend-value)))))
+      (cond
+        ((null augend-address)
+          (error "Error in ADDITION: Augend address is NIL."))
+        ((null addend-value)
+          (error "Error in ADDITION: Addend value is NIL."))
+        (T
+          (with-slots (graph) interpreter
+            (declare (type Graph graph))
+            (graph-add graph augend-address addend-value))))))
   (values))
 
 ;;; -------------------------------------------------------
@@ -1355,7 +1594,8 @@
       (with-slots (graph) interpreter
         (declare (type Graph graph))
         (write-char
-          (code-char (node-value (graph-get-node-at graph address))))))))
+          (code-char (node-value (graph-get-node-at graph address)))))))
+  (values))
 
 ;;; -------------------------------------------------------
 
@@ -1371,7 +1611,7 @@
       (declare (type address address))
       (with-slots (graph) interpreter
         (declare (type Graph graph))
-        (the byte-value (node-value (graph-get-node-at graph address)))))))
+        (the byte-value (graph-peek graph address))))))
 
 ;;; -------------------------------------------------------
 
@@ -1438,16 +1678,23 @@
     (declare (type tree subtrahend-tree))
     (let ((minuend    (dispatch-visitor interpreter minuend-tree))
           (subtrahend (dispatch-visitor interpreter subtrahend-tree)))
-      (declare (type address     minuend))
+      (declare (type address    minuend))
       (declare (type byte-value subtrahend))
-      (with-slots (graph) interpreter
-        (declare (type Graph graph))
-        (decf (node-value (graph-get-node-at graph minuend)) subtrahend)
-        (node-value (graph-get-node-at graph minuend))))))
+      (cond
+        ((null minuend)
+          (error "Error in SUBTRACTION: Minuend is NIL."))
+        ((null subtrahend)
+          (error "Error in SUBTRACTION: Subtrahend is NIL."))
+        (T
+          (with-slots (graph) interpreter
+            (declare (type Graph graph))
+            (graph-minus graph minuend subtrahend))))))
+  (values))
 
 ;;; -------------------------------------------------------
 
 (defun execute-kolmogorov-code (code)
+  "Interprets and executes the Kolmogorov CODE supplied as a string."
   (declare (type string code))
   (let ((lexer (make-lexer code)))
     (declare (type Lexer lexer))
@@ -1463,7 +1710,7 @@
 
 (defun read-source-file (file-path)
   "Reads the file located under the FILE-PATH and returns its content as
-   a ``simple-string''."
+   a ``string''."
   (declare (type (or pathname stream string) file-path))
   (with-open-file (input file-path :direction :input)
     (let ((file-size (file-length input)))
@@ -1471,11 +1718,13 @@
       (let ((file-content (make-array file-size :element-type 'character)))
         (declare (type simple-string file-content))
         (read-sequence file-content input)
-        (the simple-string file-content)))))
+        (the string file-content)))))
 
 ;;; -------------------------------------------------------
 
 (defun execute-kolmogorov-file (file-path)
+  "Reads the Kolmogorov source code from the file located under the
+   FILE-PATH and executes it."
   (declare (type (or pathname stream string) file-path))
   (execute-kolmogorov-code (read-source-file file-path)))
 
@@ -1492,8 +1741,7 @@
                             +*\\48
                             o*
                             -*\\49
-                          ]
-                          ")
+                          ]")
 
 ;;; -------------------------------------------------------
 
@@ -1514,8 +1762,7 @@
                               a\\0\\2 \"exit the loop\"
                             ]
                             -\\1\\1 \"subtract one from the counter node\"
-                          ]
-                          ")
+                          ]")
 
 ;;; -------------------------------------------------------
 
@@ -1536,3 +1783,159 @@
      +*i   \"Read a character from the user and store its ASCII code in the active node.\"
      o*    \"Output the active node's byte value, which contains the input ASCII character code.\"
    ]")
+
+;;; -------------------------------------------------------
+
+;; Convert a user input character into a digit and print the letter,
+;; starting from 'A', using the input value as an offset. Thus, an input
+;; of zero generates the letter 'A', one generates 'B', two produces 'C',
+;; etc.
+;; Valid inputs are ASCII characters representing digits.
+(execute-kolmogorov-code
+  "+*i     \"Store the user input in the active node.\"
+   -*\\48  \"Convert the user input digit into its represented number.
+           \"ASCII characters representing digits start at 48.\"
+   +*\\65
+   o*")
+
+;;; -------------------------------------------------------
+
+;; Convert a user input character into a digit and use it for iteration.
+;; Valid inputs are ASCII characters representing digits.
+(execute-kolmogorov-code
+  "+*i
+   -*\\48
+   
+   [*
+     o*
+     -*\\1
+   ]")
+
+;;; -------------------------------------------------------
+
+;; Add the active node's value to itself.
+(execute-kolmogorov-code
+  "+*\\1
+   +*p*
+   +*\\48
+   o*")
+
+;;; -------------------------------------------------------
+
+;; A very simple and little potent version of the factorial operation
+;; "n!".
+;; 
+;; Description
+;; ===========
+;; This program prompts the argument "n", in expectancy of a single
+;; digit in the range [0, 9]. The factorial "n!" is computed, as its
+;; result is printed as the ASCII character whose code equals to the
+;; factorial value "n!'.
+;; 
+;; Example:
+;;   For a user input in the form of the character '5' the result
+;;   n! = 120 will be printed as the character 'x', as the ASCII code of
+;;   'x' equals 120.
+;; 
+;; 
+;; Graph structure:
+;; ================
+;; The Kolmogorov graph consists of three nodes, each assigned a
+;; particular role in the factorial computation process, and each
+;; connected as an outgoing edge to the active node '*':
+;; 
+;; ---------------------------------------------------------------------
+;; Node address | Variable | Role
+;; -------------+----------+-------------------------------------------
+;;  1           | n        | The counter or factorial node "n".
+;;              |          | It drives the factorial node loop by
+;;              |          | counting from the user input digit down to
+;;              |          | zero.
+;; -------------+----------+-------------------------------------------
+;;  2           | i        | The multiplication or factor node "i".
+;;              |          | Holds the current multiplicand, that is,
+;;              |          | the number of times to add the active
+;;              |          | node's value to itself in order to simulate
+;;              |          | multiplication.
+;;              |          | Counts from n-1 down to 0. Is set to the
+;;              |          | current value on n prior to each
+;;              |          | "multiplication" round (summation loop).
+;; -------------+----------+-------------------------------------------
+;;  3           | t        | The multiplier node "t".
+;;              |          | Temporary holds the active node's value in
+;;              |          | order to add it to itself with two
+;;              |          | purposes: (1) Imprimis, to simulate
+;;              |          | multiplication, and (2) secondly, as a
+;;              |          | product of this, to compute the factorial.
+;; ---------------------------------------------------------------------
+;; 
+;; 
+;; Concept
+;; =======
+;; Lacking the intrinsic faculty of multiplication, the problem of the
+;; factorial tallies twice in akin manner: (1) Simulating the
+;; multipicative operation by aid of the native operations addition and
+;; subtraction, and (2) applying the thus conceived ability to actually
+;; realize the factorial function.
+;; 
+;; Concerning the first predicament, a multiplication can be defined in
+;; terms of repeated additions in the following manner:
+;;   a * b = a_1 + a_2 + ... + a_b
+;; where:
+;;   a - is the multiplicand
+;;   b - is the multiplier
+;; 
+;; The factorial itself, to recall our knowledge, is defined as:
+;;   n! = n * (n-1) * (n-2) * ... * 2 * 1
+;; 
+;; The implementation-independent principles can be expressed in this
+;; pseudocode:
+;;   let n <- input
+;;   let i <- 0
+;;   let t <- 0
+;;   
+;;   while n > 0
+;;     t                <- activeNode.value
+;;     activeNode.value <- 0
+;;     i                <- n - 1
+;;     
+;;     while i > 0
+;;       activeNode.value <- activeNode.value + t
+;;       i                <- i - 1
+;;     end while
+;;     
+;;     n <- n - 1
+;;   end while
+;; 
+(execute-kolmogorov-code
+  "a\\0\\1    \"Create the counter node 'n'.\"
+   a\\0\\2    \"Create the factor node  'i'.\"
+   a\\0\\3    \"Create the temporary multiplier/addition node 't'.\"
+   
+   +\\1i      \"Store the user input (= n) in the counter node 'n'.\"
+   -\\1\\48   \"Convert the user input character into its represented digit value.\"
+   
+   +*\\1      \"Set the active node (result node) to 1 for the first multiplication: [...] * 1.\"
+   
+   \"Repeat the multiplication n times to obtain the factorial n!.\"
+   [\\1
+     -\\3p\\3     \"Reset 't' to zero: t = 0.\"
+     +\\3p*       \"Set the multiplier node 't' to the active node value for repeated addition.\"
+     
+     -*p*         \"Set the active node's value to zero.\"
+     
+     -\\2p\\2     \"Reset 'i' to zero: i = 0.\"
+     +\\2p\\1     \"Set the next multiplicand 'i': i = n.\"
+     
+     \"Perform 'i' times an addition of 't' to itself, storing the result in the active node.\"
+     [\\2
+       +*p\\3     \"Add the active node value to itself, simulating multiplication.\"
+       -\\2\\1    \"Decrement the multiplication node to control cessation of multiplication when exhausted.\"
+     ]
+     
+     -\\1\\1      \"Set n = n - 1.\"
+   ]
+   
+   o*
+  ")
+
