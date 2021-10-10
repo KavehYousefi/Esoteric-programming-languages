@@ -22,8 +22,8 @@
 ;; The first moeity of encoding is performed by substituting each of the
 ;; eight brainfuck instructions by a predefined three-bit sequence and
 ;; inserting these bits at the least significant position of the output
-;; bit series. The following table describes the encoding of each
-;; brainfuck instruction:
+;; bit series. The following table describes the encoding adhibited to
+;; the brainfuck instruction:
 ;; 
 ;;   brainfuck instruction | Binary representation
 ;;   ----------------------+----------------------
@@ -36,15 +36,15 @@
 ;;    [                    | 110
 ;;    ]                    | 111
 ;; 
-;; With each instruction having been encoded, a final bit group "001"
+;; With all instructions having been encoded, a final bit group "001"
 ;; is inserted at the most significant position of the total bits. The
 ;; completed bit sequence is then interpreted as an unsigned integer
 ;; number.
 ;; 
 ;; In the second part of the encoding, the obtained integer number is
 ;; utilized as a tally: By producing the exclamation mark "!" this
-;; number of times, the Ecstatic code equivalent to the brainfuck source
-;; is generated.
+;; number of times, the Ecstatic code equivalent to the brainfuck
+;; program is generated.
 ;; 
 ;; Note that brainfuck tacitly ignores any character not defined as an
 ;; instruction, an expression of tolerance that is usually appropriated
@@ -59,9 +59,9 @@
 ;;       number of exclamation marks ("!") is tallied and this unsigned
 ;;       integer value is converted into its binary representation.
 ;;   (2) Each three bits, omitting the sentinel portion in the three
-;;       most significant bits, from the most to the least significant
-;;       position, is translated into one brainfuck instruction and
-;;       concatenated into the decoded brainfuck code.
+;;       most significant positions, from the most to the least
+;;       significant position, is translated into one brainfuck
+;;       instruction and concatenated into the decoded brainfuck code.
 ;; 
 ;; The decoding process in its incipiency tallies the only character
 ;; permissive to a piece of Ecstatic source code, the exclamation mark
@@ -73,14 +73,14 @@
 ;; sentinel bits must be retrievable at the topmost bits, with the "1"
 ;; placed at the bit position
 ;;   1 + (n * 3)
-;; for an n >= 1, where the bits at enumerated from zero (0). Failure to
+;; for an n >= 1, where the bits are enumerated from zero. Failure to
 ;; satisfy this condition can be adduced as an evidence of faulty code.
 ;; 
 ;; Discencumbered from the sentinel portion, the bit sequence must then
-;; be processed: Each three consecutive bits form an encoded brainfuck
+;; be processed: Any three consecutive bits form an encoded brainfuck
 ;; command, arranged from the most significant position toward the least
 ;; significant. When decoding such a triplet, the above encoder table
-;; is perused anew, now switching the columns; thus one gains:
+;; is perused anew, the columns now interchanged, whence one gains:
 ;; 
 ;;   Binary pattern | brainfuck instruction
 ;;   ---------------+----------------------
@@ -203,8 +203,7 @@
 
 (defun convert-brainfuck-to-ecstatic (brainfuck-code
                                       &optional (destination T))
-  "Encodes the BRAINFUCK-CODE into a binary sequence conforming to the
-   Ecstatic rules, and writes the Ecstatic source code to the
+  "Converts the BRAINFUCK-CODE into Ecstatic code and writes it to the
    DESTINATION, which defaults to the standard output.
    ---
    Please note that, given the sole capability of encoding brainfuck
