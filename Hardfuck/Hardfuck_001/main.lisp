@@ -158,138 +158,131 @@
 (defun interpret-hardfuck (code)
   "Interprets and executes the Hardfuck CODE and returns ``NIL''."
   (declare (type string code))
-  (let ((position  0)
-        (character NIL))
-    (declare (type fixnum              position))
-    (declare (type (or null character) character))
-    
-    (flet
-        ((advance ()
-          "Moves the POSITION to the next CHARACTER Of the CODE and
-           returns no value."
-          (cond
-            ((< position (1- (length code)))
-              (incf position)
-              (setf character (char code position)))
-            (T
-              (setf character NIL)))
-          (values))
-         
-         (recede ()
-          "Moves the POSITION to the previous CHARACTER of the CODE and
-           returns no value."
-          (cond
-            ((plusp position)
-              (decf position)
-              (setf character (char code position)))
-            (T
-              (setf character NIL)))
-          (values))
-         
-         (move-to (new-position)
-          "Moves the POSITION to the NEW-POSITION, updates the
-           CHARACTER, and returns no value."
-          (declare (type fixnum new-position))
-          (setf position  new-position)
-          (setf character (char code position))
-          (values)))
+  (when (plusp (length code))
+    (let ((position  0)
+          (character (char code 0)))
+      (declare (type fixnum              position))
+      (declare (type (or null character) character))
       
-      (move-to position)
-      
-      (let ((memory  (make-hash-table :test #'eql))
-            (pointer 0))
-        (declare (type hash-table memory))
-        (declare (type integer    pointer))
+      (flet
+          ((advance ()
+            "Moves the POSITION to the next CHARACTER Of the CODE and
+             returns no value."
+            (cond
+              ((< position (1- (length code)))
+                (incf position)
+                (setf character (char code position)))
+              (T
+                (setf character NIL)))
+            (values))
+           
+           (recede ()
+            "Moves the POSITION to the previous CHARACTER of the CODE
+             and returns no value."
+            (cond
+              ((plusp position)
+                (decf position)
+                (setf character (char code position)))
+              (T
+                (setf character NIL)))
+            (values)))
         
-        (loop do
-          (case character
-            ((NIL)
-              (loop-finish))
-            
-            (#\>
-              (incf pointer)
-              (advance))
-            
-            (#\<
-              (decf pointer)
-              (advance))
-            
-            (#\+
-              (incf (gethash pointer memory 0))
-              (advance))
-            
-            (#\-
-              (decf (gethash pointer memory 0))
-              (advance))
-            
-            (#\.
-              (let ((input (read-char)))
-                (declare (type character input))
-                (write-char input)
-                (setf (gethash pointer memory) (char-code input)))
-              (advance))
-            
-            (#\,
-              (write-char (code-char (gethash (1- pointer) memory 0)))
-              (advance))
-            
-            (#\[
-              (cond
-                ((zerop (gethash (1- pointer) memory 0))
-                  (advance)
-                  (loop with level of-type fixnum = 0 do
-                    (case character
-                      ((NIL)
-                        (error "Unterminated bracket at position ~d."
-                          position))
-                      (#\[
-                        (incf level))
-                      (#\]
-                        (cond
-                          ((zerop level)
-                            (loop-finish))
-                          (T
-                            (decf level)
-                            (advance))))
-                      (T
-                        (advance)))))
-                (T
-                  (advance))))
-            
-            (#\]
-              (cond
-                ((zerop (gethash (1+ pointer) memory 0))
-                  (advance))
-                (T
-                  (recede)
-                  (loop with level of-type fixnum = 0 do
-                    (case character
-                      ((NIL)
-                        (error "Unmatched closing bracket at position ~d."
-                          position))
-                      (#\]
-                        (incf level))
-                      (#\[
-                        (cond
-                          ((zerop level)
-                            (loop-finish))
-                          (T
-                            (decf level)
-                            (recede))))
-                      (T
-                        (recede)))))))
-            
-            (#\@
-              (setf (gethash (1- pointer) memory 0)
-                    (* pointer 4))
-              (advance))
-            
-            (#\/
-              (setf pointer 0)
-              (advance))
-            
-            (otherwise
-              (advance))))))))
+        (let ((memory  (make-hash-table :test #'eql))
+              (pointer 0))
+          (declare (type hash-table memory))
+          (declare (type integer    pointer))
+          
+          (loop do
+            (case character
+              ((NIL)
+                (loop-finish))
+              
+              (#\>
+                (incf pointer)
+                (advance))
+              
+              (#\<
+                (decf pointer)
+                (advance))
+              
+              (#\+
+                (incf (gethash pointer memory 0))
+                (advance))
+              
+              (#\-
+                (decf (gethash pointer memory 0))
+                (advance))
+              
+              (#\.
+                (let ((input (read-char)))
+                  (declare (type character input))
+                  (write-char input)
+                  (setf (gethash pointer memory) (char-code input)))
+                (advance))
+              
+              (#\,
+                (write-char (code-char (gethash (1- pointer) memory 0)))
+                (advance))
+              
+              (#\[
+                (cond
+                  ((zerop (gethash (1- pointer) memory 0))
+                    (advance)
+                    (loop with level of-type fixnum = 0 do
+                      (case character
+                        ((NIL)
+                          (error "Unterminated opening bracket '[' ~
+                                  at position ~d."
+                            position))
+                        (#\[
+                          (incf level))
+                        (#\]
+                          (cond
+                            ((zerop level)
+                              (loop-finish))
+                            (T
+                              (decf level)
+                              (advance))))
+                        (otherwise
+                          (advance)))))
+                  (T
+                    (advance))))
+              
+              (#\]
+                (cond
+                  ((zerop (gethash (1+ pointer) memory 0))
+                    (advance))
+                  (T
+                    (recede)
+                    (loop with level of-type fixnum = 0 do
+                      (case character
+                        ((NIL)
+                          (error "Unmatched closing bracket ']' ~
+                                  at position ~d."
+                            position))
+                        (#\]
+                          (incf level))
+                        (#\[
+                          (cond
+                            ((zerop level)
+                              (loop-finish))
+                            (T
+                              (decf level)
+                              (recede))))
+                        (otherwise
+                          (recede)))))))
+              
+              (#\@
+                (setf (gethash (1- pointer) memory 0)
+                      (* pointer 4))
+                (advance))
+              
+              (#\/
+                (setf pointer 0)
+                (advance))
+              
+              (otherwise
+                (advance)))))))))
 
 
 
