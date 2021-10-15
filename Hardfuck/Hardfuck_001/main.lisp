@@ -375,7 +375,7 @@
 
 ;;; -------------------------------------------------------
 
-;; A simple loop test with three cells, labeled as suc:
+;; A simple loop test with three cells, labeled as such:
 ;;   a = memory[0]
 ;;   b = memory[1]
 ;;   c = memory[2]
