@@ -103,10 +103,10 @@
 ;;   ..................................................................
 ;;    @      | Multiplies the pointer by four and stores the product
 ;;           | in the cell preceding the pointer.
-;;           | * Note: This command does not exit in brainfuck.
+;;           | * Note: This command does not exist in brainfuck.
 ;;   ..................................................................
 ;;    /      | Relocates the pointer to the first cell.
-;;           | * Note: This command does not exit in brainfuck.
+;;           | * Note: This command does not exist in brainfuck.
 ;; 
 ;; As an important fact please note that, given the diverging semantics,
 ;; in the general case a brainfuck program is not guaranteed to operate
@@ -152,6 +152,34 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Declaration of types.                                        -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deftype hash-table-of (key-type value-type)
+  "The ``hash-table-of'' type defines a hash table of zero or more
+   entries, the keys of which conform to the KEY-TYPE and the associated
+   values to the VALUE-TYPE."
+  (let ((predicate (gensym)))
+    (declare (type symbol predicate))
+    (setf (symbol-function predicate)
+      #'(lambda (object)
+          (declare (type T object))
+          (and
+            (hash-table-p object)
+            (loop
+              for key
+                of-type T
+                being   the hash-keys in (the hash-table object)
+              using
+                (hash-value value)
+              always
+                (and (typep key   key-type)
+                     (typep value value-type))))))
+    `(satisfies ,predicate)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of public operations.                         -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -189,9 +217,8 @@
         
         (let ((memory  (make-hash-table :test #'eql))
               (pointer 0))
-          (declare (type hash-table memory))
-          (declare (type integer    pointer))
-          
+          (declare (type (hash-table-of integer integer)  memory))
+          (declare (type integer                          pointer))
           (loop do
             (case character
               ((NIL)
