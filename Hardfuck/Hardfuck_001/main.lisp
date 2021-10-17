@@ -34,7 +34,7 @@
 ;;   (4) The loop end instruction "]" returns to the matching left
 ;;       bracket "[" if the value AFTER the pointer does not equal zero.
 ;; 
-;; Apart from the affectation of existing behaviors, the command set has
+;; Apart from the acquisition of existing behaviors, the command set has
 ;; been augmented with two members foreign to the standard brainfuck:
 ;;   
 ;;   Command | Description
