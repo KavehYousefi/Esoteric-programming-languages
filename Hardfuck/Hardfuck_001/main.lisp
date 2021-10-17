@@ -194,7 +194,7 @@
       
       (flet
           ((advance ()
-            "Moves the POSITION to the next CHARACTER Of the CODE and
+            "Moves the POSITION to the next CHARACTER of the CODE and
              returns no value."
             (cond
               ((< position (1- (length code)))
