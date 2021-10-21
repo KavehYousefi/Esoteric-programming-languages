@@ -720,10 +720,14 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; A simple cat program, querying the user for a character and printing
+;; the same to the standard output.
 (interpret-M?! "mmm!?")
 
 ;;; -------------------------------------------------------
 
+;; A simple loop test which counts from three down to one, printing
+;; the respective ASCII characters.
 (interpret-M?! "???   | +++  M=0
                 mm?   | [    M=2
                 m?    | .    M=3
@@ -732,21 +736,30 @@
 
 ;;; -------------------------------------------------------
 
+;; Print "Hello World!" to the standard output.
+(interpret-M?!
+  "????????mm?mmm?mmm????mm?mmm?mmm??m?mmm???m?mmm???m?mmm?m!!!!mmm!mm!mmm?mmm?m?mmm?m?mmm!m??mmm?mm?mmm!m!mmm!mmm!mm!mmm??mm?mm?mmm!!!mmm?m???????mmm??m???mmm?mm??mm?mm!mmm!mmm?mm!mm?m???mmm?m!!!!!!mmm?m!!!!!!!!mmm?mm??mmm?mmm?mm?mmm??mmm?")
+
+;;; -------------------------------------------------------
+
+;; Converts a simple cat program from brainfuck into M?!.
 (convert-brainfuck-to-M?! ",.")
 
 ;;; -------------------------------------------------------
 
+;; Converts a simple cat program from brainfuck into M?! and executes
+;; it.
 (interpret-M?! (convert-brainfuck-to-M?! ",." NIL))
 
 ;;; -------------------------------------------------------
 
-;; Convert the brainfuck "Hello, World!" program to M?! and print it
+;; Convert the brainfuck "Hello World!" program to M?! and print it
 ;; to the standard output.
 (convert-brainfuck-to-M?! "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.")
 
 ;;; -------------------------------------------------------
 
-;; Convert the brainfuck "Hello, World!" program to M?! and interpret
+;; Convert the brainfuck "Hello World!" program to M?! and interpret
 ;; it.
 (interpret-M?!
   (convert-brainfuck-to-M?!
