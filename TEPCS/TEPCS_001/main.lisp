@@ -131,20 +131,21 @@
 ;;   printCommand        := "~^" , { expression } , "!" ;
 ;;   varDeclareCommand   := "~~^" , stringExpression , "^" , expression , "!" ;
 ;;   programStartCommand := "~~~!" ;
-;;   arithmeticCommand   := "~~~~^" , integerExpression , "^" , string , "^" , operator , "!" ;
+;;   arithmeticCommand   := "~~~~^" , numericExpression , "^" , string , "^" , operator , "!" ;
 ;;   loopCommand         := loopStartCommand , { command } , loopEndCommand ;
-;;   loopStartCommand    := "~~~~~^s^" , integerExpression , "!" ;
+;;   loopStartCommand    := "~~~~~^s^" , numericExpression , "!" ;
 ;;   loopEndCommand      := "~~~~~^e^" , expression , "!" ;
 ;;   comment             := ";^!" , { character } , "\n" ;
 ;;   
-;;   expression          := integer | string | identifiedVariable ;
+;;   expression          := number  | string | identifiedVariable ;
 ;;   stringExpression    := string  | identifier ;
-;;   integerExpression   := integer | identifier ;
+;;   numericExpression   := number  | identifier ;
 ;;   
 ;;   operator            := "+" | "-" | "*" | "/" ;
 ;;   identifiedVariable  := ";" , identifier , ";" ;
 ;;   string              := character , { character } ;
-;;   integer             := digit , { digit } ;
+;;   number              := [ "+" | "-" ] , digit , { digit } 
+;;                       |  [ "+" | "-" ] , digit , "." , { digit } ;
 ;;   identifier          := character | character , { character } ;
 ;;   
 ;;   character           := "A" | ... | "Z" | "a" | ... | "z" | "0" | ... | "9" | ... ;
@@ -176,7 +177,7 @@
 ;;                | always appended automatically.
 ;;   ..................................................................
 ;;    ~~^x^y!     | Declares or assigns the variable "x" with the value
-;;                | "y". "x" is must be a string literal or a variable,
+;;                | "y". "x" must be a string literal or a variable,
 ;;                | in that case marked by semicolons. "y" can be any
 ;;                | value, including a variable name, again
 ;;                | necessitating a demarcation. If "x" describes an
@@ -896,25 +897,36 @@
              (values))
            
            (is-scanning ()
+             "Checks whether the current loop, if one exists, is
+              searching for its end command ('~~~~~^e^...!'), returning
+              a generalized Boolean result."
              (and (first active-loops)
                   (tepcs-loop-scans-for-end (first active-loops))))
            
-           (eat-integer-expression (token)
+           (eat-numeric-expression (token)
+             "Attempts to interpret the TOKEN as a number and returns
+              the numeric value if possible, otherwise signaling an
+              error."
              (declare (type Token token))
              (with-token (type value) token
                (case type
                  (:number     value)
                  (:string     (gethash value variables))
                  (:identifier (gethash value variables))
-                 (otherwise   (error "Invalid integer expression: ~s." token)))))
+                 (otherwise   (error "Invalid numeric expression: ~s."
+                                     token)))))
            
            (eat-string-expression (token)
+             "Attempts to interpret the TOKEN as a string and returns
+              the character sequence if possible, otherwise signaling an
+              error."
              (declare (type Token token))
              (with-token (type value) token
                (case type
                  (:string     value)
                  (:identifier (gethash value variables))
-                 (otherwise   (error "Invalid string expression: ~s." token))))))
+                 (otherwise   (error "Invalid string expression: ~s."
+                                     token))))))
         
         (loop do
           (cond
@@ -1008,7 +1020,7 @@
                       ;; Read right operand.
                       (lexer-eat lexer #\^)
                       (let ((right-operand
-                              (eat-integer-expression
+                              (eat-numeric-expression
                                 (lexer-read-input lexer))))
                         (declare (type number right-operand))
                         
@@ -1057,7 +1069,7 @@
                           (lexer-eat lexer #\^)
                           
                           (let ((repetitions
-                                  (eat-integer-expression
+                                  (eat-numeric-expression
                                     (lexer-read-input lexer))))  
                             (declare (type (integer -1 *) repetitions))
                             (lexer-eat lexer #\!)
