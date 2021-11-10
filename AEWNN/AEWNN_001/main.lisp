@@ -347,7 +347,7 @@
 ;;; -------------------------------------------------------
 
 (defun interpret-AEWNN (code)
-  "Interprets the piece of AEWNN CODE and returns NIL."
+  "Interprets the piece of AEWNN CODE and returns no value."
   (declare (type string code))
   (when (plusp (length code))
     (let ((position  0)
@@ -486,7 +486,8 @@
               
               (T
                 (error "Invalid character ~s at position ~d."
-                  character position)))))))))
+                  character position))))))))
+  (values))
 
 
 
