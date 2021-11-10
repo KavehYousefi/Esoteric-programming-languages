@@ -909,12 +909,13 @@
               error."
              (declare (type Token token))
              (with-token (type value) token
-               (case type
-                 (:number     value)
-                 (:string     (gethash value variables))
-                 (:identifier (gethash value variables))
-                 (otherwise   (error "Invalid numeric expression: ~s."
-                                     token)))))
+               (the real
+                 (case type
+                   (:number     value)
+                   (:string     (gethash value variables))
+                   (:identifier (gethash value variables))
+                   (otherwise   (error "Invalid numeric expression: ~s."
+                                       token))))))
            
            (eat-string-expression (token)
              "Attempts to interpret the TOKEN as a string and returns
@@ -922,11 +923,12 @@
               error."
              (declare (type Token token))
              (with-token (type value) token
-               (case type
-                 (:string     value)
-                 (:identifier (gethash value variables))
-                 (otherwise   (error "Invalid string expression: ~s."
-                                     token))))))
+               (the string
+                 (case type
+                   (:string     value)
+                   (:identifier (gethash value variables))
+                   (otherwise   (error "Invalid string expression: ~s."
+                                       token)))))))
         
         (loop do
           (cond
