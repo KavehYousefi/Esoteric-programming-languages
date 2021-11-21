@@ -528,6 +528,7 @@
   (declare (type Node node))
   (declare (type (or null (eql T) stream string) stream))
   (with-slots (value) node
+    (declare (type byte-value value))
     (format stream "Node(~a)" value)))
 
 
@@ -589,6 +590,7 @@
   (declare (type Graph                           graph))
   (declare (type (or null (eql T) stream string) stream))
   (with-slots (active-node) graph
+    (declare (type Node active-node))
     (format stream "Graph(active=~a)" active-node)))
 
 ;;; -------------------------------------------------------
@@ -808,6 +810,8 @@
   (declare (type Token                           token))
   (declare (type (or null (eql T) stream string) stream))
   (with-slots (type value) token
+    (declare (type (or null keyword) type))
+    (declare (type T                 value))
     (format stream "Token(~s, ~s)" type value)))
 
 
@@ -1021,6 +1025,7 @@
    delivered."
   (declare (type Lexer lexer))
   (with-slots (current-character) lexer
+    (declare (type (or null character) current-character))
     (cond
       ((null current-character)
         (make-token :eof NIL))
@@ -1162,7 +1167,8 @@
   (with-slots (lexer current-token) parser
     (declare (type Lexer           lexer))
     (declare (type (or null Token) current-token))
-    (setf current-token (lexer-get-next-token lexer))))
+    (setf current-token (lexer-get-next-token lexer)))
+  (values))
 
 ;;; -------------------------------------------------------
 
@@ -1485,6 +1491,7 @@
       (declare (type byte-value destination-value))
       (declare (type byte-value edge-value))
       (with-slots (graph) interpreter
+        (declare (type Graph graph))
         (graph-assign graph destination-value edge-value))))
   (values))
 
@@ -1555,6 +1562,7 @@
       (declare (type address    destination-address))
       (declare (type byte-value edge-value))
       (with-slots (graph) interpreter
+        (declare (type Graph graph))
         (graph-join graph origin-address destination-address edge-value))))
   (values))
 
@@ -1713,6 +1721,7 @@
    a ``string''."
   (declare (type (or pathname stream string) file-path))
   (with-open-file (input file-path :direction :input)
+    (declare (type file-stream input))
     (let ((file-size (file-length input)))
       (declare (type (or null fixnum) file-size))
       (let ((file-content (make-array file-size :element-type 'character)))
