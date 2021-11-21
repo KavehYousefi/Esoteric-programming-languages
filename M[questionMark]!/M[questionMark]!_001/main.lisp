@@ -742,13 +742,12 @@
 
 ;;; -------------------------------------------------------
 
-;; Converts a simple cat program from brainfuck into M?!.
+;; Convert a simple cat program from brainfuck into M?!.
 (convert-brainfuck-to-M?! ",.")
 
 ;;; -------------------------------------------------------
 
-;; Converts a simple cat program from brainfuck into M?! and executes
-;; it.
+;; Convert a simple cat program from brainfuck into M?! and executes it.
 (interpret-M?! (convert-brainfuck-to-M?! ",." NIL))
 
 ;;; -------------------------------------------------------
