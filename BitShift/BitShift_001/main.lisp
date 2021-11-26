@@ -80,8 +80,8 @@
 ;; characters "0" and "1". The language form can be expressed in the
 ;; following Extended Backus-Naur Form (EBNF) description:
 ;; 
-;;   program : { bit } ;
-;;   bit     : "0" | "1" ;
+;;   program := { bit } ;
+;;   bit     := "0" | "1" ;
 ;; 
 ;; 
 ;; Instructions
