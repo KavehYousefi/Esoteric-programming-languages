@@ -270,6 +270,14 @@
               (the list object)))))
     `(satisfies ,predicate)))
 
+;;; -------------------------------------------------------
+
+(deftype token ()
+  "The ``token'' type defines a tally of zero or more adjacent,
+   non-whitespace characters, agnominated as a \"token\" in the Muppp
+   specification."
+  '(integer 0 *))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -347,7 +355,7 @@
           (declare (type (stack fixnum) stack))
           
           (loop
-            with  word-length of-type fixnum = 0
+            with  word-length of-type token = 0
             while character
             do
               (skip-whitespaces)
@@ -384,7 +392,7 @@
                       (declare (type fixnum word-start-position))
                       (skip-whitespaces)
                       (let ((number-of-spaces (read-word-length)))
-                        (declare (type fixnum number-of-spaces))
+                        (declare (type token number-of-spaces))
                         (move-to word-start-position)
                         (loop do
                           (cond
@@ -403,33 +411,33 @@
                 (8
                   (skip-whitespaces)
                   (let ((next-element (read-word-length)))
-                    (declare (type fixnum next-element))
+                    (declare (type token next-element))
                     (incf (first stack) next-element)))
                 
                 (9
                   (skip-whitespaces)
                   (let ((next-element (read-word-length)))
-                    (declare (type fixnum next-element))
+                    (declare (type token next-element))
                     (decf (first stack) next-element)))
                 
                 (10
                   (skip-whitespaces)
                   (let ((next-element (read-word-length)))
-                    (declare (type fixnum next-element))
+                    (declare (type token next-element))
                     (setf (first stack)
                           (* (first stack) next-element))))
                 
                 (11
                   (skip-whitespaces)
                   (let ((next-element (read-word-length)))
-                    (declare (type fixnum next-element))
+                    (declare (type token next-element))
                     (setf (first stack)
                           (round (first stack) next-element))))
                 
                 (12
                   (skip-whitespaces)
                   (let ((next-element (read-word-length)))
-                    (declare (type fixnum next-element))
+                    (declare (type token next-element))
                     (setf (first stack)
                           (mod (first stack) next-element))))
                 
@@ -437,7 +445,7 @@
                   (when (plusp (first stack))
                     (skip-whitespaces)
                     (let ((number-of-spaces (read-word-length)))
-                      (declare (type fixnum number-of-spaces))
+                      (declare (type token number-of-spaces))
                       (loop do
                         (cond
                           ((null character)
