@@ -81,7 +81,7 @@
 ;;                    [ whitespaces ] ;
 ;;   command       := nonWhitespace , { nonWhitespace }  ;
 ;;   nonWhitespace := asciiCharacter - whitespace ;
-;;   whitespaces   := { whitespace } ;
+;;   whitespaces   := whitespace , { whitespace } ;
 ;;   whitespace    := " " | "\n" | "\t" ;
 ;; 
 ;; 
