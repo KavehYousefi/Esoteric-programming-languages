@@ -306,7 +306,7 @@ SKIP THE LOOP REPETITION IF THE INPUT CELL VALUE HAS DECREASED TO ZERO
 
 ;;; -------------------------------------------------------
 
-;; Truth machine.
+;; Truth-machine.
 ;; 
 ;; The memory layout is the following:
 ;;   mem[0] = input
@@ -363,3 +363,8 @@ THIS SECTION IS ONLY REACHED IF INPUT IS ZERO AND PRINTS THE COPY CELL ONCE
 <
 .
 ")
+
+;;; -------------------------------------------------------
+
+;; An uncommented version of the above truth-machine.
+(interpret-++Brainfuck ",>>------------------------------------------------<<:)>+>+<<-;(>>:)<.>(<.")
