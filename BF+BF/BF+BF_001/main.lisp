@@ -51,8 +51,8 @@
 ;; the command range exhibit a slightly modified, dioristic appearance.
 ;; 
 ;; == THE INSTRUCTION POINTER NAVIGATES THROUGH THE CODE GRID ==
-;; The instruction pointer, the responsible unit for execution of the
-;; program, is initially set to the top-left corner (0, 0) of the
+;; The instruction pointer, the responsible unit for the execution of
+;; a program, is initially set to the top-left corner (0, 0) of the
 ;; reticulation for the code, and oriented to the right. Its progress
 ;; continuously advances along the pointer's direction, transitioning
 ;; from a cell to its neighbor. Each selected cell's character, lest
@@ -62,12 +62,12 @@
 ;; flow, if not captured in an infinite configuration, terminates by
 ;; encountering the "@" command.
 ;; 
-;; == THE DATA POINTER OPEATES ON THE DATA GRID ==
+;; == THE DATA POINTER OPERATES ON THE DATA GRID ==
 ;; A second Cartesian arrangement, the data grid, is conjoined in a
 ;; conceptual matter, but essentially dislodged from the code array.
 ;; This data respository, too, is initialized at the top-left position
 ;; (0, 0), but its pointer, the data pointer, remains destitute of an
-;; intrinsic direction --- motions along the structure must be stated
+;; intrinsic direction --- migrations along the structure must be stated
 ;; in explicit terms by mediation of the respective commands.
 ;; 
 ;; == THE STORAGE PROVIDES AN AUXILIARY VALUE ==
@@ -82,7 +82,7 @@
 ;; The language's architecture is edified upon two distinct grids not
 ;; entwined in any correlation, being yet bound to a kinship by
 ;; their attributes: the code grid and the data grid. Their purposes
-;; vindicates a segregation of the twain, with the code grid being the
+;; vindicate a segregation of the twain, with the code grid being the
 ;; bailiwick of the "Syntax" section, whereas the data analogue shall
 ;; receive its disquisition in this locus.
 ;; 
@@ -474,6 +474,9 @@
 ;;; -------------------------------------------------------
 
 (deftype hash-table-of (&optional (key-type T) (value-type T))
+  "The ``hash-table-of'' type defines a hash table of zero or more
+   entries whose keys all conform to the KEY-TYPE and whose values
+   adhere to the VALUE-TYPE."
   (let ((predicate (gensym)))
     (declare (type symbol predicate))
     (setf (symbol-function predicate)
