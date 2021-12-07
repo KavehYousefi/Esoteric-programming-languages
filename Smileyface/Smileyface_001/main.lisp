@@ -1330,7 +1330,7 @@
   ; Decrement counter cell[1] by subtracting cell[1] by cell[2] (= 1) and
   ; storing the result back in cell[1], that is:
   ;      cell[1] = cell[1] - cell[2]
-  ;;  => cell[1] = cell[1] - 1
+  ;   => cell[1] = cell[1] - 1
   :] :P :P :> :] :> :P :O
 
   ; Jump to label 2 if cell[1] > cell[2].
