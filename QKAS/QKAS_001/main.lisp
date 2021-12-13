@@ -29,14 +29,16 @@
 ;;; -------------------------------------------------------
 
 (defun get-lowercase-character (run-length)
-  "Returns the lowercase character associated with one-based RUN-LENGTH."
+  "Returns the lowercase character associated with the one-based
+   RUN-LENGTH."
   (declare (type (integer 1 *) run-length))
   (the character (schar +LOWERCASE-CHARACTERS+ (1- run-length))))
 
 ;;; -------------------------------------------------------
 
 (defun get-uppercase-character (run-length)
-  "Returns the uppercase character associated with one-based RUN-LENGTH."
+  "Returns the uppercase character associated with the one-based
+   RUN-LENGTH."
   (declare (type (integer 1 *) run-length))
   (the character (schar +UPPERCASE-CHARACTERS+ (1- run-length))))
 
