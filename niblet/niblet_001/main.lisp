@@ -165,15 +165,7 @@
            (set-stack-to-not ()
             "Sets the value of the STACK to its own logical 'NOT' and
              returns no value."
-            (loop
-              for bit-index
-                of-type (integer 0 *)
-                from    0
-                below   4
-              do
-                (if (logbitp bit-index stack)
-                  (setf (ldb (byte 1 bit-index) stack) 0)
-                  (setf (ldb (byte 1 bit-index) stack) 1)))
+            (setf stack (logxor stack #b1111))
             (values)))
         
         (loop do
