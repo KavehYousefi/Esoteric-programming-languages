@@ -1,8 +1,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
-;; This program implements routines for the encoding and decoding
-;; betwixt the esoteric programming languages "Ecstatic", invented by
-;; the Esolang user "JWinslow23", and "brainfuck" by Urban Mueller.
+;; This program implements an interpreter for the esoteric programming
+;; language "Ecstatic", invented by the Esolang user "JWinslow23", as
+;; well as routines for encoding and decoding betwixt this language and
+;; "brainfuck" by Urban Mueller.
 ;; 
 ;; Concept
 ;; =======
@@ -135,6 +136,42 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Declaration of types.                                        -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(deftype hash-table-of (&optional (key-type T) (value-type T))
+  "The ``hash-table-of'' type defines a hash table of zero or more
+   entries, the keys of which conform to the KEY-TYPE and the values to
+   the VALUE-TYPE, both defaulting to the comprehensive ``T''."
+  (let ((predicate (gensym)))
+    (declare (type symbol predicate))
+    (setf (symbol-function predicate)
+      #'(lambda (object)
+          (declare (type T object))
+          (and
+            (hash-table-p object)
+            (loop
+              for key
+                of-type T
+                being the hash-keys in (the hash-table object)
+              using
+                (hash-value value)
+              always
+                (and (typep key   key-type)
+                     (typep value value-type))))))
+    `(satisfies ,predicate)))
+
+;;; -------------------------------------------------------
+
+(deftype destination ()
+  "The ``destination'' type defines a data sink compatible with
+   Common Lisp's output operations, including ``format'' and
+   ``write-char'', among others."
+  '(or null (eql T) stream string))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of brainfuck encoder.                         -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -144,7 +181,7 @@
    bit sequences.
    ---
    Please note that, given the sole capability of encoding brainfuck
-   instructions, any characters not contributing this set --- usually
+   instructions, any characters not contributing to this set --- usually
    employed as comments --- are tacitly disregarded."
   (declare (type string brainfuck-code))
   (let ((binary          0)
@@ -189,8 +226,8 @@
    the destination, the latter of which defaults to the standard output,
    and returns the corresponding value of a ``format'' invocation with
    the same."
-  (declare (type (integer 0 *)                   tally-of-exclamations))
-  (declare (type (or null (eql T) stream string) destination))
+  (declare (type (integer 0 *) tally-of-exclamations))
+  (declare (type destination   destination))
   (if destination
     (loop repeat tally-of-exclamations do
       (write-char #\! destination))
@@ -207,10 +244,10 @@
    DESTINATION, which defaults to the standard output.
    ---
    Please note that, given the sole capability of encoding brainfuck
-   instructions, any characters not contributing this set --- usually
+   instructions, any characters not contributing to this set --- usually
    employed as comments --- are tacitly disregarded."
-  (declare (type string                          brainfuck-code))
-  (declare (type (or null (eql T) stream string) destination))
+  (declare (type string      brainfuck-code))
+  (declare (type destination destination))
   (write-exclamation-points
     (convert-brainfuck-to-binary brainfuck-code)
     destination))
@@ -230,8 +267,8 @@
    to the Ecstatic coding scheme; this means that (1) it must consist of
    zero or three-bit groups, and (2) contain the sentinel bit sequence
    '001' at its most significant position."
-  (declare (type (unsigned-byte *)               binary))
-  (declare (type (or null (eql T) stream string) destination))
+  (declare (type (unsigned-byte *) binary))
+  (declare (type destination       destination))
   (if destination
     (let ((binary-length (integer-length binary)))
       (declare (type (integer 0 *) binary-length))
@@ -286,11 +323,192 @@
                                       &optional (destination T))
   "Converts the ECSTATIC-CODE into brainfuck code and writes this code
    to the DESTINATION, which defaults to the standard output."
-  (declare (type string                          ecstatic-code))
-  (declare (type (or null (eql T) stream string) destination))
+  (declare (type string      ecstatic-code))
+  (declare (type destination destination))
   (convert-binary-to-brainfuck
     (convert-ecstatic-to-binary ecstatic-code)
     destination))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of Ecstatic interpreter.                      -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun extract-Ecstatic-binary-commands (bits)
+  "Returns a vector of the Ecstatic commands extracted from the
+   integer-encoded bits, each such command being represented as a
+   binary triplet."
+  (declare (type unsigned-byte bits))
+  (the (vector (unsigned-byte 3))
+    (loop
+      for byte-position
+        of-type (integer 0 *)
+        from    0
+        below   (integer-length bits)
+        by      3
+      collect
+        (ldb (byte 3 byte-position) bits)
+      into
+        tokens
+      finally
+        (return
+          (coerce (nreverse (butlast tokens))
+            '(vector (unsigned-byte 3)))))))
+
+;;; -------------------------------------------------------
+
+(defun interpret-Ecstatic-commands (commands)
+  "Interprets the Ecstatic program supplied in the form of a vector of
+   COMMANDS, each such in its binary form, and returns no value."
+  (declare (type (vector (unsigned-byte 3)) commands))
+  
+  (let ((position 0)
+        (command  (aref commands 0)))
+    (declare (type fixnum                      position))
+    (declare (type (or null (unsigned-byte 3)) command))
+    
+    (let ((memory  (make-hash-table :test #'eql))
+          (pointer 0))
+      (declare (type (hash-table-of integer integer) memory))
+      (declare (type integer                         pointer))
+      
+      (flet
+          ((advance ()
+            "Moves the POSITION one command forward, if possible, and
+             updates the current COMMAND."
+            (if (< position (1- (length commands)))
+              (setf command (aref commands (incf position)))
+              (setf command NIL))
+            (values))
+           
+           (recede ()
+            "Moves the POSITION one command back, if possible, and
+             updates the current COMMAND."
+            (if (plusp position)
+              (setf command (aref commands (decf position)))
+              (setf command NIL))
+            (values)))
+        
+        (loop do
+          (case command
+            ;; No more commands remaining.
+            ((NIL)
+              (loop-finish))
+            
+            ;; Increment the memory under the pointer.
+            (#b000
+              (incf (gethash pointer memory 0))
+              (advance))
+            
+            ;; Decrement the memory under the pointer.
+            (#b001
+              (decf (gethash pointer memory 0))
+              (advance))
+            
+            ;; Move pointer right.
+            (#b010
+              (incf pointer)
+              (advance))
+            
+            ;; Move pointer left.
+            (#b011
+              (decf pointer)
+              (advance))
+            
+            ;; Output the current cell value.
+            (#b100
+              (write-char (code-char (gethash pointer memory 0)))
+              (advance))
+            
+            ;; Input a character and its code in the current cell.
+            (#b101
+              (format T "~&Please input a character: ")
+              (let ((input (read-char)))
+                (declare (type (or null character) input))
+                (clear-input)
+                (setf (gethash pointer memory) (char-code input)))
+              (advance))
+            
+            ;; Jump past matching "1000" if the current cell value
+            ;; equals 0.
+            (#b110
+              (cond
+                ((zerop (gethash pointer memory 0))
+                  (advance)
+                  (loop with level of-type integer = 0 do
+                    (case command
+                      ((NIL)
+                        (error "Unmatched '110'."))
+                      (#b111
+                        (cond
+                          ((zerop level)
+                            (advance)
+                            (loop-finish))
+                          (T
+                            (decf level)
+                            (advance))))
+                      (#b110
+                        (incf level)
+                        (advance))
+                      (otherwise
+                        (advance)))))
+                (T
+                  (advance))))
+            
+            ;; Jump back after "0111" if the current cell value does
+            ;; not equal 0.
+            (#b111
+              (cond
+                ((not (zerop (gethash pointer memory 0)))
+                  (recede)
+                  (loop with level of-type integer = 0 do
+                    (case command
+                      ((NIL)
+                        (error "Unmatched '111'."))
+                      (#b110
+                        (cond
+                          ((zerop level)
+                            (advance)
+                            (loop-finish))
+                          (T
+                            (decf level)
+                            (recede))))
+                      (#b111
+                        (incf level)
+                        (recede))
+                      (otherwise
+                        (recede)))))
+                (T
+                  (advance))))
+            
+            (otherwise
+              (error "Invalid command '~b' at index ~d."
+                command position)))))))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defun interpret-Ecstatic-binary (bits)
+  "Interprets the Ecstatic code provided in its binary form by the BITS,
+   which is tantamount to the number of necessary exclamation marks '!',
+   and returns no value."
+  (declare (type unsigned-byte bits))
+  (interpret-Ecstatic-commands
+    (extract-Ecstatic-binary-commands bits))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defun interpret-Ecstatic-code (code)
+  "Interprets the Ecstatic code provided in its binary form by the BITS,
+   which is tantamount to the number of necessary exclamation marks '!',
+   and returns no value."
+  (declare (type string code))
+  (interpret-Ecstatic-commands
+    (extract-Ecstatic-binary-commands
+      (convert-ecstatic-to-binary code)))
+  (values))
 
 
 
@@ -327,3 +545,32 @@
 
 ;; Prints ",.".
 (convert-ecstatic-to-brainfuck "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+;;; -------------------------------------------------------
+
+;; One-time cat program.
+(interpret-Ecstatic-commands
+  (extract-Ecstatic-binary-commands 108))
+
+;;; -------------------------------------------------------
+
+;; Infinitely repeating cat program.
+(interpret-Ecstatic-commands
+  (extract-Ecstatic-binary-commands 56623))
+
+;;; -------------------------------------------------------
+
+;; Infinitely repeating cat program.
+(interpret-Ecstatic-binary 56623)
+
+;;; -------------------------------------------------------
+
+;; One-time cat program.
+(interpret-Ecstatic-code "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+;;; -------------------------------------------------------
+
+;; Print "Hello World!"
+(interpret-Ecstatic-commands
+  (extract-Ecstatic-binary-commands
+    (convert-brainfuck-to-binary "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.")))
