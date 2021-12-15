@@ -54,12 +54,16 @@
       
       (labels
           ((advance ()
+            "Moves the POSITION to the next character, if possible,
+             updates the current CHARACTER, and returns no value."
             (setf character
               (when (< position (1- (length code)))
                 (char code (incf position))))
             (values))
            
            (recede ()
+            "Moves the POSITION to the previous character, if possible,
+             updates the current CHARACTER, and returns no value."
             (setf character
               (when (plusp position)
                 (char code (decf position))))
