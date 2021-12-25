@@ -8,7 +8,7 @@
 ;; The esoteric programming language Track is described by a code in the
 ;; shape of a two-dimensional grid, composed of at most 30 cells width
 ;; and an arbitrary tally establishing the height, while all data is
-;; maintained in a one-dimensional memory accommodating then cells.
+;; maintained in a one-dimensional memory accommodating ten cells.
 ;; 
 ;; == TRACK CODE SPANS A GRID ==
 ;; A kenspeckle, though not completely forinsecal attribute of Track
@@ -47,7 +47,7 @@
 ;; proceeds in its current orientation to the abutting cell.
 ;; 
 ;; Upon the instruction pointer's attempt to traverse beyond either the
-;; left, top, or bottom margin, the programm immediately terminates. If
+;; left, top, or bottom margin, the program immediately terminates. If
 ;; the pointer infringes on the right edge, a more sophisticated
 ;; inquisition must be administered: In the case of the pointer's
 ;; residence in the desinent grid row, the program iterum ceases its
@@ -61,7 +61,7 @@
 ;; or subscripts 0 to 9. Each such unit stores an arbitrary signed
 ;; integer value, amenable to certain instructions.
 ;; 
-;; = THE MEMORY POINTER: A REFERENCE TO THE SELECTED CELL ==
+;; == THE MEMORY POINTER: A REFERENCE TO THE SELECTED CELL ==
 ;; Similar to the code grid, a pointer is ordained to operate on the
 ;; one-dimensional memory, known as its "memory pointer", and
 ;; initialized to that cell with the index zero (0), purporting to
@@ -112,14 +112,14 @@
 ;; whitespaces, with all content expressed in ASCII entities.
 ;; 
 ;; == EACH INSTRUCTION IS DESCRIBED BY A SINGLE CHARACTER ==
-;; Each of the twenty-one instruction in Track is denominated by a
+;; Each of the twenty-one instructions in Track is denominated by a
 ;; single character from the ASCII repertoire.
 ;; 
 ;; == SPACES CONTRIBUTE STRUCTURAL SUPPORT ==
 ;; The space character, while expressively tolerated, associates with
 ;; no operation at all, instead being an avail for accomplishing the
 ;; desiderated source code shape; in corollary, its encounter is
-;; respondend by the instruction pointer with a simple skipping.
+;; responded by the instruction pointer with a simple skipping.
 ;; 
 ;; == NEWLINES PARTITION THE CODE INTO ROWS ==
 ;; Linebreaks constitute a significant occurrence in the code,
@@ -154,7 +154,7 @@
 ;; Input/Output commands accommodate a conduit betwixt the user and the
 ;; program, proceeding bilaterally, and tolerating as a token of
 ;; currency either a character or a number. These instructions partake
-;; of the array: ".", ":", ",", and ";".
+;; of the array ".", ":", ",", and ";".
 ;; 
 ;; == OVERVIEW ==
 ;; Track's instruction set constitutes a composition of 21 members, each
@@ -270,7 +270,7 @@
 ;; constituents of which encompass merely the x- and y-coordinates.
 ;; Inquests into nonextant cells inside of the grid bounds are replied
 ;; with a default space entity, whereas any content foreby the marches
-;; delivers a ``NIL'' sentinent.
+;; delivers a ``NIL'' sentinel.
 ;; 
 ;; At the start of the Track source interpretation, the one-dimensional
 ;; code string is transformed into a new ``Grid'' instance, with the
@@ -287,7 +287,7 @@
 ;; former.
 ;; 
 ;; == MEMORY ==
-;; The stringently fixed characteristics inherent to the memory,
+;; The stringently fixed characteristic inherent to the memory,
 ;; implicated by the restriction to ten cells, vindicates its
 ;; manifestation as a static array holding integer elements. The index
 ;; into the current cell, the designation of which is attended to by a
