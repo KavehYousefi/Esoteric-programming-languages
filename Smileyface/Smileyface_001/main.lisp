@@ -29,9 +29,10 @@
 ;;   Token | Name      | Description
 ;;   ------+-----------+-----------------------------------------------
 ;;    :)   | smiling   | A smiling face.
-;;         |           | The mien, expressive of bliss, more prominently
-;;         |           | than any other serves to display this mood,
-;;         |           | exceeding mere happiness through extroversion.
+;;         |           | The mien, expressive of bliss, more
+;;         |           | prominently than any other serves to display
+;;         |           | this mood, exceeding mere happiness through
+;;         |           | extroversion.
 ;;   ..................................................................
 ;;    :P   | cheeky    | A facial expression with a drooping tongue.
 ;;         |           | The tongue's adduction intimidates a certain
@@ -641,6 +642,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftype smiley ()
+  "The ``smiley'' type defines the valid tokens of the language."
   '(member
     :smiling      ;; :)
     :cheeky       ;; :P
