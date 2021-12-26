@@ -560,7 +560,9 @@
   "Creates a Track program capable of printing the TEXT and writes it to
    the DESTINATION, extending each line to a maximum GRID-WIDTH tally of
    columns."
-  (declare (type string text))
+  (declare (type string                          text))
+  (declare (type (or null (eql T) stream string) destination))
+  (declare (type (integer 1 *)                   grid-width))
   (if destination
     (let ((column 0))
       (declare (type (integer 0 *) column))
