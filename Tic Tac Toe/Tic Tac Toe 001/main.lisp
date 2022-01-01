@@ -603,7 +603,7 @@
 ;;; -------------------------------------------------------
 
 (deftype game-state ()
-  "The ``game-state'' type defines the possible state appertaining to
+  "The ``game-state'' type defines the possible states appertaining to
    the progress of a program in the guise of a game.
    ---
    The four state constitute:
@@ -720,7 +720,7 @@
   (squares
     (make-array 9
       :element-type 'mark :initial-element :empty :adjustable NIL)
-    :type (vector mark *)))
+    :type (vector mark 9)))
 
 ;;; -------------------------------------------------------
 
@@ -757,7 +757,7 @@
    a ``boolean'' value of ``T'' on confirmation, or ``NIL'' if at least
    one square is still vacant."
   (declare (type Board board))
-  (not (find :empty (board-squares board))))
+  (the boolean (not (find :empty (board-squares board)))))
 
 ;;; -------------------------------------------------------
 
@@ -793,7 +793,7 @@
 ;;; -------------------------------------------------------
 
 (defun board-clear (board)
-  "Removes any marks from the BOARD, setting all of its squares to b
+  "Removes any marks from the BOARD, designating all of its squares as
    vacant, and returns the modified BOARD."
   (declare (type Board board))
   (loop
@@ -850,14 +850,24 @@
 
 ;;; -------------------------------------------------------
 
-(defun token-has-type-of (token &rest matching-types)
-  "Checks whether the TOKEN type matches any of the MATCHING-TYPES,
-   returnign a ``boolean'' value of ``T'' on any match, otherwise
-   ``NIL''."
-  (declare (type Token             token))
-  (declare (type (list-of keyword) matching-types))
+(defun token-has-type-of (token expected-type)
+  "Checks whether the TOKEN type matches the EXPECTED-TYPE, returning
+   a ``boolean'' value of ``T'' on match, and otherwise ``NIL''."
+  (declare (type Token   token))
+  (declare (type keyword expected-type))
+  (the boolean (not (null (eq (token-type token) expected-type)))))
+
+;;; -------------------------------------------------------
+
+(defun token-is-word (token expected-word)
+  "Checks whether the TOKEN constitutes a ``:WORD'' containing the
+   EXPECTED-WORD as its value, returning a ``boolean'' value of ``T''
+   on confirmation or ``NIL'' on mismatch."
+  (declare (type Token token))
   (the boolean
-    (not (null (member (token-type token) matching-types :test #'eq)))))
+    (not (null
+      (and (token-has-type-of token :word)
+           (string= (token-value token) expected-word))))))
 
 
 
@@ -984,8 +994,7 @@
    ---
    Upon its exhaustion, the LEXER continuously returns a fresh instance
    of a token with the type ``:EOF'' and the value ``NIL''. An invalid
-   character incites the signaling of an error of the type
-   ``simple-error''."
+   character incites the signaling of an error of unspecified type."
   (declare (type Lexer lexer))
   (with-slots (character) lexer
     (declare (type (or null character) character))
@@ -1073,7 +1082,7 @@
 ;;; -------------------------------------------------------
 
 (defun node-attribute (node name)
-  "Returns the NODE attribute value specified by NAMEE, or ``NIL'' if
+  "Returns the NODE attribute value specified by NAME, or ``NIL'' if
    it cannot be retrieved."
   (declare (type Node    node))
   (declare (type keyword name))
@@ -1121,12 +1130,13 @@
     :initarg       :lexer
     :initform      (error "A parser expects a lexer.")
     :type          Lexer
-    :documentation "")
+    :documentation "The lexer as the purveyor of the tokens to compose
+                    an abstract syntax tree (AST) from.")
    (current-token
     :initarg       :current-token
     :initform      NIL
     :type          (or null Token)
-    :documentation ""))
+    :documentation "The last token delivered by the LEXER."))
   (:documentation
     "The ``Parser'' class provides an entity for constructing an
      abstract syntax tree (AST) representation of a program from a
@@ -1149,18 +1159,6 @@
    the LEXER."
   (declare (type Lexer lexer))
   (the Parser (make-instance 'Parser :lexer lexer)))
-
-;;; -------------------------------------------------------
-
-(defun token-is-word (token expected-word)
-  "Checks whether the TOKEN constitutes a ``:WORD'' containing the
-   EXPECTED-WORD as its value, returning a ``boolean'' value of ``T''
-   on confirmation or ``NIL'' on mismatch."
-  (declare (type Token token))
-  (the boolean
-    (not (null
-      (and (token-has-type-of token :word)
-           (string= (token-value token) expected-word))))))
 
 ;;; -------------------------------------------------------
 
@@ -1243,12 +1241,14 @@
     (let ((game (make-node :game-declaration)))
       (declare (type Node game))
       
+      ;; Read the game number.
       (let ((round (token-value current-token)))
         (declare (type integer round))
         (parser-eat parser :integer)
         (parser-eat parser :colon)
         (setf (node-attribute game :number) round))
       
+      ;; Collect zero or more player moves.
       (loop while current-token do
         (cond
           ((token-has-type-of current-token :mark)
@@ -1294,7 +1294,7 @@
 
 (defun parser-parse (parser)
   "Parses a Tic Tac Toe program by aid of the PARSER and returns the
-   root node of the thus generated the abstract syntax tree (AST)."
+   root node of the thus generated abstract syntax tree (AST)."
   (declare (type Parser parser))
   (with-slots (current-token) parser
     (declare (type (or null Token) current-token))
@@ -1302,14 +1302,15 @@
     (let ((program (make-node :program :statements NIL)))
       (declare (type Node program))
       
+      ;; Strive to read the introducing player mark declaration.
       (if (token-is-word current-token "I")
         (setf (node-attribute program :player-declaration)
               (parser-parse-player-declaration parser))
         (error "Expected word 'I', but found ~s." current-token))
       
+      ;; Collect zero or more game declarations.
       (loop do
         (cond
-          
           ((null current-token)
             (loop-finish))
           
@@ -1338,7 +1339,7 @@
   ()
   (:documentation
     "A ``Visitor'' processes an abstract syntax tree (AST) by traversing
-     through its nodes and exerting some action upon each such."))
+     its nodes and exerting some action upon each such."))
 
 ;;; -------------------------------------------------------
 
@@ -1374,7 +1375,7 @@
     :initarg       :active-player
     :initform      :X
     :type          mark
-    :documentation "The player whose turn is: either 'X' or 'O'.")
+    :documentation "The player whose turn it is: either 'X' or 'O'.")
    (game-number
     :initarg       :game-number
     :initform      0
@@ -1629,16 +1630,14 @@
 ;;; -------------------------------------------------------
 
 (defun interpreter-interpret (interpreter)
+  "Interprets the abstract syntax tree (AST) contained in the
+   INTERPRETER and returns no value."
   (declare (type Interpreter interpreter))
   (with-slots (parser) interpreter
     (declare (type Parser parser))
     (let ((ast (parser-parse parser)))
       (declare (type Node ast))
-      ;(print ast)
       (visitor-visit-node interpreter ast)))
-  
-  (format T "~&BF code: ~s" (slot-value interpreter 'commands))
-  
   (values))
 
 ;;; -------------------------------------------------------
