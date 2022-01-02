@@ -52,6 +52,8 @@
       (declare (type integer                         pointer))
       (declare (type integer                         temporary))
       
+      (setf *random-state* (make-random-state T))
+      
       (labels
           ((advance ()
             "Moves the POSITION to the next character, if possible,
