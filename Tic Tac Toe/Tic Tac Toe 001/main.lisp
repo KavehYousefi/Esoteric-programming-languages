@@ -1773,7 +1773,7 @@
 ;;; -------------------------------------------------------
 
 (defun interpret-Tic-Tac-Toe (code)
-  "Interpret the piece of Tic Tac Toe CODE and returns no value."
+  "Interprets the piece of Tic Tac Toe CODE and returns no value."
   (declare (type string code))
   (let ((lexer (make-lexer code)))
     (declare (type Lexer lexer))
