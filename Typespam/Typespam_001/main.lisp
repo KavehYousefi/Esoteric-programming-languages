@@ -100,181 +100,182 @@
   "Interprets the piece of Typespam CODE and returns no value."
   (declare (type string code))
   
-  (let ((position  0)
-        (character (char code 0))
-        
-        (chain     (make-hash-table :test #'eql))
-        (pointer   0)
-        (markers   (make-hash-table :test #'eql)))
-    (declare (type fixnum                           position))
-    (declare (type (or null character)              character))
-    (declare (type (hash-table-of integer Cell)     chain))
-    (declare (type integer                          pointer))
-    (declare (type (hash-table-of character fixnum) markers))
-    
-    (labels
-        ((advance ()
-          "Moves the POSITION cursor to the next character in the CODE,
-           updates the current CHARACTER, and returns no value."
-          (setf character
-            (when (< position (1- (length code)))
-              (char code (incf position))))
-          (values))
-         
-         (move-to (new-position)
-          "Moves the POSITION cursor to the NEW-POSITION, updates the
-           current CHARACTER, and returns no value."
-          (declare (type fixnum new-position))
-          (setf position  new-position)
-          (setf character (char code position))
-          (values))
-         
-         
-         (current-cell ()
-          "Returns the cell (instance) under the memory POINTER."
-          (the (or null Cell) (gethash pointer chain)))
-         
-         ((setf current-cell) (new-cell)
-          "Sets the cell under the memory POINTER to the NEW-CELL, and
-           returns the NEW-CELL."
-          (declare (type Cell new-cell))
-          (setf (gethash pointer chain) new-cell)
-          (the Cell (gethash pointer chain)))
-         
-         (check-if-initialized ()
-          "Checks whether the current instance is selected, throwing an
-           error if not, otherwise returning no value."
-          (unless (gethash pointer chain)
-            (error "The instance at the index ~d is not initialized."
-              pointer))
-          (values))
-         
-         
-         (set-marker (marker-name marker-position)
-          "Associates the MARKER-NAME with the MARKER-POSITION in the
-           CODE, overwriting any extant entry with such a name, and
-           returning no value."
-          (declare (type character marker-name))
-          (declare (type fixnum    marker-position))
-          (setf (gethash marker-name markers) marker-position)
-          (values))
-         
-         (get-marker-position (marker-name)
-          "Returns the position in the CODE designating the start of the
-           body of the marker with the MARKER-NAME.
-           ---
-           If no MARKER-NAME association exists yet, the respective
-           declaration is searched starting from the beginning of the
-           CODE, and, if found, an association is established ere its
-           returning. If no marker with this identifier can be detected,
-           an error is signaled."
-          (declare (type character marker-name))
-          (multiple-value-bind (marker-position contains-marker)
-              (gethash marker-name markers)
-            (declare (type (or null fixnum) marker-position))
-            (declare (type T                contains-marker))
-            (the fixnum
-              (if contains-marker
-                marker-position
-                (let ((return-position position))
-                  (declare (type fixnum return-position))
-                  (move-to 0)
-                  (loop while character do
-                    (case character
-                      (#\|
-                        (advance)
-                        (when (char= character marker-name)
-                          (advance)
-                          (set-marker marker-name position)
-                          (return
-                            (prog1 position
-                              (setf position return-position)))))
-                      (otherwise
-                        (advance)))
-                    finally
-                      (error "No marker with the name ~s could be found."
-                        marker-name))))))))
+  (when (plusp (length code))
+    (let ((position  0)
+          (character (char code 0))
+          
+          (chain     (make-hash-table :test #'eql))
+          (pointer   0)
+          (markers   (make-hash-table :test #'eql)))
+      (declare (type fixnum                           position))
+      (declare (type (or null character)              character))
+      (declare (type (hash-table-of integer Cell)     chain))
+      (declare (type integer                          pointer))
+      (declare (type (hash-table-of character fixnum) markers))
       
-      (loop do
-        (cond
-          ((null character)
-            (loop-finish))
-          
-          ;; Initialize instance at the pointer.
-          ((char= character #\_)
-            (setf (current-cell) (make-cell))
-            (advance))
-          
-          ;; Move the memory pointer up the chain.
-          ((char= character #\^)
-            (decf pointer)
-            (advance))
-          
-          ;; Move the memory pointer down the chain.
-          ((char= character #\v)
-            (incf pointer)
-            (advance))
-          
-          ;; Set the current instance type to character.
-          ((char= character #\c)
-            (check-if-initialized)
-            (setf (cell-type (current-cell)) :character)
-            (advance))
-          
-          ;; Set the current instance type to integer.
-          ((char= character #\i)
-            (check-if-initialized)
-            (setf (cell-type (current-cell)) :integer)
-            (advance))
-          
-          ;; Set the current instance value to the following character.
-          ((char= character #\{)
-            (check-if-initialized)
-            (advance)
-            (setf (cell-value (current-cell))
-                  (char-code character))
-            (advance))
-          
-          ;; Set a marker using the next character as its name.
-          ((char= character #\|)
-            (advance)
-            (let ((marker-name character))
-              (declare (type character marker-name))
+      (labels
+          ((advance ()
+            "Moves the POSITION cursor to the next character in the CODE,
+             updates the current CHARACTER, and returns no value."
+            (setf character
+              (when (< position (1- (length code)))
+                (char code (incf position))))
+            (values))
+           
+           (move-to (new-position)
+            "Moves the POSITION cursor to the NEW-POSITION, updates the
+             current CHARACTER, and returns no value."
+            (declare (type fixnum new-position))
+            (setf position  new-position)
+            (setf character (char code position))
+            (values))
+           
+           
+           (current-cell ()
+            "Returns the cell (instance) under the memory POINTER."
+            (the (or null Cell) (gethash pointer chain)))
+           
+           ((setf current-cell) (new-cell)
+            "Sets the cell under the memory POINTER to the NEW-CELL, and
+             returns the NEW-CELL."
+            (declare (type Cell new-cell))
+            (setf (gethash pointer chain) new-cell)
+            (the Cell (gethash pointer chain)))
+           
+           (check-if-initialized ()
+            "Checks whether the current instance is selected, throwing an
+             error if not, otherwise returning no value."
+            (unless (gethash pointer chain)
+              (error "The instance at the index ~d is not initialized."
+                pointer))
+            (values))
+           
+           
+           (set-marker (marker-name marker-position)
+            "Associates the MARKER-NAME with the MARKER-POSITION in the
+             CODE, overwriting any extant entry with such a name, and
+             returning no value."
+            (declare (type character marker-name))
+            (declare (type fixnum    marker-position))
+            (setf (gethash marker-name markers) marker-position)
+            (values))
+           
+           (get-marker-position (marker-name)
+            "Returns the position in the CODE designating the start of the
+             body of the marker with the MARKER-NAME.
+             ---
+             If no MARKER-NAME association exists yet, the respective
+             declaration is searched starting from the beginning of the
+             CODE, and, if found, an association is established ere its
+             returning. If no marker with this identifier can be detected,
+             an error is signaled."
+            (declare (type character marker-name))
+            (multiple-value-bind (marker-position contains-marker)
+                (gethash marker-name markers)
+              (declare (type (or null fixnum) marker-position))
+              (declare (type T                contains-marker))
+              (the fixnum
+                (if contains-marker
+                  marker-position
+                  (let ((return-position position))
+                    (declare (type fixnum return-position))
+                    (move-to 0)
+                    (loop while character do
+                      (case character
+                        (#\|
+                          (advance)
+                          (when (char= character marker-name)
+                            (advance)
+                            (set-marker marker-name position)
+                            (return
+                              (prog1 position
+                                (setf position return-position)))))
+                        (otherwise
+                          (advance)))
+                      finally
+                        (error "No marker with the name ~s could be found."
+                          marker-name))))))))
+        
+        (loop do
+          (cond
+            ((null character)
+              (loop-finish))
+            
+            ;; Initialize instance at the pointer.
+            ((char= character #\_)
+              (setf (current-cell) (make-cell))
+              (advance))
+            
+            ;; Move the memory pointer up the chain.
+            ((char= character #\^)
+              (decf pointer)
+              (advance))
+            
+            ;; Move the memory pointer down the chain.
+            ((char= character #\v)
+              (incf pointer)
+              (advance))
+            
+            ;; Set the current instance type to character.
+            ((char= character #\c)
+              (check-if-initialized)
+              (setf (cell-type (current-cell)) :character)
+              (advance))
+            
+            ;; Set the current instance type to integer.
+            ((char= character #\i)
+              (check-if-initialized)
+              (setf (cell-type (current-cell)) :integer)
+              (advance))
+            
+            ;; Set the current instance value to the following character.
+            ((char= character #\{)
+              (check-if-initialized)
               (advance)
-              (set-marker marker-name position)))
-          
-          ;; Jump to the marker identified by next character.
-          ((char= character #\})
-            (advance)
-            (let ((marker-name character))
-              (declare (type character marker-name))
-              (declare (ignorable      marker-name))
-              (cond
-                ((cell-is-nonzero (current-cell))
-                  (move-to (get-marker-position marker-name)))
-                (T
-                  (advance)))))
-          
-          ;; Display the current instance value.
-          ((char= character #\-)
-            (check-if-initialized)
-            (cell-display (current-cell) T)
-            (advance))
-          
-          ;; Retrieve user input and store it in the current instance.
-          ((char= character #\#)
-            (check-if-initialized)
-            (format T "~&Please input a character: ")
-            (let ((input (read-char)))
-              (declare (type character input))
-              (clear-input)
               (setf (cell-value (current-cell))
-                    (char-code input)))
-            (advance))
-          
-          ;; Ignore any other character as comment.
-          (T
-            (advance))))))
+                    (char-code character))
+              (advance))
+            
+            ;; Set a marker using the next character as its name.
+            ((char= character #\|)
+              (advance)
+              (let ((marker-name character))
+                (declare (type character marker-name))
+                (advance)
+                (set-marker marker-name position)))
+            
+            ;; Jump to the marker identified by next character.
+            ((char= character #\})
+              (advance)
+              (let ((marker-name character))
+                (declare (type character marker-name))
+                (declare (ignorable      marker-name))
+                (cond
+                  ((cell-is-nonzero (current-cell))
+                    (move-to (get-marker-position marker-name)))
+                  (T
+                    (advance)))))
+            
+            ;; Display the current instance value.
+            ((char= character #\-)
+              (check-if-initialized)
+              (cell-display (current-cell) T)
+              (advance))
+            
+            ;; Retrieve user input and store it in the current instance.
+            ((char= character #\#)
+              (check-if-initialized)
+              (format T "~&Please input a character: ")
+              (let ((input (read-char)))
+                (declare (type character input))
+                (clear-input)
+                (setf (cell-value (current-cell))
+                      (char-code input)))
+              (advance))
+            
+            ;; Ignore any other character as comment.
+            (T
+              (advance)))))))
   (values))
 
 
