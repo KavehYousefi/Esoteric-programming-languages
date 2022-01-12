@@ -11,7 +11,8 @@
 
 (deftype stack-of (&optional (element-type T))
   "The ``stack-of'' type defines a list-based stack of zero or more
-   elements, each of which conforms to the ELEMENT-TYPE."
+   elements, each of which conforms to the ELEMENT-TYPE, with the same
+   defaulting to the comprehensive type ``T''."
   (let ((predicate (gensym)))
     (declare (type symbol predicate))
     (setf (symbol-function predicate)
