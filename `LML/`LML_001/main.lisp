@@ -60,7 +60,8 @@
              returns no value."
             (setf character
               (when (< position (1- (length code)))
-                (char code (incf position))))))
+                (char code (incf position))))
+            (values)))
         
         (loop do
           (case character
@@ -142,7 +143,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Prompts the user for his name and print the message "Hi " followed by
+;; Prompt the user for his name and print the message "Hi " followed by
 ;; the induced input.
 (interpret-LML
   "
