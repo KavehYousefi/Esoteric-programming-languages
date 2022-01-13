@@ -568,13 +568,14 @@
       (declare (type (integer 0 *) column))
       (flet ((append-character (character)
               "Writes the CHARACTER to the DESTINATION, taking heed not
-               to trespass the GRID-WIDTH."
+               to trespass the GRID-WIDTH, and returns no value."
               (declare (type character character))
               (when (>= column grid-width)
                 (terpri destination)
                 (setf column 0))
               (write-char character destination)
-              (incf column)))
+              (incf column)
+              (values)))
         (loop
           with last-char-code of-type fixnum    =      0
           for  character      of-type character across text
@@ -592,7 +593,6 @@
               (T
                 NIL)))
         (append-character #\.)
-        ;(terpri destination)
         (setf last-char-code character-code))))
     (the string
       (with-output-to-string (output)
