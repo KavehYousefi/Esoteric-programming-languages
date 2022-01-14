@@ -367,6 +367,90 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of Deadfish-to-JR converter.                  -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun get-deadfish-command-for (instruction-set character)
+  "Returns the ``deadfish-command'' associated in the INSTRUCTION-SET
+   with the CHARACTER."
+  (declare (type deadfish-instruction-set instruction-set))
+  (declare (type character                character))
+  (the deadfish-command
+    (case instruction-set
+      (:standard
+        (case character
+          (#\i                       :increment)
+          (#\d                       :decrement)
+          (#\s                       :square)
+          (#\o                       :output)
+          ((#\Newline #\Space #\Tab) :whitespace)
+          (otherwise                 :unknown)))
+      (:XKCD
+        (case character
+          (#\x                       :increment)
+          (#\d                       :decrement)
+          (#\k                       :square)
+          (#\c                       :output)
+          ((#\Newline #\Space #\Tab) :whitespace)
+          (otherwise                 :unknown)))
+      (otherwise
+        (error "Invalid instruction set: ~s." instruction-set)))))
+
+;;; -------------------------------------------------------
+
+(defun convert-Deadfish-to-JR (deadfish-code
+                               &key (destination     T)
+                                    (instruction-set :standard)
+                                    (output-format   :numeric))
+  "Converts the piece of DEADFISH-CODE, stated using the
+   INSTRUCTION-SET, to the equivalent JR code, and prints the result to
+   the DESTINATION."
+  (declare (type string                   deadfish-code))
+  (declare (type destination              destination))
+  (declare (type deadfish-instruction-set instruction-set))
+  (declare (type output-format            output-format))
+  
+  (if destination
+    (loop
+      for token    of-type character across deadfish-code
+      and position of-type fixnum    from   0 by 1
+      do
+      (case (get-deadfish-command-for instruction-set token)
+        (:increment
+          (write-char #\] destination))
+        
+        (:decrement
+          (write-char #\[ destination))
+        
+        (:square
+          (write-char #\; destination))
+        
+        (:output
+          (case output-format
+            (:numeric   (write-char #\. destination))
+            (:character (write-char #\, destination))
+            (otherwise  (error "Invalid output format: ~s."
+                          output-format))))
+        
+        (:whitespace
+          (write-char token destination))
+        
+        (otherwise
+          (error "Invalid character in the Deadfish code at ~
+                  position ~d: ~s."
+            position token))))
+    
+    (the string
+      (with-output-to-string (output)
+        (declare (type string-stream output))
+        (convert-Deadfish-to-JR deadfish-code
+          :destination     output
+          :instruction-set instruction-set
+          :output-format   output-format)))))
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Test cases.                                                  -- ;;
@@ -405,3 +489,31 @@
 ;;; -------------------------------------------------------
 
 (execute-JR-shell (make-interpreter))
+
+;;; -------------------------------------------------------
+
+;; Print to the standard output the JR code
+;;   ]];;;.
+(convert-Deadfish-to-JR "iissso")
+
+;;; -------------------------------------------------------
+
+;; Print to the standard output the JR code
+;;   ]];;;,
+;; Note that the desinent JR command produced states the character print
+;; operation "," in lieu of the Deadfish equivalent "." --- a corollary
+;; of specifying the ``:output-format :character'' option.
+(convert-Deadfish-to-JR "iissso" :output-format :character)
+
+;;; -------------------------------------------------------
+
+;; Print to the standard output the JR code
+;;   ]];;;.
+(convert-Deadfish-to-JR "xxkkkc" :instruction-set :XKCD)
+
+;;; -------------------------------------------------------
+
+;; Executes the equivalent JR code
+;;   ]];;;.
+(interpret-JR (make-interpreter)
+  (convert-Deadfish-to-JR "iissso" :destination NIL))
