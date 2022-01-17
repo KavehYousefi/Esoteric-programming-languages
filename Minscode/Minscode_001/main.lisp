@@ -67,7 +67,35 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun interpret-Minscode (code)
-  "Interprets the piece of Miscode CODE and returns no value."
+  "Interprets the piece of Miscode CODE and returns no value.
+   ---
+   In order to assay the equipoise of opening and closing brackets ---
+   parentheses '(...)' in the case of the conditional ('if') statement
+   and braces '{...}' as twains partaking of the iterative facility ---,
+   two stacks are deployed:
+     - The stack ``loops'' reacts to the encounter of an opening brace
+       '{' by pushing the position immediately following it to the top,
+       if the iteration condition is satisfied. In doing so, the most
+       recent loop attains the focus of the program. Upon processing a
+       closing brace '}', the continuation condition is indagated and,
+       if still holding, the internally managed instruction pointer,
+       called ``position'' in this implementation, relocates to the
+       loop's body start location. A failure to satisfy this predicate
+       designates the executing loop as terminated, popping it from the
+       ``loops'' stack; if another element remains in this data
+       structure, it is ordained as the new active loop.
+     - The stack ``conditionsals'' analogously registers the occurrences
+       of opening parenthesis '(' in the case of execution condition's
+       fulfilment, albeit in this circumstance the memorized position
+       describes an act of arbitrariness, because no return to the
+       remembered location is necessary for the one-time execution of
+       the 'if' statement. The processing of a closing parenthesis ')'
+       requires the existence of at least one element in the
+       ``conditionals'' stack. If confirmed, this top element is popped
+       and the potential successor designated as the new active 'if'
+       block. Advancing to a closing parenthesis with an empty stack
+       bewrays an error in the Minscode program, the etyology of which
+       must be a missing opening parenthesis."
   (declare (type string code))
   (when (plusp (length code))
     (let ((position  0)
@@ -80,12 +108,8 @@
             (register-C        0)
             (condition-c       NIL)
             (current-register :A)
-            
-            ;; List of fixnums, each the position of a loop body start.
             (loops            NIL)
-            ;; LIst of fixnums, each the position of an "if".
-            (conditionals     NIL)
-            )
+            (conditionals     NIL))
         (declare (type integer          register-A))
         (declare (type integer          register-B))
         (declare (type integer          register-C))
@@ -309,8 +333,13 @@
                         (parse-integer input)))
                 (advance))
               
+              ;; Skip whitespaces.
+              ((#\Space #\Newline)
+                (advance))
+              
               (otherwise
-                (advance))))))))
+                (error "Unexpected character ~s at position ~d."
+                  character position))))))))
     (values))
 
 
@@ -442,8 +471,7 @@
 
 ;; Example for a tautology, that is, an ascertainment that the condition
 ;; register "c" is true. This program prints the value of the register
-;; "A", albeit, retaining the state of the condition register "c" being
-;; true.
+;; "A", retaining the state of the condition register "c" being true.
 (interpret-Minscode
   "A+++
    !
@@ -454,7 +482,7 @@
 
 ;; Example for a contradiction, that is, an ascertainment that the
 ;; condition register "c" is false. This program does not print the
-;; value of the register "A", albeit, it is temporarily set to true, as
+;; value of the register "A", albeit it is temporarily set to true, as
 ;; by passing through the "!(!)" its value is ensured to be rendered
 ;; false.
 (interpret-Minscode
@@ -468,7 +496,7 @@
 ;; Example for a contradiction, that is, an ascertainment that the
 ;; condition register "c" is false. This program does not print the
 ;; value of the register "A", passing its false state through the "!(!)"
-;; gate.
+;; gate unmodified.
 (interpret-Minscode
   "A+++
    !(!)
