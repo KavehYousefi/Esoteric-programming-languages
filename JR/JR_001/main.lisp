@@ -480,7 +480,7 @@
 ;; Demonstrates the computational peculiarity of the underlying
 ;; "Deadfish" heritage, which for the values -1 and 256 simulates an
 ;; overflow by setting the accumulator --- or, in the case of JR, the
-;; current cell, to zero. The Deadfish equivalent comprises:
+;; current cell --- to zero. The Deadfish equivalent comprises:
 ;;   iissso
 ;; The output should be:
 ;;   0
