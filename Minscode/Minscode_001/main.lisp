@@ -202,9 +202,7 @@
                 (otherwise
                   (error "Invalid current register: ~s."
                     current-register)))
-              (values))
-             
-            )
+              (values)))
           
           (loop do
             (case character
@@ -317,10 +315,8 @@
               
               ;; Output current register value.
               (#\,
-                
-                (write #\Space :stream T :escape NIL)
-                
                 (write (current-register-value) :stream T :escape NIL)
+                (write #\Space :stream T :escape NIL)
                 (advance))
               
               ;; Prompt user for number to store into current register.
@@ -337,6 +333,7 @@
               ((#\Space #\Newline)
                 (advance))
               
+              ;; Invalid characters incite an error.
               (otherwise
                 (error "Unexpected character ~s at position ~d."
                   character position))))))))
