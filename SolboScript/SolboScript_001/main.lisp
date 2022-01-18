@@ -975,6 +975,127 @@
 ;; embrace paravaunt the traversal of the node hierarchy and the
 ;; processing of its nodes.
 ;; 
+;; The stringency of justice inflicts us as the amenities enjoyed in the
+;; singular ``Node'' class extort a costage in disaccommodation tholed
+;; when traversing the node network. A proven, extensible solution to
+;; reacting in response to distinguishable node subclasses is exercised
+;; by means of the "visitor" design pattern. The same's basic tenet
+;; prescribes a single method, adjusted to our context as
+;;   
+;;   visitNode (node : Node)
+;; 
+;; and transliterated into the Common Lisp syntax as
+;;   
+;;   visit-node ((interpreter Interpreter) (node <NODE-SUBCLASS>))
+;; 
+;; Without the encroaching Procrustean administration, generic function
+;; implementations would assume the guise typified in the following
+;; selection:
+;;   
+;;   visit-node ((interpreter Interpreter) (node Program-Node))
+;;   
+;;   visit-node ((interpreter Interpreter) (node Print-Letter-Node))
+;;   
+;;   visit-node ((interpreter Interpreter) (node Loop-Until-Node))
+;;   
+;;   ...
+;; 
+;; The amorphous nature inhabiting the comprehensive ``Node'' type,
+;; barring the diorisms of contingent specializations, encumbers this
+;; pattern with indiscriminate attendance:
+;;   
+;;   visit-node ((interpreter Interpreter) (node Node))
+;; 
+;; The visitor pattern's haecceity, its respondency to different node
+;; types, suffers obliteration. A soteriological warkloom, however,
+;; exists in Common Lisp that deems the predicament soluble: Generic
+;; functions in Common Lisp dispatch on two possible specificiations,
+;; the one enumerated already with class identities, the second realized
+;; in the ``eql'' predicate. The general pattern assumes:
+;;   
+;;   my-method (... (argument (eql <OBJECT-TO-DISPATCH-ON>)) ...)
+;; 
+;; Our ``Node'' class' slot ``type'' exhibits an equivalency to the
+;; identity propagated usually by classes; dispatchment on this datum
+;; avails us with an equipollence commensurate to the class hierarchy's
+;; lost potential, concretized:
+;;   
+;;   visit-node ((interpreter Interpreter)
+;;               (node-type   (eql <NODE-TYPE-KEYWORD>))
+;;               (node        Node))
+;; 
+;; It would be a thing of tenability to require each invocation of
+;; ``visit-node'' to assume such a signature --- yet, this advenient
+;; imposition may be obviated. The adminicular function
+;;   
+;;   dispatch-node ((interpreter Interpreter)
+;;                  (node-type   (eql <NODE-TYPE-KEYWORD>))
+;;                  (node        Node))
+;; 
+;; is ordained with the main operative functionality, superseding
+;; ``visit-node'' in this duty; for instance:
+;;   
+;;   dispatch-node ((interpreter Interpreter)
+;;                  (node-type   :program)
+;;                  (node        Node))
+;;   
+;;   dispatch-node ((interpreter Interpreter)
+;;                  (node-type   :print-letter)
+;;                  (node        Node))
+;;   
+;;   dispatch-node ((interpreter Interpreter)
+;;                  (node-type   :loop-until)
+;;                  (node        Node))
+;; 
+;; While being laden both with application logic and the recognition of
+;; diorisms in the ``node-type'', the invocation ``visit-node'' remains
+;; the official interface operation:
+;;   
+;;   visit-node ((interpreter Interpreter)
+;;               (node        Node))
+;; 
+;; ``dispatch-node'' never experiences direct usage, as visible in the
+;; code excerpt
+;;   
+;;   (defmethod dispatch-node ((interpreter Interpreter)
+;;                             (node-type   (eql :program))
+;;                             (node        Node))
+;;     (declare (type Interpreter interpreter))
+;;     (declare (type keyword     node-type))
+;;     (declare (ignore           node-type))
+;;     (declare (type Node        node))
+;;     (let ((statements (node-attribute node :statements)))
+;;       (declare (type (list-of Node) statements))
+;;       (dolist (statement statements)
+;;         (declare (type Node statement))
+;;         (visit-node interpreter statement)))
+;;     (values))
+;; 
+;; Please heed the invocation of ``visit-node'', applying itself to the
+;; dissemination of the control by furcation. Its implementation amounts
+;; to
+;; 
+;;   (defmethod visit-node ((interpreter Interpreter) (node Node))
+;;     (declare (type Interpreter interpreter))
+;;     (declare (type Node        node))
+;;     (let ((node-type (node-type node)))
+;;       (declare (type keyword node-type))
+;;       (dispatch-node interpreter node-type node)))
+;; 
+;; Contemplation redes the inquiry into the reasonability of the
+;; ``visit-node'' as a generic function instead of a completely
+;; sufficient and more efficient usual function, in the form of
+;;   
+;;   (defun visit-node (interpreter node)
+;;     (declare (type Interpreter interpreter))
+;;     (declare (type Node        node))
+;;     (let ((node-type (node-type node)))
+;;       (declare (type keyword node-type))
+;;       (dispatch-node interpreter node-type node)))
+;; 
+;; A sense of adherence to the visitor pattern in this context inclines
+;; towards the interface style and thus the more elaborate solution.
+;; 
 ;; == VARIABLES: A HASH TABLE OF NAMES AND INTEGERS ==
 ;; By nature of its duties, the interpreter is assigned the maintenance
 ;; of a program's variables. A meager degree of intricacy designates the
@@ -2044,6 +2165,40 @@
 
 ;;; -------------------------------------------------------
 
+(defun interpreter-variable-with-name (interpreter name)
+  "Returns the integeer value of the variable associated with the NAME
+   in the INTERPRETER, signaling an error of the type
+   ``Undefined-Variable-Error'' upon failure to locate the identifier."
+  (declare (type Interpreter interpreter))
+  (declare (type string      name))
+  (with-slots (variables) interpreter
+    (declare (type (hash-table-of string integer) variables))
+    (multiple-value-bind (variable-value contains-variable)
+        (gethash name variables)
+      (declare (type (or null integer) variable-value))
+      (declare (type T                 contains-variable))
+      (the integer
+        (if contains-variable
+          variable-value
+          (throw-undefined-variable-error name))))))
+
+;;; -------------------------------------------------------
+
+(defun (setf interpreter-variable-with-name) (new-value interpreter name)
+  "Sets the value of the variable registered with the NAME at the
+   INTERPRETER to the NEW-VALUE, or, if no such entity exists, creates
+   and stores a new association of the variable NAME with this value,
+   in both cases returning the modified INTERPRETER."
+  (declare (type integer     new-value))
+  (declare (type Interpreter interpreter))
+  (declare (type string      name))
+  (with-slots (variables) interpreter
+    (declare (type (hash-table-of string integer) variables))
+    (setf (gethash name variables) new-value))
+  (the Interpreter interpreter))
+
+;;; -------------------------------------------------------
+
 (defgeneric visit-node (interpreter node)
   (:documentation
     "Visits the NODE using the INTERPRETER, returning a value
@@ -2096,33 +2251,6 @@
       (declare (type Node statement))
       (visit-node interpreter statement)))
   (values))
-
-;;; -------------------------------------------------------
-
-(defun interpreter-variable-with-name (interpreter name)
-  (declare (type Interpreter interpreter))
-  (declare (type string      name))
-  (with-slots (variables) interpreter
-    (declare (type (hash-table-of string integer) variables))
-    (multiple-value-bind (variable-value contains-variable)
-        (gethash name variables)
-      (declare (type (or null integer) variable-value))
-      (declare (type T                 contains-variable))
-      (the integer
-        (if contains-variable
-          variable-value
-          (throw-undefined-variable-error name))))))
-
-;;; -------------------------------------------------------
-
-(defun (setf interpreter-variable-with-name) (new-value interpreter name)
-  (declare (type integer     new-value))
-  (declare (type Interpreter interpreter))
-  (declare (type string      name))
-  (with-slots (variables) interpreter
-    (declare (type (hash-table-of string integer) variables))
-    (setf (gethash name variables) new-value))
-  (the Interpreter interpreter))
 
 ;;; -------------------------------------------------------
 
