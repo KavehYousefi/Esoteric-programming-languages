@@ -10,9 +10,9 @@
 ;;   {-Y...+X}
 ;; 
 ;; == ENSURING THE CONDITION STATE ==
-;; If optating to ascertain a particular state of the condition register
-;; "c", a custom logic gate can be implemented founded upon negation and
-;; conditional execution:
+;; If optating to ascertain a particular state of the conditional
+;; register "c", a custom logic gate can be implemented founded upon
+;; negation and conditional execution:
 ;; 
 ;; Ensure true (tautology):
 ;;   (!)!
@@ -246,20 +246,20 @@
                 (setf current-register :C)
                 (advance))
               
-              ;; Negate condition register c.
+              ;; Negate conditional register c.
               (#\!
                 (setf condition-c (not condition-c))
                 (advance))
               
-              ;; Execute "(...)" if condition register c is true.
+              ;; Execute "(...)" if conditional register c is true.
               (#\(
                 (cond
-                  ;; Condition register "c" is true?
+                  ;; Conditional register "c" is true?
                   ;; => Execute parenthesized commands.
                   (condition-c
                     (push position conditionals)
                     (advance))
-                  ;; Condition register "c" is false?
+                  ;; conditional register "c" is false?
                   ;; => Skip past closing ")".
                   (T
                     (advance)
@@ -280,16 +280,16 @@
                     (error "Unmatched closing ')' at position ~d."
                       position))))
               
-              ;; Loop while condition register c is false.
+              ;; Loop while conditional register c is false.
               (#\{
                 (cond
-                  ;; Condition register "c" is true?
+                  ;; Conditional register "c" is true?
                   ;; => Skip past closing "}".
                   (condition-c
                     (advance)
                     (move-to (find-terminator #\{ #\}))
                     (advance))
-                  ;; Condition register "c" is false?
+                  ;; Conditional register "c" is false?
                   ;; => Execute until true.
                   (T
                     (advance)
@@ -396,7 +396,7 @@
 ;;     o After being printed, "C" copies its value to "B", thus setting
 ;;       F(n-1) = F(n) for the next iteration, while simultaneously
 ;;       resetting "C" to zero.
-;;     o The condition register "c" must be negated to permit a next
+;;     o The conditional register "c" must be negated to permit a next
 ;;       repetition of the loop.
 ;; 
 ;; Pseudocode representation of the process:
@@ -444,7 +444,7 @@
 ;;; -------------------------------------------------------
 
 ;; Counts the register "A" from three down to zero, but only prints
-;; its value if the condition register "c" contains true, which occurs
+;; its value if the conditional register "c" contains true, which occurs
 ;; at the end of the encompassing loop's last iteration.
 (interpret-Minscode
   "A+++
@@ -457,8 +457,8 @@
 
 ;; Example for a tautology, that is, an ascertainment that the condition
 ;; register "c" is true. This program prints the value of the register
-;; "A", albeit, at the start of the program, the condition register "c"
-;; was false.
+;; "A", albeit, at the start of the program, the conditional register
+;; "c" was false.
 (interpret-Minscode
   "A+++
    (!)!
@@ -468,7 +468,7 @@
 
 ;; Example for a tautology, that is, an ascertainment that the condition
 ;; register "c" is true. This program prints the value of the register
-;; "A", retaining the state of the condition register "c" being true.
+;; "A", retaining the state of the conditional register "c" being true.
 (interpret-Minscode
   "A+++
    !
@@ -478,7 +478,7 @@
 ;;; -------------------------------------------------------
 
 ;; Example for a contradiction, that is, an ascertainment that the
-;; condition register "c" is false. This program does not print the
+;; conditional register "c" is false. This program does not print the
 ;; value of the register "A", albeit it is temporarily set to true, as
 ;; by passing through the "!(!)" its value is ensured to be rendered
 ;; false.
@@ -491,7 +491,7 @@
 ;;; -------------------------------------------------------
 
 ;; Example for a contradiction, that is, an ascertainment that the
-;; condition register "c" is false. This program does not print the
+;; conditional register "c" is false. This program does not print the
 ;; value of the register "A", passing its false state through the "!(!)"
 ;; gate unmodified.
 (interpret-Minscode
