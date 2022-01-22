@@ -2166,7 +2166,7 @@
 ;;; -------------------------------------------------------
 
 (defun interpreter-variable-with-name (interpreter name)
-  "Returns the integeer value of the variable associated with the NAME
+  "Returns the integer value of the variable associated with the NAME
    in the INTERPRETER, signaling an error of the type
    ``Undefined-Variable-Error'' upon failure to locate the identifier."
   (declare (type Interpreter interpreter))
