@@ -65,29 +65,35 @@
              ``boolean'' value of ``T'' on confirmation, and otherwise
              ``NIL''."
             (declare (type character expected-character))
-            (and (plusp position)
-                 (char= (char code (1- position))
-                        expected-character)))
+            (the boolean
+              (not (null
+                (and (plusp position)
+                     (char= (char code (1- position))
+                            expected-character))))))
            
            (command-character-p (subject)
             "Checks whether the SUBJECT constitutes a command character
              name, returning a ``boolean'' value of ``T'' on
              confirmation, and ``NIL'' otherwise."
             (declare (type character subject))
-            (not (null (find subject "QWOP" :test #'char=))))
+            (the boolean
+              (not (null (find subject "QWOP" :test #'char=)))))
            
            (find-next-command ()
             "Starting at the current POSITION, searches forward for the
              next command identifier, relocating the POSITION cursor to
-             its stead."
+             its stead, and returning no value."
             (loop
               until (or (null character)
                         (command-character-p character))
               do
                 (memorize-current-character)
-                (advance)))
+                (advance))
+            (values))
             
            (memorize-current-character ()
+            "Stores the current CHARACTER in the COPY-OF-CODE in the
+             case of a quine request and returns no value."
             (when character
               (vector-push-extend character copy-of-code))
             (values)))
