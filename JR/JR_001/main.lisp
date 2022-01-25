@@ -25,9 +25,9 @@
 ;;; -------------------------------------------------------
 
 (deftype output-format ()
-  "The ``output-format'' type defines the data type of output format
-   applied during the conversion of Deadfish source program to the more
-   potent JR language.
+  "The ``output-format'' type defines the options for the printing
+   commands applicable during the conversion of Deadfish source program
+   to the more potent JR language.
    ---
    Deadfish restricts its output to the numeric value of its
    accumulator, while JR grants the programmer the choice betwixt the
@@ -122,9 +122,9 @@
      as a means for shifting the current output upwards and outside of
      the visible area. Of course, the predicament of adjustable
      terminals, or windows, cannot be meliorated by this static console
-     attribute, and programmer is encumbered with the onus of invoking
-     the '`standard-console-clearing-scroll-size'' function if optating
-     an adjustment to such external influences."))
+     attribute, and the programmer is encumbered with the onus of
+     invoking the ``standard-console-clearing-scroll-size'' function if
+     optating an adjustment to such external influences."))
 
 ;;; -------------------------------------------------------
 
@@ -232,8 +232,8 @@
 ;;; -------------------------------------------------------
 
 (defun interpreter-process-commands (interpreter code)
-  "Interprets the piece of JR CODE, using the CONSOLE as an output
-   conduit for printing operations, and returns no value."
+  "Interprets the piece of JR CODE using the INTERPRETER and returns no
+   value."
   (declare (type Interpreter interpreter))
   (declare (type string      code))
   
@@ -343,7 +343,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun interpret-JR (interpreter code)
-  "Interprets the piece of JR CODE using the INTERPRETER, and returns
+  "Interprets the piece of JR CODE using the INTERPRETER and returns
    no value."
   (declare (type Interpreter interpreter))
   (declare (type string      code))
@@ -353,7 +353,7 @@
 ;;; -------------------------------------------------------
 
 (defun execute-JR-shell (interpreter)
-  "Executes the JR shell using the INTERPRETER, and returns no value."
+  "Executes the JR shell using the INTERPRETER and returns no value."
   (declare (type Interpreter interpreter))
   (loop do
     (format T "~&>> ")
@@ -488,6 +488,9 @@
 
 ;;; -------------------------------------------------------
 
+;; Execute the JR shell. Please note that such a program does not offer
+;; the contingency for interruption, that is, the shell must be closed
+;; by manual termination of some kind.
 (execute-JR-shell (make-interpreter))
 
 ;;; -------------------------------------------------------
