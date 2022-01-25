@@ -791,7 +791,7 @@
 ;;   Value range | Members
 ;;   ------------+----------------------
 ;;    1--26      | lowercase letters a--z
-;;    2--52      | uppercase letters A--Z
+;;    27--52     | uppercase letters A--Z
 ;;    53--62     | digits 0--9
 ;;    63--65     | whitespaces
 ;;    66--74     | punctuation marks
@@ -1461,12 +1461,15 @@
     :initarg       :type
     :initform      NIL
     :type          (or null keyword)
-    :documentation "")
+    :documentation "The node type, identifying the modeled SolboScript
+                    language facility.")
    (attributes
     :initarg       :attributes
     :initform      (make-hash-table :test #'eq)
     :type          (hash-table-of keyword T)
-    :documentation ""))
+    :documentation "A collection of attributes which describe the
+                    represented language construct and depend on the
+                    particular TYPE."))
   (:documentation
     "The ``Node'' class represents a node, tree, or subtree in an
      abstract syntax tree (AST), identified regarding its nature by a
