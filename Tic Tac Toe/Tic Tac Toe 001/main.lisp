@@ -367,6 +367,8 @@
 ;; introducing as an adscititious member the no-operation command "NOP".
 ;; 
 ;; == OVERVIEW ==
+;; The following table shall describe the nine available instructions,
+;; in juxtaposition, if possible, to their brainfuck equivalents.
 ;; 
 ;;   Square | bf command | Effect
 ;;   -------+------------+---------------------------------------------
