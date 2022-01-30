@@ -291,7 +291,7 @@
 ;; implicated by the restriction to ten cells, vindicates its
 ;; manifestation as a static array holding integer elements. The index
 ;; into the current cell, the designation of which is attended to by a
-;; pointer, is accomplished by a simple integer datum in the congurent
+;; pointer, is accomplished by a simple integer datum in the congruent
 ;; range [0, 9].
 ;; 
 ;; --------------------------------------------------------------------
