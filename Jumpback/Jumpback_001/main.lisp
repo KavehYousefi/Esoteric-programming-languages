@@ -695,7 +695,7 @@
 (defun (setf memory-at) (source interpreter destination)
   "Sets the value residing in the INTERPRETER's memory at the
    DESTINATION address to the SOURCE, and returns the modified
-   INTERPETER."
+   INTERPRETER."
   (declare (type integer     source))
   (declare (type Interpreter interpreter))
   (declare (type Operand     destination))
