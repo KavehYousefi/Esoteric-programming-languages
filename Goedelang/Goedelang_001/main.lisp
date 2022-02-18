@@ -1185,10 +1185,14 @@
 ;;; -------------------------------------------------------
 
 (defparameter *brainfuck-encoding-table-v1*
-  (make-hash-table :test #'eql))
+  (make-hash-table :test #'eql)
+  "The encoding table which assigns to each brainfuck instruction the
+   corresponding Goedelang command according to the version 1.")
 
 (defparameter *brainfuck-encoding-table-v2*
-  (make-hash-table :test #'eql))
+  (make-hash-table :test #'eql)
+  "The encoding table which assigns to each brainfuck instruction the
+   corresponding Goedelang command according to the version 2.")
 
 ;;; -------------------------------------------------------
 
@@ -1282,13 +1286,13 @@
 
 (defparameter *brainfuck-decoding-table-v1*
   (make-hash-table :test #'eq)
-  "The decoding table which assign to each brainfuck instruction the
-   equivalent Goedelang command according the latter's version 1.")
+  "The decoding table which assigns to each Goedelang version 1 command
+   the equivalent brainfuck instruction.")
 
 (defparameter *brainfuck-decoding-table-v2*
   (make-hash-table :test #'eq)
-  "The decoding table which assign to each brainfuck instruction the
-   equivalent Goedelang command according the latter's version 2.")
+  "The decoding table which assigns to each Goedelang version 1 command
+   the equivalent brainfuck instruction.")
 
 ;;; -------------------------------------------------------
 
