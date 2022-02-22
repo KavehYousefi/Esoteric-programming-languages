@@ -320,7 +320,7 @@
 (defun lexer-read-newlines (lexer)
   "Starting at the LEXER's current position, reads zero or more adjacent
    newline characters and returns a new ``Token'' of the ``:newline''
-   type containing the tally of consumed newliines."
+   type containing the tally of consumed newlines."
   (declare (type Lexer lexer))
   (with-slots (character) lexer
     (declare (type (or null character) character))
