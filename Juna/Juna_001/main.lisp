@@ -73,8 +73,8 @@
 
 (defstruct (Token
   (:constructor make-token (type value)))
-  "A token avails as significant portion's encapsulation, produced by a
-   prior analyzation of a piece of Juna source code."
+  "A token avails as a significant portion's encapsulation, produced by
+   a prior analyzation of a piece of Juna source code."
   (type  (error "No token type specified.") :type keyword)
   (value NIL                                :type T))
 
@@ -264,10 +264,14 @@
 
 (defstruct (Operand
   (:constructor make-operand (type value)))
-  "The ``Operand'' class an object in the agency of an instruction's
-   arguments."
-  (type  (error "No operand type specified.") :type operand-type)
-  (value NIL                                  :type T))
+  "The ``Operand'' class models an object in the agency of an
+   instruction's argument."
+  (type
+    (error "No operand type specified.")
+    :type operand-type)
+  (value
+    0
+    :type non-negative-integer))
 
 
 
@@ -275,61 +279,54 @@
 ;; -- Implementation of class "Instruction".                       -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defstruct (Instruction
-  (:constructor create-instruction (line-number)))
-  "An ``Instruction'' reifies the concept of an operation."
-  (type        :undefined :type instruction-type)
-  ;; The instruction's line number "L".
-  (line-number 0          :type non-negative-integer)
-  ;; Index (address) of the register "a".
-  (register-a  NIL        :type (or null Operand))
-  ;; Index (address) of the register "b".
-  (register-b  NIL        :type (or null Operand))
-  ;; Target line number "Y".
-  (line-Y      NIL        :type (or null Operand))
-  ;; Target line number "N".
-  (line-N      NIL        :type (or null Operand)))
+(defun determine-instruction-type (register-a register-b)
+  "Determine and return the instruction type from combination of
+   registers REGISTER-A and register-B."
+  (declare (type Operand register-a))
+  (declare (type Operand register-b))
+  (the instruction-type
+    (cond
+      ;; L a b Y N
+      ((and (eq (operand-type register-a) :integer)
+            (eq (operand-type register-b) :integer))
+        :nand)
+      ;; L . b Y N
+      ((and (eq (operand-type register-a) :dot)
+            (eq (operand-type register-b) :integer))
+        :input)
+      ;; L a . Y N
+      ((and (eq (operand-type register-a) :integer)
+            (eq (operand-type register-b) :dot))
+        :output)
+      ;; L . . Y N => Invalid.
+      (T
+        (error "Invalid register combination: a = ~s, b = ~s."
+          register-a register-b)))))
 
 ;;; -------------------------------------------------------
 
-(defun make-instruction (&key (line-number 0)
-                              (register-a  (make-operand :integer 0))
-                              (register-b  (make-operand :integer 0))
-                              (line-Y      (make-operand :dot     0))
-                              (line-N      (make-operand :dot     0)))
-  "Creates and returns a new ``Instruction'' located at the LINE-NUMBER,
-   operating on the operands REGISTER-A, REGISTER-B, LINE-Y, and LINE-N."
-  (declare (type non-negative-integer line-number))
-  (declare (type Operand              register-a))
-  (declare (type Operand              register-b))
-  (declare (type Operand              line-Y))
-  (declare (type Operand              line-N))
-  (let ((instruction (create-instruction line-number)))
-    (declare (type Instruction instruction))
-    (setf (instruction-register-a instruction) register-a)
-    (setf (instruction-register-b instruction) register-b)
-    (setf (instruction-line-Y     instruction) line-Y)
-    (setf (instruction-line-N     instruction) line-N)
-    ;; Determine the instruction type from register-a and register-b.
-    (setf (instruction-type instruction)
-      (cond
-        ;; L a b Y N
-        ((and (eq (operand-type register-a) :integer)
-              (eq (operand-type register-b) :integer))
-          :nand)
-        ;; L . b Y N
-        ((and (eq (operand-type register-a) :dot)
-              (eq (operand-type register-b) :integer))
-          :input)
-        ;; L a . Y N
-        ((and (eq (operand-type register-a) :integer)
-              (eq (operand-type register-b) :dot))
-          :output)
-        ;; L . . Y N => Invalid.
-        (T
-          (error "Invalid operands: a = ~s, b = ~s."
-            register-a register-b))))
-    (the Instruction instruction)))
+(defstruct (Instruction
+  (:constructor make-instruction
+      (&key
+         line-number
+         register-a
+         register-b
+         line-Y
+         line-N
+       &aux
+         (type (determine-instruction-type register-a register-b)))))
+  "An ``Instruction'' reifies the concept of an operation."
+  (type        :undefined                :type instruction-type)
+  ;; The instruction's line number "L".
+  (line-number 0                         :type non-negative-integer)
+  ;; Index (address) of the register "a".
+  (register-a  (make-operand :integer 0) :type Operand)
+  ;; Index (address) of the register "b".
+  (register-b  (make-operand :integer 0) :type Operand)
+  ;; Target line number "Y".
+  (line-Y      (make-operand :dot     0) :type Operand)
+  ;; Target line number "N".
+  (line-N      (make-operand :dot     0) :type Operand))
 
 ;;; -------------------------------------------------------
 
@@ -442,7 +439,7 @@
             (parser-eat parser :integer)))
         (:dot
           (prog1
-            (make-operand :dot (token-value current-token))
+            (make-operand :dot 0)
             (parser-eat parser :dot)))
         (otherwise
           (error "Invalid operand token: ~s." current-token))))))
@@ -550,7 +547,7 @@
    (instruction-pointer
     :initarg       :instruction-pointer
     :initform      0
-    :type          fixnum
+    :type          non-negative-integer
     :documentation "The CURRENT-INSTRUCTION's line number.")
    (current-instruction
     :initarg       :current-instruction
@@ -594,7 +591,7 @@
       interpreter
     (declare (type (hash-table-of non-negative-integer Instruction)
                    instructions))
-    (declare (type fixnum                instruction-pointer))
+    (declare (type non-negative-integer  instruction-pointer))
     (declare (type (or null Instruction) current-instruction))
     (multiple-value-bind (entry-instruction contains-entry-index-p)
         (gethash 0 instructions)
@@ -611,10 +608,12 @@
 ;;; -------------------------------------------------------
 
 (defun interpreter-jump-to (interpreter target)
+  "Relocates the INTERPRETER's instruction pointer to the instruction
+   designated by the TARGET, and returns the modified INTERPRETER."
   (declare (type Interpreter interpreter))
   (declare (type Operand     target))
   (with-slots (instruction-pointer current-instruction) interpreter
-    (declare (type fixnum                instruction-pointer))
+    (declare (type non-negative-integer  instruction-pointer))
     (declare (type (or null Instruction) current-instruction))
     (case (operand-type target)
       (:integer
@@ -624,10 +623,8 @@
                 (slot-value interpreter 'instructions)))
         (unless current-instruction
           (error "No line with number ~d found." instruction-pointer)))
-      
       (:dot
         (setf current-instruction NIL))
-      
       (otherwise
         (error "Invalid jump to operand: ~s." target))))
   (the Interpreter interpreter))
@@ -640,11 +637,9 @@
   (declare (type Interpreter interpreter))
   ;; Locate the instruction pointer to the line with the index 0.
   (interpreter-find-entry-point interpreter)
-  
   (with-slots (current-instruction registers) interpreter
     (declare (type (or null Instruction) current-instruction))
     (declare (type (hash-table-of non-negative-integer bit) registers))
-    
     (labels
         ((register-at (operand)
           "Returns the value of the register addressed by the OPERAND."
@@ -774,8 +769,7 @@
   14 0 . 15 15
   15 0 . 16 16
   16 1 . . .
-  "
-  )
+  ")
 
 ;;; -------------------------------------------------------
 
