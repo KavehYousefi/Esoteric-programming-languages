@@ -498,16 +498,16 @@
 ;;     Accepts a Goedel number representation of a Goedelang program and
 ;;     a language version specifier, executing the thus specified code.
 ;;   
-;;   compile-goedelang-instructions
+;;   compile-Goedelang-instructions
 ;;     Accepts a list of Goedelang instructions in any version of the
 ;;     language and returns the Goedel number corresponding to a program
 ;;     in the same. The thus produced integer value defines compatible
 ;;     input for the INTERPRET-GOEDELANG function.
 ;;   
-;;   extract-goedelang-instructions
-;;     Accepts Goedel number representation of a Goedelan program, and
-;;     returns a vector of the contained Goedelang instructions. This
-;;     function may be reckoned as the opposite of the operation
+;;   extract-Goedelang-instructions
+;;     Accepts a Goedel number representation of a Goedelang program,
+;;     and returns a vector of the contained Goedelang instructions.
+;;     This function may be reckoned as the opposite of the operation
 ;;     COMPILE-GOEDELANG-INSTRUCTIONS, as it disassembles a Goedel
 ;;     number (or Goedelang program) into its constituents, while the
 ;;     latter assembles these instructions into a single datum.
@@ -761,7 +761,7 @@
 
 ;;; -------------------------------------------------------
 
-(defun extract-goedelang-instructions (goedel-number)
+(defun extract-Goedelang-instructions (goedel-number)
   "Extracts and returns from the GOEDEL-NUMBER a vector containing the
    numeric Goedelang instruction codes."
   (declare (type goedel-number goedel-number))
@@ -789,7 +789,7 @@
    version 1, and returns no value."
   (declare (type goedel-number code))
   
-  (let ((instructions (extract-goedelang-instructions code)))
+  (let ((instructions (extract-Goedelang-instructions code)))
     (declare (type (simple-array instruction (*)) instructions))
     
     (when (plusp (length instructions))
@@ -943,7 +943,7 @@
    version 2, formerly known as version 1.1, and returns no value."
   (declare (type goedel-number code))
   
-  (let ((instructions (extract-goedelang-instructions code)))
+  (let ((instructions (extract-Goedelang-instructions code)))
     (declare (type (simple-array instruction *) instructions))
     
     (when (plusp (length instructions))
@@ -1151,7 +1151,7 @@
 
 ;;; -------------------------------------------------------
 
-(defun compile-goedelang-instructions (symbol-codes)
+(defun compile-Goedelang-instructions (symbol-codes)
   "Encodes the list of non-negative integer SYMBOL-CODES as a
    Goedel number, thus producing a Goedelang program, and returns the
    same."
@@ -1248,7 +1248,7 @@
   (declare (type string                                source))
   (declare (type (hash-table-of character instruction) encoding-table))
   (the goedel-number
-    (compile-goedelang-instructions
+    (compile-Goedelang-instructions
       (compute-symbol-codes source encoding-table))))
 
 ;;; -------------------------------------------------------
@@ -1332,7 +1332,7 @@
   (declare (type goedel-number goedel-number))
   (declare (type destination   destination))
   (if destination
-    (let ((goedelang-instructions (extract-goedelang-instructions goedel-number)))
+    (let ((goedelang-instructions (extract-Goedelang-instructions goedel-number)))
       (declare (type (simple-array instruction (*))
                      goedelang-instructions))
       (loop
@@ -1399,13 +1399,13 @@
 ;; to the brainfuck instruction set through input and output of direct
 ;; numeric values in lieu of ASCII characters and their codes.
 (interpret-Goedelang
-  (compile-goedelang-instructions (list 11 13 9 14 9)))
+  (compile-Goedelang-instructions (list 11 13 9 14 9)))
 
 ;;; -------------------------------------------------------
 
 ;; Returns the Goedelang program (Goedel number)
 ;;   59250896327476337572570276385712371250000000000.
-(convert-brainfuck-to-goedelang ",.[,.]" :goedelang-version :2.0)
+(convert-brainfuck-to-Goedelang ",.[,.]" :goedelang-version :2.0)
 
 ;;; -------------------------------------------------------
 
@@ -1417,7 +1417,7 @@
 ;; the brainfuck program
 ;;   ,.[,.]
 (convert-Goedelang-to-brainfuck
-  (convert-brainfuck-to-goedelang ",.[,.]" :goedelang-version :2.0)
+  (convert-brainfuck-to-Goedelang ",.[,.]" :goedelang-version :2.0)
   :goedelang-version :2.0)
 
 ;;; -------------------------------------------------------
@@ -1428,7 +1428,7 @@
 ;;   59250896327476337572570276385712371250000000000
 ;; and interprets the latter.
 (interpret-Goedelang
-  (convert-brainfuck-to-goedelang ",.[,.]" :goedelang-version :2.0)
+  (convert-brainfuck-to-Goedelang ",.[,.]" :goedelang-version :2.0)
   :language-version :2.0)
 
 ;;; -------------------------------------------------------
@@ -1455,7 +1455,7 @@
 ;;   524809000
 ;; and executes the thus produced code.
 (interpret-Goedelang
-  (convert-brainfuck-to-goedelang
+  (convert-brainfuck-to-Goedelang
     "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++."
     :goedelang-version :1.0)
   :language-version :1.0)
