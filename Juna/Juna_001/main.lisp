@@ -280,8 +280,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun determine-instruction-type (register-a register-b)
-  "Determine and return the instruction type from combination of
-   registers REGISTER-A and register-B."
+  "Determines and returns the instruction type from the combination of
+   the registers REGISTER-A and REGISTER-B."
   (declare (type Operand register-a))
   (declare (type Operand register-b))
   (the instruction-type
@@ -333,13 +333,21 @@
 (defmethod print-object ((instruction Instruction) stream)
   (declare (type Instruction instruction))
   (declare (type destination stream))
-  (format stream "~&Instruction(~a, ~d ~a ~a ~a ~a)"
-    (instruction-type        instruction)
-    (instruction-line-number instruction)
-    (operand-value (instruction-register-a instruction))
-    (operand-value (instruction-register-b instruction))
-    (operand-value (instruction-line-Y     instruction))
-    (operand-value (instruction-line-N     instruction))))
+  (flet ((get-operand-value (operand)
+          (declare (type Operand operand))
+          (the (or non-negative-integer character)
+            (case (operand-type operand)
+              (:integer  (operand-value operand))
+              (:dot      #\.)
+              (otherwise (error "Invalid operand type for ~s."
+                           operand))))))
+    (format stream "~&Instruction(~a, ~d ~a ~a ~a ~a)"
+      (instruction-type        instruction)
+      (instruction-line-number instruction)
+      (get-operand-value (instruction-register-a instruction))
+      (get-operand-value (instruction-register-b instruction))
+      (get-operand-value (instruction-line-Y     instruction))
+      (get-operand-value (instruction-line-N     instruction)))))
 
 
 
@@ -584,8 +592,8 @@
 
 (defun interpreter-find-entry-point (interpreter)
   "Attempts to set the INTERPRETER's instruction pointer to the first
-   instruction line, index with zero, returning on success the modified
-   INTERPRETER, otherwise signaling an error."
+   instruction line, indexed with zero, returning on success the
+   modified INTERPRETER, otherwise signaling an error."
   (declare (type Interpreter interpreter))
   (with-slots (instructions instruction-pointer current-instruction)
       interpreter
@@ -724,6 +732,77 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of additional operations.                     -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun generate-Juna-output-code (text &key (destination T))
+  "Generates the source code of a Juna program capable of reproducing
+   the TEXT's ASCII characters in a binary form molded into a series of
+   consecutive registers, writing the result to the DESTINATION, and
+   returning ``NIL'' is the DESTINATION is non-``NIL'', otherwise
+   producing a new string containing the produced code.
+   ---
+   The generated Juna program, if consigned to the operations of the
+   ``interpret-Juna'' function, will print the TEXT's binary
+   representation by reproduction of the dispatched registers, starting
+   with the most significant bit of the first character, and proceeding
+   likewise to the least significant bit of the desinent."
+  (declare (type string      text))
+  (declare (type destination destination))
+  (cond
+    (destination
+      (format destination "~&0 1 1 1 1")
+      ;; The BIT-COUNT, storing the total number of bits comprising the
+      ;; TEXT, and in an assident manner, the tally of registers to
+      ;; accommodate, constitutes a requisite for detecting the last
+      ;; instruction, which shall not jump to another line, but instead
+      ;; terminate the Jaune program. Please see also the local loop
+      ;; variable BIT-NUMBER.
+      (let ((bit-count (* (length text) 8)))
+        (declare (type non-negative-integer bit-count))
+        (loop
+          for  character   of-type character across text
+          ;; The current instruction's line number.
+          with line-number of-type non-negative-integer = 1
+          ;; The number of hitherto processed bits. This piece of data
+          ;; is required in order to discriminate whether the next
+          ;; instruction will be a jump to a next register or the end
+          ;; of the Juna program.
+          with bit-number  of-type non-negative-integer = 1
+          ;; Write the current CHARACTER code's bits into the register.
+          do
+            (loop
+              ;; The index of the bit in the character's ASCII code,
+              ;; enumerated from the least significant to the most
+              ;; significant position.
+              for bit-position of-type (integer -1 8) from 7 downto 0
+              ;; If no more bits of the TEXT follow, the coming
+              ;; instruction will jump to a halt instead of a line.
+              for has-more-bits-p
+                of-type boolean
+                =       (not (null (< bit-number bit-count)))
+              do
+                (format destination "~&~d ~d . ~d ~d"
+                  line-number
+                  (ldb (byte 1 bit-position)
+                       (char-code character))
+                  (if has-more-bits-p
+                    (1+ line-number)
+                    ".")
+                  (if has-more-bits-p
+                    (1+ line-number)
+                    "."))
+                (incf line-number)
+                (incf bit-number)))))
+    (T
+      (the string
+        (with-output-to-string (output)
+          (declare (type string-stream output))
+          (generate-Juna-output-code text :destination output))))))
+
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Test cases.                                                  -- ;;
@@ -747,7 +826,7 @@
 ;; encodes the decimal integer 72, corresponding to the ASCII character
 ;; "H", while the trailing compartment
 ;;   01101001
-;; is tantamount a decimal 105, the character code of "i"; thus:
+;; is tantamount to a decimal 105, the character code of "i"; thus:
 ;;   01001000 01101001
 ;;       H       i
 (interpret-Juna
@@ -778,5 +857,23 @@
   "# Store the user input bit in register 0, and jump to line 1.
    0 . 0 1 1
    
-   # Print the bit stored in register 0, and returns to line 0.
+   # Print the bit stored in register 0, and return to line 0.
    1 0 . 0 0")
+
+;;; -------------------------------------------------------
+
+(generate-Juna-output-code "Hi")
+
+;;; -------------------------------------------------------
+
+(generate-Juna-output-code "Hi" :destination NIL)
+
+;;; -------------------------------------------------------
+
+(interpret-Juna
+  (generate-Juna-output-code "Hi" :destination NIL))
+
+;;; -------------------------------------------------------
+
+(interpret-Juna
+  (generate-Juna-output-code "Hello, World!" :destination NIL))
