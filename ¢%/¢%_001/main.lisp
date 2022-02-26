@@ -257,7 +257,7 @@
       (declare (type (or null instruction) instruction))
       (declare (type (stack-of integer)    stack))
       
-      (labels
+      (flet
           ((advance ()
             "Moves the instruction pointer IP to the next instruction,
              if possible, updates the current INSTRUCTION, and returns
@@ -274,7 +274,7 @@
             (setf instruction
               (when (plusp ip)
                 (aref instructions (decf ip))))
-             (values)))
+            (values)))
         
         (loop while instruction do
           (case instruction
