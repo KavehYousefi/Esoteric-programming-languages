@@ -1,5 +1,5 @@
 ﻿;; Author: Kaveh Yousefi
-;; Date:   2022-02-28
+;; Date:   2022-03-02
 ;; 
 ;; Sources:
 ;;   -> "https://esolangs.org/wiki/Bedroom"
@@ -56,7 +56,7 @@
 ;;; -------------------------------------------------------
 
 (deftype direction ()
-  "The ``direction'' type enumerates the recognized direction in which
+  "The ``direction'' type enumerates the recognized directions in which
    the program flow may proceed."
   '(member :down :left :right :up))
 
@@ -71,7 +71,7 @@
    error if no correspondence can be established."
   (declare (type character character))
   (the instruction
-    (ecase character
+    (case character
       (#\UPWARDS_BLACK_ARROW    :move-ip-up)
       (#\DOWNWARDS_BLACK_ARROW  :move-ip-down)
       (#\LEFTWARDS_BLACK_ARROW  :move-ip-left)
@@ -97,12 +97,11 @@
   (declare (type direction direction))
   (the direction
     (case direction
-      (:down :right)
-      (:left :down)
-      (:right :up)
-      (:up    :left)
-      (otherwise
-        (error "Invalid direction: ~s." direction)))))
+      (:down     :right)
+      (:left     :down)
+      (:right    :up)
+      (:up       :left)
+      (otherwise (error "Invalid direction: ~s." direction)))))
 
 
 
@@ -120,17 +119,16 @@
 ;;; -------------------------------------------------------
 
 (defun location-move (location direction)
-  "Moves the LOCATION one step into the DIRECTION, and returns the
+  "Moves the LOCATION one step into the DIRECTION and returns the
    modified LOCATION."
   (declare (type Location  location))
   (declare (type direction direction))
   (case direction
-    (:left  (decf (location-x location)))
-    (:up    (decf (location-y location)))
-    (:right (incf (location-x location)))
-    (:down  (incf (location-y location)))
-    (otherwise
-      (error "Invalid direction for location: ~s." direction)))
+    (:left     (decf (location-x location)))
+    (:up       (decf (location-y location)))
+    (:right    (incf (location-x location)))
+    (:down     (incf (location-y location)))
+    (otherwise (error "Invalid direction for location: ~s." direction)))
   (the Location location))
 
 
@@ -163,7 +161,7 @@
 ;;; -------------------------------------------------------
 
 (defun grid-at (grid location)
-  "Returns the instruction at the GRID, residing at the LOCATION."
+  "Returns the instruction at the GRID residing at the LOCATION."
   (declare (type Grid     grid))
   (declare (type Location location))
   (the instruction
@@ -226,7 +224,6 @@
       (loop for character of-type character across code do
         (when (zerop height)
           (setf height 1))
-        
         (case character
           (#\Newline
             (setf (location-x location) 0)
@@ -322,7 +319,7 @@
         
         (flet
             ((advance ()
-              "Move the instruction pointer IP one step in the current
+              "Moves the instruction pointer IP one step in the current
                IP-DIRECTION, if possible, updates the current
                INSTRUCTION, and returns no value."
               (location-move ip ip-direction)
