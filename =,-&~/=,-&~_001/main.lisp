@@ -31,7 +31,7 @@
 
 (deftype stack-of (&optional (element-type T))
   "The ``stack-of'' type defines a list-based stack of zero or more
-   elements, each of which conforms to the ELEMENT-TYPE, default to
+   elements, each of which conforms to the ELEMENT-TYPE, defaulting to
    ``T''."
   `(list-of ,element-type))
 
@@ -207,7 +207,7 @@
              
              (skip-whitespaces ()
               "Starting at the current POSITION, skips zero or more
-               whitespaces, and returns no value."
+               whitespaces and returns no value."
               (loop
                 while (and character (whitespace-character-p character))
                 do    (advance))
@@ -256,7 +256,7 @@
 
 (defun process-instructions (instructions)
   "Processes the =,-&~ INSTRUCTIONS and returns no value."
-  (declare (type (simple-array instruction (*)) instructions))
+  (declare (type (vector instruction *) instructions))
   
   (when (plusp (length instructions))
     (let ((ip          0)
@@ -287,7 +287,6 @@
         
         (loop do
           (case instruction
-            
             ((NIL)
               (loop-finish))
             
@@ -465,7 +464,7 @@
 ;;; -------------------------------------------------------
 
 (flet ((add-instruction (instruction token)
-        "Associates the the =,-&~ INSTRUCTION with the TOKEN in the
+        "Associates the =,-&~ INSTRUCTION with the TOKEN in the
          +TOKEN-TABLE+ and returns no value."
         (declare (type instruction instruction))
         (declare (type string      token))
@@ -609,7 +608,7 @@
 ;;   :add-1            ;;        (1 N c c*)
 ;;   :swap             ;;        (N 1 c c*)
 ;;   :minus            ;; N=N-1  (N c c*)
-;;   :jump-backward
+;;   :jump-back
 ;; 
 ;; The produced and interpreted =,-&~ code constitutes
 ;;   =∽ - -~ ≡- - ≡ ≡ ≡ = = ≡= - = -~ ≡- - ≡ ≡ ≡ = = ≡= -~ -- =- -~ ≡- -
