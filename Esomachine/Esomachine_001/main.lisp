@@ -367,7 +367,7 @@
   (:include     Operand)
   (:constructor make-boolean-operand (state &aux (type :boolean))))
   "The ``Boolean-Operand'' models a Boolean value represented by the
-   integer 0 and 1 and usually connoted with a cell's lock state, that
+   integers 0 and 1 and usually connoted with a cell's lock state, that
    is, appertaining to the Esomachine instruction 'INDEX_STATE'."
   (state 0 :type bit))
 
@@ -377,7 +377,7 @@
   (:include Operand)
   (:constructor make-arithmetic-operand (operation
                                          &aux (type :arithmetic))))
-  "The ``Arithmetic-Operand'' models the arithmetic operations names
+  "The ``Arithmetic-Operand'' models the arithmetic operation names
    involved in the Esomachine instruction 'HANDS_CONLANG'."
   (operation NIL :type (or null keyword)))
 
@@ -410,7 +410,7 @@
   (:include     Numeric-Operand)
   (:constructor make-literal-operand (value &aux (type :literal))))
   "The ``Literal-Operand'' represents a literal integer in the role of
-   a number of address."
+   a number or an address."
   (value 0 :type integer))
 
 ;;; -------------------------------------------------------
@@ -511,7 +511,8 @@
     (if (token-type-p current-token expected-token-type)
       (setf current-token (lexer-get-next-token lexer))
       (error "Expected a token of the type ~s, but encountered ~s."
-        expected-token-type current-token))))
+        expected-token-type current-token)))
+  (the Parser parser))
 
 ;;; -------------------------------------------------------
 
@@ -1156,8 +1157,8 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Sets the value of the cell at index 1 to the ASCII code of the
-;; character "A" and prints the cell value as an ASCII character.
+;; Set the value of the cell at index 1 to the ASCII code of the
+;; character "A" and print the cell value as an ASCII character.
 (interpret-Esomachine
   "INDEX_STATE[1, 1]
    INDEX_SET[1, 65]
@@ -1165,8 +1166,8 @@
 
 ;;; -------------------------------------------------------
 
-;; Sets the accumulator to the ASCII code of the character "A", writes
-;; the accumulator value to the cell at index 1, and prints this cell's
+;; Set the accumulator to the ASCII code of the character "A", write
+;; the accumulator value to the cell at index 1, and print this cell's
 ;; value as an ASCII character.
 (interpret-Esomachine
   "HANDS_CONLANG[+, 65]
@@ -1249,7 +1250,7 @@
    INDEX_STATE[1, 13]
    INDEX_SET[13, 72]   \\ Set cell[13] to ASCII code of the character 'H'.
    HANDS_CONLANG[+, 13]
-   OUTPUT[HANDS]         \\ Line 28
+   OUTPUT[HANDS]       \\ Line 28
    HANDS_CONLANG[-, 1]
    HANDS_JUMP[POSITIVE, 28]")
 
