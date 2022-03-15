@@ -65,7 +65,7 @@
         (T
           (error "Invalid character '~c' detected in the bit string ~s."
             character bit-string))))
-    (the bit-vector
+    (the simple-bit-vector
       (coerce (nreverse digits) 'simple-bit-vector))))
 
 ;;; -------------------------------------------------------
@@ -86,10 +86,10 @@
            parses this binary portion as a decimal integer, updates the
            START-POSITION, and returns the parsed decimal value."
           (setf end-position (min (+ start-position 8) (length bits)))
-          (the (integer 0 *)
+          (the (unsigned-byte 8)
             (prog1
               (parse-integer
-                (format NIL "~8,0,0,'0@<~a~>"
+                (format NIL "~8,1,0,'0@<~a~>"
                   (with-output-to-string (digits)
                     (declare (type string-stream digits))
                     (loop
@@ -111,12 +111,12 @@
 ;;; -------------------------------------------------------
 
 (defun append-zero-bit (bits)
-  "Creates and returns a new ``bit-vector'' based upon the BITS,
+  "Creates and returns a new ``simple-bit-vector'' based upon the BITS,
    extended by a single zero-bit as its appendix.
    ---
    The BITS will not be modified."
   (declare (type bit-vector bits))
-  (the bit-vector (concatenate 'bit-vector bits #*0)))
+  (the simple-bit-vector (concatenate 'simple-bit-vector bits #*0)))
 
 ;;; -------------------------------------------------------
 
@@ -141,7 +141,7 @@
                      (= bit-2 0))
               0
               1))))
-    (the bit-vector
+    (the simple-bit-vector
       (coerce
         (loop
           for bit-index of-type fixnum from 0 below (length bits) by 2
@@ -149,7 +149,7 @@
             (logical-imply
               (bit bits bit-index)
               (bit bits (1+ bit-index))))
-        'bit-vector))))
+        'simple-bit-vector))))
 
 ;;; -------------------------------------------------------
 
@@ -162,7 +162,7 @@
    tabs, and newlines for the purpose of augmented readability."
   (declare (type string initial-state))
   (let ((state (parse-bit-string initial-state)))
-    (declare (type bit-vector))
+    (declare (type simple-bit-vector))
     (loop do
       (cond
         ;; First bit is zero?
@@ -178,7 +178,7 @@
         ;; => Set STATE to implication of its own bits.
         (T
           (setf state (implication-of-bits state)))))
-    (the bit-vector state)))
+    (the simple-bit-vector state)))
 
 
 
