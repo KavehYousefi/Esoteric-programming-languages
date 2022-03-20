@@ -88,7 +88,7 @@
 ;; ============
 ;; Instructions in BitShift entail solely niladic operations,
 ;; addressable by the cardinality of a group of bits, and restrained to
-;; the integer range [1, 7]. The command type enumerate as follows,
+;; the integer range [1, 7]. The command types enumerate as follows,
 ;; where each alternation, or group size, is juxtaposed with the
 ;; resulting effect.
 ;; 
