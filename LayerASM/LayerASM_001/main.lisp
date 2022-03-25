@@ -1179,7 +1179,7 @@
 ;;   
 ;;   [stackoverflow2012ieee754max]
 ;;   -> "https://stackoverflow.com/questions/10233444/max-float-represented-in-ieee-754"
-;;       o Maximum value of IEEE-754 single float: 3.4028235×10^{38}.
+;;       o Maximum value of IEEE-754 single float: 3.4028235*10^{38}.
 ;;       o In Common Lisp notation: 3.4028233E+38.
 ;;   
 ;;   [stackoverflow2013csignedbyte]
@@ -2742,7 +2742,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of auxillary functions.                       -- ;;
+;; -- Implementation of auxiliary functions.                       -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun make-byte-vector (&rest bytes)
