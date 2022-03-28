@@ -104,8 +104,10 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; One-time cat program.
 (interpret-DirectBrainFUCK ",.")
 
 ;;; -------------------------------------------------------
 
+;; One-time cat program using random access.
 (interpret-DirectBrainFUCK ">>,<<m3.")
