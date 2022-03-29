@@ -6,7 +6,7 @@
 ;;   -> "https://spinningnumbers.org/a/logic-nand-nor.html"
 ;;       o Describes the logical "nor" operator.
 ;;   -> "https://en.wikipedia.org/wiki/Logical_NOR"
-;;       o Describes the logical "nor", or "joint denial" operator.
+;;       o Describes the logical "nor", or "joint denial", operator.
 
 
 
