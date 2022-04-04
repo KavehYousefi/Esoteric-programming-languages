@@ -31,6 +31,16 @@
 ;; regarding their reading or writing, furcates into the various
 ;; discriminated effects.
 ;; 
+;; In addition to the aforementioned epiphenomena, each invocation
+;; supputates the sum of the {leftOperand} and the {rightOperand},
+;; storing the result in the {target}, following the formula:
+;;   
+;;   {leftOperand} + {rightOperand} = {target}
+;; 
+;; The {leftOperand} and {rightOperand}, if any of these are variables,
+;; will be read, while the {target}, always being such a placeholder,
+;; is subjected to a writing operation.
+;; 
 ;; == NONNEGATIVE INTEGERS ESTABLISH THE CURRENCY ==
 ;; The manifestation of data is restricted to the management of
 ;; nonnegative integer objects, either stated as literals, stored in
@@ -174,7 +184,11 @@
 ;; will be read, eventuating the particular causatum of this access
 ;; mode; its deployment as a {target}, on the other hand, refers to its
 ;; modification, the concomitant of that establishes the respective
-;; epiphenomon.
+;; epiphenomon. The concrete application of this form resolves to:
+;;   
+;;   {leftOperand} + {rightOperand} = {target}
+;; 
+;; Thus, the {target} receives the sum of its operands.
 ;; 
 ;; A summary perspective on the behaviors of the variable quadruple in
 ;; the context of reading and writing a member shall be adduced below:
