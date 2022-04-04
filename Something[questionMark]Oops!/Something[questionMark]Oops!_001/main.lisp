@@ -272,7 +272,7 @@
 ;;       gleaned in a vector.
 ;;   (3) The instruction vector is processed by the interpreter.
 ;; 
-;; == (1)  ==
+;; == (1) A PROGRAM CONSISTS OF LINES ==
 ;; Its stringency and simplicity vindicates the avoidance of a lexical
 ;; analyzer for the language, and compels the implementation to directly
 ;; operate on a line produced by splitting the source code at
@@ -286,7 +286,7 @@
 ;; the former the numeric datum, for the latter the identifier
 ;; character.
 ;; 
-;; == THE INTERPRETER CONSUMES THE INSTRUCTIONS ==
+;; == (3) THE INTERPRETER CONSUMES THE INSTRUCTIONS ==
 ;; The generated instruction vector's dependent, the interpreter itself
 ;; maintains a particular set of facilities, including an instruction
 ;; pointer as a reference to the currently processed statement and the
@@ -540,15 +540,16 @@
   (declare (type string code))
   (with-input-from-string (code-stream code)
     (declare (type string-stream code-stream))
-    (coerce
-      (loop
-        for line
-          of-type (or null string)
-          =       (read-line code-stream NIL)
-        while line
-        when (instruction-line-p line)
-          collect (parse-line line))
-      '(simple-array Instruction (*)))))
+    (the (simple-array Instruction (*))
+      (coerce
+        (loop
+          for line
+            of-type (or null string)
+            =       (read-line code-stream NIL)
+          while line
+          when (instruction-line-p line)
+            collect (parse-line line))
+        '(simple-array Instruction (*))))))
 
 
 
