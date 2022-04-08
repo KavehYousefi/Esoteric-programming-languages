@@ -285,7 +285,7 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Rectified version of the "Hello World" program.
+;; Print "Hello World".
 (interpret-Typespam "_c {H-{e-{l--{o-{ -{W-{o-{r-{l-{d-")
 
 ;;; -------------------------------------------------------
