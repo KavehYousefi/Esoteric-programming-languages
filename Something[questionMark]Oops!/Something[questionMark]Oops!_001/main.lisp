@@ -164,7 +164,7 @@
 ;; ============
 ;; The stringency applied to its design allots not imposition of
 ;; impotence upon the language's functional roster. Something?Oops!'s
-;; versatility comprehend in its potentials input and output
+;; versatility comprehends in its potentials input and output
 ;; intelligence, data storage by mediation of variables, as much as a
 ;; goto mechanism used to capacitate navigation across the instructions.
 ;; 
@@ -210,8 +210,8 @@
 ;;            | current line number.      | instruction corresponding
 ;;            |                           | to the new value.
 ;; 
-;; A visual correlation betwixt the function avails of language and the
-;; variables' agency shall be limned in the following table:
+;; A visual correlation betwixt the functional avails of the language
+;; and the variables' agency shall be limned in the following table:
 ;;   
 ;;   Functionality | Variable
 ;;   --------------+---------------------------------------------------
@@ -239,7 +239,7 @@
 ;; Lacunae in the Specification
 ;; ============================
 ;; The ascertainment of its virtues, the concinnity commorant in the
-;; persuit and achievement of both nexility and lucidity, does not
+;; pursuit and achievement of both nexility and lucidity, does not
 ;; disencumber Something?Oops!'s specification from a few blemishes
 ;; inflicting its patration; a selection thereof shall be subject to
 ;; further delineation.
