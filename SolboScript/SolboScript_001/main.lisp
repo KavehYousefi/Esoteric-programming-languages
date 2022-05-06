@@ -762,7 +762,7 @@
 ;; 
 ;; Lacunae in the Specification
 ;; ============================
-;; The SolboScript specification, however complete and comprehsible,
+;; The SolboScript specification, however complete and comprehensible,
 ;; is inflicted with a set of ambiguities, a selection thereof shall be
 ;; presented below.
 ;; 
@@ -789,7 +789,7 @@
 ;; table:
 ;;   
 ;;   Value range | Members
-;;   ------------+----------------------
+;;   ------------+-----------------------
 ;;    1--26      | lowercase letters a--z
 ;;    27--52     | uppercase letters A--Z
 ;;    53--62     | digits 0--9
