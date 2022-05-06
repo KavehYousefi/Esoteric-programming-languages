@@ -19,7 +19,7 @@
 ;; 
 ;; == VARIABLES ==
 ;; Two kinds of variables are accommodated introduction into utility:
-;; number and strings. A twofold application of regulation determines
+;; numbers and strings. A twofold application of regulation determines
 ;; their identifying features, the first being a nominal stringency,
 ;; reserving only Latin letters, digits, and the underscore character
 ;; as a name's constituents, with the incipient position restricted to
@@ -358,13 +358,18 @@
 ;; Modifies a numeric variable's value using an arithmetic operation.
 ;; 
 ;; Signature:
-;;   &:%outputVariable # operator rightOperand
-;;      **************   ******** ************
+;;   &:%leftOperand # operator rightOperand
+;;      ***********   ******** ************
 ;; 
 ;; Interface:
-;;   mathematicalOperation (outputVariable : variable,
+;;   mathematicalOperation (leftOperand : variable,
 ;;                          operator       : operator,
 ;;                          rightOperand   : number or variable) : void
+;; 
+;; Description:
+;;   Applies the {operator} using the {leftOperand} variable as the left
+;;   operand and the {rightOperand} as the right operand, storing the
+;;   result back into the {leftOperand}.
 ;;   
 ;;   Four options exist regarding the {operator}:
 ;;     
@@ -378,18 +383,13 @@
 ;;     ................................................................
 ;;      /       | Division.
 ;; 
-;; Description:
-;;   Applies the {operator} using the {outputVariable} as the left
-;;   operand and the {rightOperand} as the right operand, storing the
-;;   result back into the {outputVariable}.
-;; 
 ;; Side effects:
-;;   - The variable amenable to the identifier {outputVariable} will be
+;;   - The variable amenable to the identifier {leftOperand} will be
 ;;     modified.
 ;; 
 ;; Exceptional situations:
 ;;   - An error of the type "UndefinedVariable" is thrown if no numeric
-;;     variable amenable to the identifier {outputVariable} exists.
+;;     variable amenable to the identifier {leftOperand} exists.
 ;;   - An error of the type "IllegalArgument" is thrown if the
 ;;     {operator} does not designate a valid arithmetic operator.
 ;;   - An error of the type "UndefinedVariable" is thrown if the
@@ -439,8 +439,22 @@
 ;; 
 ;; Description:
 ;;   Using the standard input, queries the user either for a number or a
-;;   string, depending upon  the {inputType}, and stores the input in
+;;   string, depending upon the {inputType}, and stores the input in
 ;;   the variable amenable to the {variableName}.
+;;   
+;;   The {inputType} determines the kind of object expected when
+;;   prompting the user's input, with two options being defined:
+;;     
+;;     Input type | Description
+;;     -----------+----------------------------------------------------
+;;      #         | A numeric input, that is, a real-valued number, is
+;;                | expected. Its destination, designated by the
+;;                | {variableName}, must refer to a numeric variable.
+;;     ................................................................
+;;      @         | A string input, that is, a sequence of zero or more
+;;                | characters, is expected. Its destination,
+;;                | designated by the {variableName}, must refer to a
+;;                | string variable.
 ;; 
 ;; Side effects:
 ;;   - Optionally, a prompt text is printed to the standard output.
@@ -463,8 +477,8 @@
 ;;         produce a variable of the string type.
 ;; 
 ;; == CONDITIONAL ==
-;; Executes a series of statements if a variable matches a certain
-;; value.
+;; Executes a series of statements if a variable satisfies a specified
+;; predicate.
 ;; 
 ;; Syntax:
 ;;   ^: %variableName comparison testValue \ statement-1 \ ... \ statement-N
@@ -480,12 +494,13 @@
 ;; 
 ;; Description:
 ;;   Checks whether the variable identified by the {variableName}
-;;   contains a value equal to the {testValue}, on confirmation
-;;   executing in the order of their occurrences the zero or more
-;;   statements {statement-1} through {statement-N}.
+;;   satisfies the relationship defined by the {comparison} operator and
+;;   the {testValue}, executing on confirmation in the order of their
+;;   occurrences the zero or more statements {statement-1} through
+;;   {statement-N}.
 ;;   
 ;;   The {variableName} must designate any numeric or string variable.
-;;   The {testValue} must be a number, string, or another variable whose
+;;   The {testValue} must be a number or a variable of any kind, whose
 ;;   value juxtaposes with the content of the variable designated by the
 ;;   {variableName}.
 ;;   
@@ -495,13 +510,23 @@
 ;;     ---------+------------------------------------------------------
 ;;      =       | Is satisfied if the value of the variable with the
 ;;              | {variableName} is exactly equal to the {testValue}.
+;;              | String comparison is performed in a case-sensitive
+;;              | manner.
 ;;     ................................................................
 ;;      <       | Is satisfied if the value of the variable with the
 ;;              | {variableName} is strictly less than the {testValue}.
+;;              | String comparison is performed in a case-sensitive
+;;              | manner.
 ;;     ................................................................
 ;;      >       | Is satisfied if the value of the variable with the
 ;;              | {variableName} is strictly greater than the
 ;;              | {testValue}.
+;;              | String comparison is performed in a case-sensitive
+;;              | manner.
+;;   
+;;   The statements {statement-1} through {statement-N} must be a
+;;   sequence of zero or more arbitrary commands, executed if the
+;;   predicate applies.
 ;; 
 ;; Side effects:
 ;;   - If any of the conditional statements {statement-1} through
