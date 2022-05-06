@@ -231,15 +231,16 @@
 ;;   numericVariable         := "%" , identifier ;
 ;;   stringVariable          := "@" , identifier ;
 ;;   
-;;   number                := [ "+" | "-" ] , digit, { digit } ,
-;;                            [ "." , { digit } ] ;
-;;   string                := "[" , { character } , "]" ;
-;;   identifier            := letter , { letter | digit | underscore } ;
+;;   number                  := [ "+" | "-" ] , digit, { digit } ,
+;;                              [ "." , { digit } ] ;
+;;   string                  := "[" , { character } , "]" ;
+;;   identifier              := letter ,
+;;                              { letter | digit | underscore } ;
 ;;   
-;;   underscore            := "_" ;
-;;   letter                := "a" | ... | "z" | "A" | ... | "Z" ;
-;;   digit                 := "0" | "1" | "2" | "3" | "4"
-;;                         |  "5" | "6" | "7" | "8" | "9" ;
+;;   underscore              := "_" ;
+;;   letter                  := "a" | ... | "z" | "A" | ... | "Z" ;
+;;   digit                   := "0" | "1" | "2" | "3" | "4"
+;;                           |  "5" | "6" | "7" | "8" | "9" ;
 ;; 
 ;; 
 ;; Instructions
