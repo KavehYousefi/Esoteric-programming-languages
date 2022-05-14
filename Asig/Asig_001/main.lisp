@@ -2122,12 +2122,13 @@
     :initarg       :tree
     :initform      (error "Missing tree for the interpreter.")
     :type          Node
-    :documentation "")
+    :documentation "The abstract syntax tree (AST) to process.")
    (variables
     :initarg       :variables
     :initform      (make-hash-table :test #'equal)
     :type          (hash-table-of string Variable)
-    :documentation "[string] => [Variable]"))
+    :documentation "Maintains a list of variable names mapped to their
+                    respective ``Variable'' objects."))
   (:documentation
     "The ``Interpreter'' class fulfils the onus of traversing an
      abstract syntax tree (AST) in order to imbue the same with an
