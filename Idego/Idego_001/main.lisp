@@ -9,7 +9,7 @@
 ;;   Four operands: a b c d
 ;;     
 ;;     if a = "IN" then
-;;       cells[b] <- input
+;;       cells[b] <- getASCIICodeForCharacter(input)
 ;;     else if a = "OUT" then
 ;;       print asciiCharacterForCode(cells[b])
 ;;     else if a > 0 then
@@ -27,7 +27,7 @@
 ;;   Three operands: a b c
 ;;     
 ;;     if a = "IN" then
-;;       cells[b] <- input
+;;       cells[b] <- getASCIICodeForCharacter(input)
 ;;     else if a = "OUT" then
 ;;       print asciiCharacterForCode(cells[b])
 ;;     else if a > 0 then
@@ -45,7 +45,7 @@
 ;;   Two operands: a b
 ;;     
 ;;     if a = "IN" then
-;;       cells[b] <- input
+;;       cells[b] <- getASCIICodeForCharacter(input)
 ;;     else if a = "OUT" then
 ;;       print asciiCharacterForCode(cells[b])
 ;;     else if a > 0 then
@@ -808,22 +808,17 @@
 ;; 
 ;; Pseudocode, with line numbers as sinistral apostilles:
 ;;   
-;;   1 | cell[2] <- asciiCodeFor('0')   { cell[2] = 48.
-;;   2 | cell[3] <- asciiCodeFor('1')   { cell[3] = 49. }
-;;   3 | cell[1] <- get user input      { cell[1] must be either 48 or 49. }
-;;   4 | if cell[1] = 48, go to line 7  { Jump to print cell[2] = 0 on zero input. }
-;;   5 | print cell[1]                  { Print cell[3] = 1. }
-;;   6 | if cell[1] = 49, go to line 5  { Return to print cell[1] = 1. }
-;;   7 | print cell[1]                  { Prints cell[2] = 0 and terminates. }
+;;   1 | cell[1] <- get user input      { Input must be either '0' or '1'. }
+;;   2 | if cell[1] = 48, go to line 5  { Jump to print cell[1] = '0' on zero input. }
+;;   3 | print cell[1]                  { Print cell[1] = '1'. }
+;;   4 | if cell[1] = 49, go to line 3  { Return to print cell[1] = '1'. }
+;;   5 | print cell[1]                  { Print cell[1] = '0' and terminate. }
 (interpret-Idego
-  "48 2
-   49 3
-   
-   IN 1
-   0 1 7 48
-   OUT 3
-   0 1 5 49
-   OUT 2")
+  "IN 1
+   0 1 5 48
+   OUT 1
+   0 1 3 49
+   OUT 1")
 
 ;;; -------------------------------------------------------
 
