@@ -11,7 +11,7 @@
 ;;     if a = "IN" then
 ;;       cells[b] <- getASCIICodeForCharacter(input)
 ;;     else if a = "OUT" then
-;;       print asciiCharacterForCode(cells[b])
+;;       print getASCIICharacterForCode(cells[b])
 ;;     else if a > 0 then
 ;;       cells[b] <- cells[b] + a
 ;;     else
@@ -29,7 +29,7 @@
 ;;     if a = "IN" then
 ;;       cells[b] <- getASCIICodeForCharacter(input)
 ;;     else if a = "OUT" then
-;;       print asciiCharacterForCode(cells[b])
+;;       print getASCIICharacterForCode(cells[b])
 ;;     else if a > 0 then
 ;;       cells[b] <- cells[b] + a
 ;;     else
@@ -47,7 +47,7 @@
 ;;     if a = "IN" then
 ;;       cells[b] <- getASCIICodeForCharacter(input)
 ;;     else if a = "OUT" then
-;;       print asciiCharacterForCode(cells[b])
+;;       print getASCIICharacterForCode(cells[b])
 ;;     else if a > 0 then
 ;;       cells[b] <- cells[b] + a
 ;;     else
@@ -746,7 +746,7 @@
           (interpreter-advance-ip interpreter))
         
         (otherwise
-          (error "Invalid instruction: ~s at position ~d."
+          (error "Invalid instruction ~s at position ~d."
             current-instruction ip)))))
   
   (values))
