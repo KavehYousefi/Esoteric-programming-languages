@@ -141,10 +141,10 @@
    ---
    This interpreter employs an internally managed stacks of currently
    operating loops, designated by the euonym \"LOOPS\", which, upon each
-   encounter of an iteration start, receives at its top the position in the CODE
-   immediately following the detection's occasion --- the start of
-   loop's body. The repetition of the currently active loop resolves to
-   a relocation of the position cursor to the top LOOPS element, that
+   encounter of an iteration start, receives at its top the position in
+   the CODE immediately following the detection's occasion --- the start
+   of loop's body. The repetition of the currently active loop resolves
+   to a relocation of the position cursor to the top LOOPS element, that
    is, a return to the loop body beginning; a termination eventuates the
    element's removal. If further loops exist, the process is hence
    applied recursively."
@@ -165,9 +165,9 @@
         
         (labels
             ((advance ()
-              "Moves the POSITION cursor to the next character in the CODE,
-               if possible, updates the current CHARACTER, and returns no
-               value."
+              "Moves the POSITION cursor to the next character in the
+               CODE, if possible, updates the current CHARACTER, and
+               returns no value."
               (setf character
                 (when (array-in-bounds-p code (1+ position))
                   (char code (incf position))))
@@ -175,7 +175,8 @@
              
              (move-to (new-position)
               "Relocates the POSITION cursor to the NEW-POSITION in the
-               CODE, updates the current CHARACTER, and returns no value."
+               CODE, updates the current CHARACTER, and returns no
+               value."
               (declare (type fixnum new-position))
               (setf position new-position)
               (setf character
@@ -202,8 +203,8 @@
              
              (input-equals-ə-p ()
               "Checks whether the INPUT committed by the user equals the
-               sentinel value \"ə\", returning on confirmation a ``boolean''
-               value of ``T'', otherwise ``NIL''."
+               sentinel value \"ə\", returning on confirmation a
+               ``boolean'' value of ``T'', otherwise ``NIL''."
               (the boolean
                 (not (null (and input (string= input "ə")))))))
           
