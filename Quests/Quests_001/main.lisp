@@ -178,14 +178,14 @@
 ;; An expression of the language in the Extended Backus-Naur Form (EBNF)
 ;; shall be procured:
 ;;   
-;;   program    := [ command , { whitespaces , command } ] ;
-;;   command    := push | pop | increment | decrement | swap ;
-;;   expression := integer | string | command ;
-;;   push       := "p"   , "( , expression , ")" ;
-;;   pop        := "<"   , "(", expression , ")" ;
-;;   increment  := "inc" , "(", expression , ")" ;
-;;   decrement  := "dec" , "(", expression , "," , expression , ")" ;
-;;   swap       := "sw"  , "(" , ")" ;
+;;   program       := [ command , { whitespaces , command } ] ;
+;;   command       := push | pop | increment | decrement | swap ;
+;;   expression    := integer | string | command ;
+;;   push          := "p"   , "( , expression , ")" ;
+;;   pop           := "<"   , "(", expression , ")" ;
+;;   increment     := "inc" , "(", expression , ")" ;
+;;   decrement     := "dec" , "(", expression , "," , expression , ")" ;
+;;   swap          := "sw"  , "(" , ")" ;
 ;;   
 ;;   string        := textCharacter , { textCharacter } ;
 ;;   integer       := [ "+" | "-" ] , digit , { digit } ;
@@ -227,15 +227,40 @@
 ;;            | If {x} equals one (1), increments the Questa's bottom
 ;;            | element by one.
 ;;   ..................................................................
-;;   dec(x,y) | If {x} equals zero (0), moves the instruction pointer
-;;            | to the {y}-th command.
-;;            | If {x} equals one (1), and {y} equals zero, decrements
-;;            | the Questa's top element by one.
-;;            | If {x} equals one (1), and {y} does not equal zero,
-;;            | decrements the Questa's bottom element by one.
+;;   dec(x,y) | If {x} equals zero (0), and the Questa's top element
+;;            | equals zero (0), moves the instruction pointer to the
+;;            | {y}-th command. Please note that the instructions are
+;;            | enumerated starting with the index zero (0).
+;;            | If {x} equals zero (0), and the Questa's top element
+;;            | does not equal zero (0), decrements the Questa's top
+;;            | element by one (1).
+;;            | If {x} equals one (1), and the Questa's bottom element
+;;            | equals zero (0), moves the instruction pointer to the
+;;            | {y}-th command. Please note that the instructions are
+;;            | enumerated starting with the index zero (0).
+;;            | If {x} equals one (1), and the Questa's bottom element
+;;            | does not equal zero (0), decrements the Questa's bottom
+;;            | element by one (1).
 ;;   ..................................................................
 ;;   sw()     | Swaps the Questa's top and bottom elements.
 ;;            | This function represents the Questa SWAP operation.
+;; 
+;; == "DEC": DECREMENT OR GOTO ==
+;; The slightly convoluted operations of the "dec" command, which in its
+;; nature coalesces both an arithmetic deduction and a navigational
+;; moeity, shall be accompanied with the following pseudocode:
+;;   
+;;   if (x = 0) and (questa.first = 0) then
+;;     go to command at index y
+;;   else if (x = 0) and (questa.first != 0) then
+;;     decrement questa.first
+;;   else if (x = 1) and (questa.last = 0) then
+;;     go to command at index y
+;;   else if (x = 1) and (questa.last != 0) then
+;;     decrement questa.bottom
+;;   else
+;;     signal error "Invalid value for 'x': ", x
+;;   end if
 ;; 
 ;; 
 ;; Lacunae in the Specification
@@ -262,39 +287,6 @@
 ;; 
 ;; The incorporation, for instance, of real-valued or complex numbers
 ;; may become a future language iteration's cynosure.
-;; 
-;; == HOW DOES THE "DEC" COMMAND OPERATE? ==
-;; The "dec" command, according to its official description, shall
-;; proceed in a manner similar to "inc"; this, however, introduces an
-;; antilogy into its behavior: The "inc" command, if presented with an
-;; argument of zero, shall increment the Questa's top element; recipient
-;; of one, it shall manipulate in the same fashion the bottom item. The
-;; "dec" command, if invoked with zero, shall act as a goto instruction;
-;; while a non-zero input instigates a subtraction. This deduction's
-;; concrete nature bewrays some deficits and germinates these questions:
-;;   
-;;   - How shall a distinguishment betwixt top and bottom element
-;;     manipulation be realized?
-;;   - If no such distinguishment resides in the intention, which end,
-;;     top or bottom, shall steadily be decremented?
-;; 
-;; Three contingencies exist:
-;;   
-;;   (a) The top element shall be decremented.
-;;       "dec(1)" thus mimics "inc(0)".
-;;   (b) The bottom element shall be decremented
-;;       "dec(1)" thus mimics "inc(1)".
-;;   (c) The "y" parameter shall be indagated in order to resolve the
-;;       disambiguity:
-;;       o In the case of "dec(1,0)", the top element shall be
-;;         decremented. "dec(1,0)" thus mimics "inc(0)".
-;;       o In the case of "dec(1,1)", the bottom element shall be
-;;         decremented. "dec(1,1)" thus mimics "inc(1)".
-;; 
-;; The squandering of the "y" parameter in the case of a non-zero "x"
-;; input entices the employment of the third option (3) in lieu of the
-;; less potent alternatives (1) and (2), and thus manifests in this
-;; implementation.
 ;; 
 ;; == HOW SHALL ATTEMPTED ARITHMETICS ON STRINGS PROCEED? ==
 ;; The two adscititious Questa operations admitted to Quests, "inc" and
@@ -1583,27 +1575,47 @@
               (declare (type bit     x))
               (declare (type integer y))
               
-              (case x
-                ;; Goto.
-                (0 
-                  (prog1 NIL
-                    (interpreter-move-ip-to interpreter y)))
-                
-                ;; Subtract.
-                (1
-                  (prog1
-                    (cond
-                      ((zerop y)
-                        (questa-set1 questa (1- (questa-peek1 questa)))
-                        (questa-peek1 questa))
-                      (T
-                        (questa-set2 questa (1- (questa-peek2 questa)))
-                        (questa-peek2 questa)))
-                    (interpreter-advance-ip interpreter)))
-                
-                ;; Invalid x.
-                (otherwise
-                  (error "Invalid command: dec(~s,~s)." x y)))))
+              (the (or null integer)
+                (cond
+                  ;; (x = 0) and (questa.first = 0)?
+                  ;; => Goto.
+                  ((and (zerop x)
+                        (zerop (questa-peek1 questa)))
+                    (prog1 NIL
+                      (interpreter-move-ip-to interpreter y)))
+                  
+                  ;; (x = 0) and (questa.first != 0)?
+                  ;; => Decrement.
+                  ((and (zerop x)
+                        (not (zerop (questa-peek1 questa))))
+                    (questa-set1 questa (1- (questa-peek1 questa)))
+                    (prog1
+                      (questa-peek1 questa)
+                      (unless (instruction-operand-p instruction)
+                        (interpreter-advance-ip interpreter))))
+                  
+                  ;; (x = 1) and (questa.last = 0)?
+                  ;; => Goto.
+                  ((and (= x 1)
+                        (zerop (questa-peek2 questa)))
+                    (prog1 NIL
+                      (interpreter-move-ip-to interpreter y)))
+                  
+                  ;; (x = 1) and (questa.last != 0)?
+                  ;; => Decrement.
+                  ((and (= x 1)
+                        (not (zerop (questa-peek2 questa))))
+                    (questa-set2 questa (1- (questa-peek2 questa)))
+                    (prog1
+                      (questa-peek2 questa)
+                      (unless (instruction-operand-p instruction)
+                        (interpreter-advance-ip interpreter))))
+                  
+                  ;; Invalid combination of arguments x and y.
+                  (T
+                    (error "Invalid combination of command arguments: ~
+                            dec(x=~s,y=~s)."
+                      x y))))))
           
           (:swap
             (prog1 NIL
@@ -1704,30 +1716,56 @@
 
 ;;; -------------------------------------------------------
 
+;; Returns 0.
+;; 
 ;; Uses the goto facility, incorporated as an ancillary into the "dec"
 ;; command, to bypass the pushing of "World" unto the Questa, thus, when
-;; returning the top element, responding with the integer 100, not with
+;; returning the top element, responding with the integer 0, not with
 ;; "World", which otherwise would have been inserted at the top.
 ;; 
-;; Returns 100.
+;; In order to demonstrate the "dec" command's functioning, two elements
+;; are pushed, "Hello" and 0, comprising the following Questa content:
+;;   0        <- top
+;;   "Hello"  <- bottom
+;; The invocation
+;;   dec(0,4)
+;; checks the top element for equality to zero, and jumps to the last
+;; line (index = 4), thus not pushing "World" to the top. The
+;; instruction
+;;   <(0)
+;; hence pops the integer 0, not "World".
 (interpret-Quests
-  "p(100)
-   dec(0,3)
+  "p(Hello)
+   p(0)
+   dec(0,4)
    p(World)
    <(0)")
 
 ;;; -------------------------------------------------------
 
-;; Returns 99.
+;; Returns "Hello".
+;; 
+;; Pushes two elements unto the Questa, 0 and "Hello", comprising the
+;; following Questa content:
+;;   "Hello"  <- top
+;;   0        <- bottom
+;; The invocation
+;;   dec(1,4)
+;; checks the bottom element for equality to zero, and jumps to the last
+;; line (index = 4), thus not pushing "World" to the top. The
+;; instruction
+;;   <(0)
+;; hence pops the string "Hello", not "World".
 (interpret-Quests
-  "p(100)
-   dec(1,3)
+  "p(0)
+   p(Hello)
+   dec(1,4)
    p(World)
-   <(1)")
+   <(0)")
 
 ;;; -------------------------------------------------------
 
-;; Returns: "first".
+;; Returns "first".
 (interpret-Quests
   "p(first)
    p(second)
