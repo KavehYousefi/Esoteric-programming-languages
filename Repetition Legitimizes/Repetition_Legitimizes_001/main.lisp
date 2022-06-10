@@ -162,8 +162,8 @@
   "Sets the value of the first MEMORY cell to the NEW-VALUE,
    contingently preceding the modification with an adjustment into the
    byte range, and returns the modified MEMORY."
-  (declare (type Memory memory))
-  (declare (type octet  new-value))
+  (declare (type Memory              memory))
+  (declare (type nonnegative-integer new-value))
   (setf (aref (memory-cells memory) 0)
         (wrap-byte new-value))
   (the Memory memory))
@@ -401,13 +401,17 @@
 ;; -- Implementation of code generator.                            -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun generate-code-for-text (text &key (destination NIL))
+(defun generate-code-for-text (text
+                               &key (cell-separator #\Space)
+                                    (destination    NIL))
   "Generates a Repetition Legitimizes program capable of reproducing the
    ASCII codes of the TEXT in its memory and writes it to the
-   DESTINATION, returning for a non-``NIL'' DESTINATION the ``NIL''
+   DESTINATION, each two cell populating instructions separated by the
+   CELL-SEPARATOR, and returns for a non-``NIL'' DESTINATION the ``NIL''
    value, otherwise a fresh string containing the result."
   (declare (type string      text))
   (declare (type destination destination))
+  (declare (type T           cell-separator))
   
   (the (or null string)
     (if destination
@@ -430,8 +434,13 @@
             (declare (type octet            cell-value))
             (let ((cell-address (get-cell-address cell-index)))
               (declare (type string cell-address))
-              (loop repeat cell-value do
-                (format destination "~a " cell-address)))
+              (loop
+                repeat cell-value
+                for    first-repetition-p of-type boolean = T then NIL
+                do
+                  (unless first-repetition-p
+                    (format destination " "))
+                  (format destination "~a" cell-address)))
             (values))
            
            (reproduce-character (cell-index character)
@@ -441,16 +450,28 @@
             (declare (type positive-integer cell-index))
             (declare (type character        character))
             (set-cell-to-value cell-index (char-code character))
+            (values))
+           
+           (write-cell-separator ()
+            "Writes to the DESTINATION a textual representation of the
+             CELL-SEPARATOR and returns no value."
+            (format destination "~a" cell-separator)
             (values)))
         
         (loop
-          for cell-index     of-type fixnum    from   1
-          for text-character of-type character across text
-          do  (reproduce-character cell-index text-character)))
+          for cell-index        of-type fixnum    from 1
+          and text-character    of-type character across text
+          and first-character-p of-type boolean   = T then NIL
+          do
+            (unless first-character-p
+              (write-cell-separator))
+            (reproduce-character cell-index text-character)))
       
       (with-output-to-string (content)
         (declare (type string-stream content))
-        (generate-code-for-text text :destination content)))))
+        (generate-code-for-text text
+          :cell-separator cell-separator
+          :destination    content)))))
 
 
 
