@@ -1710,10 +1710,6 @@
 
 ;;; -------------------------------------------------------
 
-;; test        := "^", ":", anyVariable , ( "=" | ">" | "<" ) , ( number | anyVariable ) ;
-;; anyVariable := "%" , identifier
-;;             |  "@" , identifier ;
-;; 
 (defun parser-parse-test (parser)
   "Parses a test or conditional command body and returns a node
    representation thereof.
