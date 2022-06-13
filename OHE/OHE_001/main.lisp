@@ -10,8 +10,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun interpret-OHE (code)
-  "Interprets the OHE CODE and returns no value."
-  (declare (type string code) (ignore code))
+  "Interprets the piece of OHE CODE and returns no value."
+  (declare (type string code))
+  (declare (ignore      code))
   (format T "~&Hello, world!")
   (values))
 
