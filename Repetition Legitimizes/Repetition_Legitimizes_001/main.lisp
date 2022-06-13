@@ -109,8 +109,8 @@
 (defstruct (Memory
   (:constructor make-memory ()))
   "The ``Memory'' class represents the program storage, arranged in the
-   similitude of a tape, and composed a contingently infinite tally of
-   byte-valued cells.
+   similitude of a tape, and composed of a contingently infinite tally
+   of byte-valued cells.
    ---
    While the referencing of cells conceptually starts with the index one
    (1), the underlying vector, of course, constitutes a zero-based
