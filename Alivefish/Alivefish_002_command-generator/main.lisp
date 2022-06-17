@@ -2,7 +2,7 @@
 ;; 
 ;; This program implements an Alivefish interpreter based upon the
 ;; generation of dedicated command objects from user inputs, which
-;; subsequently constitute the tokens of currency in the evalution of
+;; subsequently constitute the tokens of currency in the evaluation of
 ;; the thus delineated instruction sequence.
 ;; 
 ;; --------------------------------------------------------------------
