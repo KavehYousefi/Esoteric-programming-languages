@@ -233,7 +233,7 @@
     (declare (type (integer 0 *)           memory))
     (declare (type keyword                 state))
     
-    (labels
+    (flet
         ((check-indentation (command)
           "Checks whether the COMMAND's indentation equals the global
            INDENTATION requisite to model a straight ladder, returning
@@ -382,60 +382,65 @@
                                    (indentation 0))
   "Generates a laddermaker program which prints the TEXT to the standard
    output, indenting the code by the INDENTATION size, and printing the
-   it to the DESTINATION."
+   it to the DESTINATION, and returns for a non-``NIL'' DESTINATION the
+   ``NIL'' value, otherwise produces and returns a fresh string
+   containing the output."
   (declare (type string                          text))
   (declare (type (or null (eql T) stream string) destination))
   (declare (type (integer 0 *)                   indentation))
   
-  (if destination
-    (labels
-        ((output-instruction (control-string &rest format-arguments)
-          "Prints to the DESTINATION the CONTROL-STRING formatted using
-           the FORMAT-ARGUMENTS, and preceded by a conditional newline
-           and an indentation of INDENTATION size, finally returning
-           with no value."
-          (declare (type string      control-string))
-          (declare (type (list-of T) format-arguments))
-          (format destination "~&~v@t~?" indentation
-            control-string format-arguments)
-          (values))
-         
-         (output-character (character)
-          "Prints to the DESTINATION the laddermaker instructions
-           necessary to print the CHARACTER, and returns no value."
-          (declare (type character character))
-          (loop
-            for code-portion
-              of-type (integer 1 99)
-              in      (get-character-code-portions character)
-            for first-portion-p
-              of-type boolean
-              =       T
-              then    NIL
-            do
-              (output-instruction "+  +")
-              (output-instruction "+~2d+" code-portion)
-              (if first-portion-p
-                (output-instruction "++++")
-                (output-instruction "+[]+")))
-          (output-instruction "+  +")
-          (output-instruction "+__+")
-          (values)))
+  (the (or null string)
+    (if destination
+      (labels
+          ((output-instruction (control-string &rest format-arguments)
+            "Prints to the DESTINATION the CONTROL-STRING formatted
+             using the FORMAT-ARGUMENTS, and preceded by a conditional
+             newline and an indentation of INDENTATION size, finally
+             returning with no value."
+            (declare (type string      control-string))
+            (declare (type (list-of T) format-arguments))
+            (format destination "~&~v@t~?" indentation
+              control-string format-arguments)
+            (values))
+           
+           (output-character (character)
+            "Prints to the DESTINATION the laddermaker instructions
+             necessary to print the CHARACTER, and returns no value."
+            (declare (type character character))
+            (loop
+              for code-portion
+                of-type (integer 1 99)
+                in      (get-character-code-portions character)
+              for first-portion-p
+                of-type boolean
+                =       T
+                then    NIL
+              do
+                (output-instruction "+  +")
+                (output-instruction "+~2d+" code-portion)
+                (if first-portion-p
+                  (output-instruction "++++")
+                  (output-instruction "+[]+")))
+            (output-instruction "+  +")
+            (output-instruction "+__+")
+            (values)))
+        
+        ;; Create a step.
+        (output-instruction "+--+")
+        
+        ;; Create the instructions necessary to print the characters.
+        (loop for character of-type character across text do
+          (output-character character))
+        
+        ;; Clear the memory.
+        (output-instruction "+<>+"))
       
-      ;; Create a step.
-      (output-instruction "+--+")
-      
-      ;; Create the instructions necessary to print the characters.
-      (loop for character of-type character across text do
-        (output-character character))
-      
-      ;; Clear the memory.
-      (output-instruction "+<>+"))
-  
-  (the string
-    (with-output-to-string (output)
-      (declare (type string-stream output))
-      (generate-text-program text :destination output :indentation indentation)))))
+      (the string
+        (with-output-to-string (output)
+          (declare (type string-stream output))
+          (generate-text-program text
+            :destination output
+            :indentation indentation))))))
 
 
 
