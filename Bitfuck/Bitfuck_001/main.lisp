@@ -1,13 +1,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
+;; This program implements an interpreter for the esoteric programming
+;; language "Bitfuck", introduced by the Esolang user "Bataais"
+;; (referred to as Michael Gianfreda in the user page), as well as a
+;; converter from Sam Hughes's inspiring "Boolfuck" to Bitfuck.
+;; 
 ;; Instructions
 ;; ============
-;; Its heritage from brainfuck manifests in Bitfuck command repository,
-;; the same retains the tally, while adjusting the intrinsics to the
-;; bit level in lieu of the original byte realm.
+;; Its heritage from brainfuck manifests in Bitfuck's command
+;; repository, the same retains the basic functionality while curtailing
+;; their tally by one, with the cell value increment ("+") and decrement
+;; ("-") operations having been conflated into a single bit toggle ("*")
+;; construct, thus adjusting the intrinsics to the bit level in lieu of
+;; the original byte realm.
 ;; 
 ;; == OVERVIEW ==
-;; Bitfuck's instruction set embraces an octuple membership, which shall
+;; Bitfuck's instruction set embraces a septuple membership, which shall
 ;; be summarized in the following table:
 ;;   
 ;;   Command | Effect
@@ -57,7 +65,7 @@
 ;;           | starting instruction "!<".
 ;; 
 ;; Bitfuck's Boolfuck cleronomy conditions an inquisition into the
-;; relations betwixt its inspiration, which shall be the following
+;; relations with its inspiration, which shall be the following
 ;; juxtaposition's cynosure:
 ;;   
 ;;   Bitfuck command | Boolfuck command | Command name
