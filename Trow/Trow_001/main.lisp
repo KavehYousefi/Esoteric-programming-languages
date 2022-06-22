@@ -2,8 +2,8 @@
 ;; 
 ;; This program implements an interpreter for the joke language "Trow",
 ;; invented by the Esolang user "Jaipack17", and intended to generate
-;; text message with a certain mete of variability based upon randomized
-;; placeholder insertions.
+;; text messages with a certain mete of variability based upon
+;; randomized placeholder insertions.
 ;; 
 ;; An output-only language, Trow programs are restricted in their
 ;; capacity to the generation of display text only, applying themselves
@@ -187,8 +187,8 @@
 ;;; -------------------------------------------------------
 
 (defun make-lexer (source)
-  "Creates and returns a new ``Lexer'' intended for analyzation of the
-   SOURCE."
+  "Creates and returns a new ``Lexer'' intended for the analyzation of
+   the SOURCE."
   (declare (type string source))
   (the Lexer (make-instance 'Lexer :source source)))
 
@@ -636,7 +636,7 @@
                     representing its items."))
   (:documentation
     "The ``Interpreter'' class processes a vector of instructions in
-     to apply actual effect to the same."))
+     order to apply actual effect to the same."))
 
 ;;; -------------------------------------------------------
 
@@ -697,7 +697,7 @@
 ;;; -------------------------------------------------------
 
 (defun interpreter-interpret (interpreter)
-  "Process the instructions stored in the INTERPRETER and returns the
+  "Processes the instructions stored in the INTERPRETER and returns the
    modified INTERPRETER."
   (declare (type Interpreter interpreter))
   

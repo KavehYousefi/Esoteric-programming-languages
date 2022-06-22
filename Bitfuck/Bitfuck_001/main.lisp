@@ -582,7 +582,7 @@
 ;;; -------------------------------------------------------
 
 (defun tape-get-current-cell (tape)
-  "Returns the bit stored at the TAPE's current cell."
+  "Returns the bit stored in the TAPE's current cell."
   (declare (type Tape tape))
   (with-slots (cells pointer) tape
     (declare (type bit-table cells))
@@ -615,9 +615,9 @@
    Each entry of the resulting hash table of fixnum keys and values,
    these being indices into the INSTRUCTIONS vector, associates either
    with a loop start position the location immediately following its
-   matching closing statement, or with a loop end position the location
-   immediately following its matching start statement. No discrimination
-   betwixt keys identifying starts and terminators are being met, as the
+   matching closing statement, or with a loop end position the exact
+   location of its matching start statement. No discrimination betwixt
+   keys identifying starts and terminators are being met, as the
    INSTRUCTIONS index itself determines the role, if of interest at
    all."
   (declare (type (vector command *) instructions))
@@ -767,7 +767,8 @@
               (move-ip-to-opposite-bracket))
             
             (otherwise
-              (error "Invalid instruction \"~s\" at IP position ~d."
+              (error "Invalid instruction \"~s\" at instruction ~
+                      pointer position ~d."
                 instruction ip))))
         
         (when (output-pending-p output)
