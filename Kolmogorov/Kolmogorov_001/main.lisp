@@ -1883,7 +1883,7 @@
 ;; =======
 ;; Lacking the intrinsic faculty of multiplication, the problem of the
 ;; factorial tallies twice in akin manner: (1) Simulating the
-;; multipicative operation by aid of the native operations addition and
+;; multiplicative operation by aid of the native operations addition and
 ;; subtraction, and (2) applying the thus conceived ability to actually
 ;; realize the factorial function.
 ;; 
@@ -1948,3 +1948,31 @@
    o*
   ")
 
+;;; -------------------------------------------------------
+
+;; Truth-machine.
+(execute-kolmogorov-code
+  "
+  \"Create a node which holds the ASCII code of the character '1',
+    intended to be printed repeatedly in the case of a user input of
+    one.\"
+  a\\49\\1
+  
+  \"Store the user input into the current node.\"
+  +*i
+  
+  \"Print the current node. If the user input equals zero, this will
+    constitute the only and desinent time of its output.\"
+  o*
+  
+  \"Convert the user input character ('0' or '1') into its numeric value
+    in order to control the coming node loop.\"
+  -*\\48
+  
+  \"If the user has supplied a value unequal to zero ('0'), the
+    following node loop will print the character '1', whose ASCII code
+    49 is stored in the node with the edge address 1, infinitely.\"
+  [*
+    o\\1
+  ]
+  ")
