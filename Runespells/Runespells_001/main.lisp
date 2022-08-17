@@ -2311,7 +2311,7 @@
 
 ;; Infinitely repeating numeric cat program.
 (interpret-Runespells
-  "Rune 1[1]: Mizi Mizo Chizo
+  "Rune 1[]: Mizi Mizo Chizo
    Spell [1]: Fa Yah")
 
 ;;; -------------------------------------------------------
