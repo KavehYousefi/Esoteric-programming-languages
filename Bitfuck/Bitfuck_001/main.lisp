@@ -220,7 +220,7 @@
   (declare (type string code))
   
   (let ((instructions NIL))
-    (declare (type list instructions))
+    (declare (type (list-of command) instructions))
     
     (when (plusp (length code))
       (let ((position  0)
