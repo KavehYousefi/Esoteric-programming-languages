@@ -30,7 +30,7 @@
 ;; little effect with a nimious mete of investment. The code generation
 ;; proceeds by a series of transformations applied to each character in
 ;; order to produce an allusion to the licentious number "69", acting
-;; especially in the area of hexadecimal representions. The againward
+;; especially in the area of hexadecimal representation. The againward
 ;; motion, when applied to the concept, restores the original data.
 ;; 
 ;; == HELL69-ENCODING ==
@@ -42,7 +42,7 @@
 ;; delineation:
 ;;   
 ;;   (1) TRANSFORM THE DIGITS AND LETTERS
-;;       The two character of the hexadecimal number, each of which
+;;       The two characters of the hexadecimal number, each of which
 ;;       accounts either for a decimal digit or a letter from a to f,
 ;;       must be transcripted in a first step by multiplying the digit
 ;;       by 69 and replacing the letter by its successor in the
@@ -653,7 +653,7 @@
 
 (defun decode-Hell-number (hell-number)
   "Returns the hexadecimal number string corresponding to the Hell69
-   number.
+   HELL-NUMBER.
    ---
    The thus produced string represents the plaintext character's ASCII
    code in its hexadecimal form."
