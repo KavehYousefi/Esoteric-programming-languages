@@ -158,11 +158,13 @@
 ;;           | --------------------------------------------------------
 ;;           | STANDARD: If the current cell's value equals zero (0),
 ;;           |           moves forward to the position immediately
-;;           |           following the matching "]".
+;;           |           following the matching inverted "[", that is,
+;;           |           an instruction patterned like "\[".
 ;;           | --------------------------------------------------------
 ;;           | INVERTED: If the current cell's value does not equal
 ;;           |           zero (0), moves back to the position
-;;           |           immediately following the matching "[".
+;;           |           immediately following the matching
+;;           |           non-inverted "[".
 ;;           | --------------------------------------------------------
 ;;           | Constitutes an original brainfuck command.
 ;;   ..................................................................
