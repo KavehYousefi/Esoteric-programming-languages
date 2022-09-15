@@ -92,7 +92,7 @@
 ;; Each of the sextuple ingredients of the instruction set is
 ;; represented by a designated character.
 ;; 
-;; == COMMENT ==
+;; == COMMENTS ==
 ;; Any character not donated to the instruction representation
 ;; experiences tolerance and an interpretation as a descanting entity.
 ;; 
@@ -361,6 +361,7 @@
 ;; its derivation by the inversion command'S ("\") adminiculum, as shall
 ;; be the coming illustration's subject:
 ;; 
+;;   ------------------
 ;;   brainfuck | UglyBF
 ;;   ----------+-------
 ;;   +         | +
@@ -371,6 +372,7 @@
 ;;   ,         | \.
 ;;   [         | [
 ;;   ]         | \[
+;;   ------------------
 ;; 
 ;; 
 ;; Lacunae in the Specification
