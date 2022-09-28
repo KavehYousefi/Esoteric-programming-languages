@@ -2,10 +2,10 @@
 ;; 
 ;; This program implements an interpreter for the esoteric programming
 ;; language "Indirect", designed by the Esolang user "Quojil" in the
-;; year 2014, and intended a derivative of Urban Mueller's language
+;; year 2014, and intended as a derivative of Urban Mueller's
 ;; "brainfuck", substituting the sire's octuple instruction set by three
 ;; commands which manipulate a numeric "instruction bay" for producing a
-;; set of 16 possible operations.
+;; variety of 16 possible operations.
 ;; 
 ;; --------------------------------------------------------------------
 ;; 
@@ -44,7 +44,7 @@
 ;;; -------------------------------------------------------
 
 (deftype nybble ()
-  "The ``nybble'' type defines an unsigned sequence of four bits tally,
+  "The ``nybble'' type defines an unsigned sequence of four bits' tally,
    occupying the integer range [0, 15], and meet for replicating the
    instruction bay's 16 operation codes."
   '(unsigned-byte 4))
@@ -98,7 +98,7 @@
 
 (deftype destination ()
   "The ``destination'' type defines a sink for output operations,
-   comprehend, for instance, ``format'' or ``write-char''."
+   comprehending, for instance, ``format'' or ``write-char''."
   '(or null (eql T) stream string))
 
 
@@ -133,19 +133,21 @@
         :nop)
     :adjustable   NIL
     :fill-pointer NIL)
-  "Associates each of the 16 operation code from the instruction memory
-   to the respective Indirect instruction.
+  "Associates each of the 16 operation codes from the instruction memory
+   with the respective Indirect instruction.
    ---
    The operation codes are indirectly encoded in the zero-based indices
-   of this vector, thus mapping automatically to the instructions at
-   their positions.")
+   of this vector, thus mapping automatically to the instructions
+   residing at their positions.")
 
 ;;; -------------------------------------------------------
 
 (defun get-instruction-for-operation-code (operation-code)
   "Returns the instruction affiliated with the OPERATION-CODE."
   (declare (type nybble operation-code))
-  (the instruction (aref +OPERATIONS+ operation-code)))
+  (the instruction
+    (or (aref +OPERATIONS+ operation-code)
+        (error "Unrecognized operation code: ~d." operation-code))))
 
 ;;; -------------------------------------------------------
 
@@ -207,12 +209,12 @@
 ;;; -------------------------------------------------------
 
 (defparameter +IO-FILE-PATH+   "io"
-  "The file path of the \"i/o\" on the system.")
+  "The file path of the \"i/o\" file on the system.")
 
 (defparameter +IO-FILE-STREAM+ NIL
   "The file stream created by opening the \"i/o\" file.
    ---
-   Upon the file's closure this stream assume the value ``NIL''.")
+   Upon the file's closure this stream assumes the value ``NIL''.")
 
 ;;; -------------------------------------------------------
 
@@ -277,7 +279,7 @@
 ;;; -------------------------------------------------------
 
 (defun append-to-io-file (character)
-  "Appends the CHARACTER to the I/O file's content and returns no
+  "Appends the CHARACTER to the i/o file's content and returns no
    value."
   (declare (type character character))
   (write-char character +IO-FILE-STREAM+)
@@ -330,7 +332,7 @@
             (aref data-memory (1+ pointer))))
          
          (perform-logical-operation (operation)
-          "Performs the specified logical bitwise OPERATION unto the
+          "Performs the specified logical bitwise OPERATION on the
            current cell value as the left and the next cell value as its
            right operand, stores the result into the current cell, and
            returns no value.
@@ -366,8 +368,8 @@
           (values))
          
          (read-input ()
-          "Depending on the input/output mode, sets the current cell
-           value either by prompting a user input character, or by
+          "Depending on the input/output mode IO-MODE, sets the current
+           cell value either by prompting a user input character, or by
            reading the desinent byte from the i/o file, in any case
            returning no value."
           (case io-mode
@@ -382,8 +384,8 @@
           (values))
          
          (write-output ()
-          "Depending on the input/output mode, either writes the ASCII
-           character associated with the current cell value to the
+          "Depending on the input/output mode IO-MODE, either writes the
+           ASCII character associated with the current cell value to the
            standard output, or appends the same to the i/o file, in any
            case returning no value."
           (case io-mode
@@ -633,7 +635,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Generate an Indirect program which stores a user input in the "io"
+;; Generate an Indirect program which stores a user input in the "i/o"
 ;; file, copies it into the cell at the program data memory's desinence,
 ;; and outputs it to the standard console.
 ;; 
@@ -653,13 +655,14 @@
       :input/output
       ;; Switch to standard input/output mode.
       :open/close-file
-      ;; Print value of cell[7] (= cell[0] = user input) to standard output.
+      ;; Print value of cell[7] (= cell[0] = user input) to standard
+      ;; output.
       :input/output)
     '(simple-array instruction (*))))
 
 ;;; -------------------------------------------------------
 
-;; Generate an Indirect program which stores a user input in the "io"
+;; Generate an Indirect program which stores a user input in the "i/o"
 ;; file, copies it into the cell at the program data memory's desinence,
 ;; and outputs it to the standard console, and concomitantly execute
 ;; the thus produced piece of source code.
@@ -678,6 +681,7 @@
         :input/output
         ;; Switch to standard input/output mode.
         :open/close-file
-        ;; Print value of cell[7] (= cell[0] = user input) to standard output.
+        ;; Print value of cell[7] (= cell[0] = user input) to standard
+        ;; output.
         :input/output)
       '(simple-array instruction (*)))))
