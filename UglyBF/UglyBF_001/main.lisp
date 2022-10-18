@@ -15,6 +15,12 @@
 ;; mode, which, in coefficiency with a repetitions operation, imparts a
 ;; holophrastic nature to the programs.
 ;; 
+;; == UGLYBF: AN ADMISSION OF LACKING PULCHRITUDE ==
+;; Its agnomination most likely alludes to the aesthetical detriment
+;; inflicted upon brainfuck's, already kenspeckle, syntaxis by admission
+;; of its two adscititious constituents, the backslash "\" and the
+;; asterisk "*".
+;; 
 ;; == UGLYBF: COMPACTNESS APPLIED TO BRAINFUCK ==
 ;; UglyBF proceeds from the strain of its entheus, brainfuck, however,
 ;; engaged in a cambistry of the stock-father's explicitness for an
