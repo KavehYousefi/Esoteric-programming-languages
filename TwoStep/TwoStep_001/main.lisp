@@ -466,7 +466,7 @@
 ;;; -------------------------------------------------------
 
 (defun make-interpreter (instructions)
-  "Creates and returns a new ``Interpreter'' processes the
+  "Creates and returns a new ``Interpreter'' which processes the
    INSTRUCTIONS."
   (declare (type (vector instruction *) instructions))
   (the Interpreter
