@@ -286,9 +286,9 @@
 
 (defun find-instruction-locations (source token)
   "Searches for all occurrences of the TOKEN in the SOURCE and returns
-   a list of cons, each instance of which contains in its left part the
-   TOKEN's location in the SOURCE, while the right moeity entails the
-   command associated with the same."
+   a list of cons cells, each instance of which contains in its left
+   part the TOKEN's location in the SOURCE, while the right moeity
+   entails the command associated with the same."
   (declare (type string source))
   (declare (type string token))
   (let ((detections   NIL)
@@ -519,17 +519,18 @@
   (the (or null string)
     (if destination
       (loop
-        for brainfuck-token of-type character across brainfuck-code
-        and first-token-p   of-type boolean   =      T then NIL
+        for  brainfuck-token of-type character across brainfuck-code
+        with first-token-p   of-type boolean   =      T
         do
           (let ((detailedFuck-token
                   (get-DetailedFuck-token-for-brainfuck
                     brainfuck-token)))
-          (declare (type (or null string) detailedFuck-token))
-          (when detailedFuck-token
-            (unless first-token-p
-              (format destination "~&"))
-            (format destination "~a" detailedFuck-token))))
+            (declare (type (or null string) detailedFuck-token))
+            (when detailedFuck-token
+              (if first-token-p
+                (setf first-token-p NIL)
+                (format destination "~&"))
+              (format destination "~a" detailedFuck-token))))
       (with-output-to-string (output)
         (declare (type string-stream output))
         (convert-brainfuck-to-DetailedFuck brainfuck-code
