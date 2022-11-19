@@ -329,7 +329,7 @@
                   | spaces only.
      ------------------------------------------------------------------
    
-   A set of four local functions contribute to a more convenient usance
+   A set of five local functions contribute to a more convenient usance
    of the lexer:
    
      ------------------------------------------------------------------
@@ -343,6 +343,9 @@
                     | skips it.
      ..................................................................
      skip-spaces    | Skips zero or more adjacent spaces.
+     ..................................................................
+     close-source   | Closes the source stream, thus disabling the line
+                    | reading process.
      ------------------------------------------------------------------"
   (let ((evaluated-lexer (gensym)))
     (declare (type symbol evaluated-lexer))
@@ -1120,6 +1123,8 @@
 ;;; -------------------------------------------------------
 
 (defun interpreter-read-next-symbol (interpreter)
+  "Requests and returns from the INTERPRETER's internally managed input
+   facility the next symbol, or ``NIL'' if its source is exhausted."
   (declare (type Interpreter interpreter))
   (the (or null character)
     (input-get-next-symbol
