@@ -39,14 +39,16 @@
 ;; The relationship betwixt the two specimens may be subsumed into three
 ;; categories:
 ;; 
-;;   (a) Paregal commands: Such are appropriated verbatim from Deadfish
-;;       by 2.+- and comprehend
-;;         + (increment accumulator)
-;;         - (decrement accumulator)
-;;   (b) Renamed commands: This ilk administers the exact same effect
+;;   (a) Renamed commands: This ilk administers the exact same effect
 ;;       as some equivalent in Deadfish, albeit deploying a
 ;;       distinguished token for its purpose:
-;;         2 (square accumulator; equivalent to Deadfish's "s")
+;;         + (increment accumulator; equivalent to Deadfish's "i")
+;;         - (decrement accumulator; equivalent to Deadfish's "d")
+;;         2 (square    accumulator; equivalent to Deadfish's "s")
+;;   (b) Divergent commands: These correspond to an inherited facility
+;;       with some mete of similitude, yet wanting in perfect
+;;       compatibility, tallying
+;;         . (print accumulator; character-based version of "o")
 ;;   (c) New commands: Members of this tier introduce new capabilities
 ;;       into the language, their kind lacking in Deadfish:
 ;;         = (define alias for a token)
@@ -73,10 +75,14 @@
 ;;               | numbers.
 ;;   ..................................................................
 ;;   +           | Increments the accumulator by one.
-;;               | This constitutes an original Deadfish operation.
+;;               | This constitutes an original Deadfish operation,
+;;               | however, differing in its designation from the
+;;               | stock-father's "i".
 ;;   ..................................................................
 ;;   -           | Decrements the accumulator by one.
-;;               | This constitutes an original Deadfish operation.
+;;               | This constitutes an original Deadfish operation,
+;;               | however, differing in its designation from the
+;;               | stock-father's "d".
 ;;   ..................................................................
 ;;   alias=token | Defines the {alias} as a synonym for the {token},
 ;;   ***** ***** | both expected to be exactly one character in length.
@@ -93,9 +99,11 @@
 ;;   ------------------------------------------------------------------
 ;;   Deadfish | 2.+- | Notes
 ;;   ---------+------+-------------------------------------------------
-;;   +        | +    | 
+;;   i        | +    | Only a nominal discrepancy differentiates the
+;;            |      | two commands.
 ;;   ..................................................................
-;;   -        | -    | 
+;;   d        | -    | Only a nominal discrepancy differentiates the
+;;            |      | two commands.
 ;;   ..................................................................
 ;;   s        | 2    | Only a nominal discrepancy differentiates the
 ;;            |      | two commands.
@@ -387,14 +395,18 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-#|
 ;; Print the letter "B".
 (interpret-2.+-
   "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++.")
-|#
 
 ;;; -------------------------------------------------------
 
 ;; Print "Hello world".
+(interpret-2.+-
+  "++2++++2++++++++.+++++++++++++++++++++++++++++.+++++++..+++.-------------------------------------------------------------------------------.---------------------2--.--------.+++.------.--------.")
+
+;;; -------------------------------------------------------
+
+;; Print "Hello world" using the Deadfish emulator.
 (interpret-2.+-
   "s=2o=.i=+d=-iisiiiisiiiiiiiioiiiiiiiiiiiiiiiiiiiiiiiiiiiiioiiiiiiiooiiiodddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddodddddddddddddddddddddsddoddddddddoiiioddddddoddddddddo")
