@@ -570,6 +570,7 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Print the text "Hello, world".
 (bert-decode
   "BE@This is a 
 comment−262.9565217391−368.8695652174−394.4347826087−394.4347826087−405.3913043478−160.6956521739
@@ -577,15 +578,21 @@ comment−262.9565217391−368.8695652174−394.4347826087−394.4347826087−40
 
 ;;; -------------------------------------------------------
 
+;; Encode the text "Hello, world" and print the resulting BERT program
+;; to the standard output.
 (bert-encode "Hello, world" :destination T)
 
 ;;; -------------------------------------------------------
 
+;; Encode the text "Hello, world" and decode the resulting BERT program,
+;; returning the latter.
 (bert-decode
   (bert-encode "Hello, world"))
 
 ;;; -------------------------------------------------------
 
+;; Encode the text "Hello, world" and decode the resulting BERT program,
+;; finally printing the latter to the standard output.
 (bert-decode
   (bert-encode "Hello, world")
   :destination T)
