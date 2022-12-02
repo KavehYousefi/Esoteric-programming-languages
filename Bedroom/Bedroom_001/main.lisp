@@ -152,7 +152,8 @@
     :initarg       :cells
     :initform      (make-hash-table :test #'equalp)
     :type          (hash-table-of Location instruction)
-    :documentation "A sparse "))
+    :documentation "A contingently sparse two-dimensional arrangement of
+                    instructions that represent the cells."))
   (:documentation
     "The ``Grid'' class represents a two-dimensional Cartesian layout
      of Bedroom instructions, suitable to contain a program in the same
