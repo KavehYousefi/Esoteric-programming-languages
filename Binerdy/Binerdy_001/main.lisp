@@ -99,42 +99,6 @@
 ;;   bit     := "0" | "1" ;
 ;; 
 ;; 
-;; Lacunae in the Specification
-;; ============================
-;; By adminiculum of Binerdy's plain conception and lucid presentation,
-;; few latibula are accountred vouchsafement of ambivalence and inroads
-;; of eisegeses; natheless, the products of their detections shall be
-;; listed below.
-;; 
-;; == ARE STACK ELEMENTS ALWAYS OCTETS? ==
-;; The introduction of the stack being a witeless effort, the account of
-;; its members' haecceity desists from investments to ensure a
-;; contribution paragoned to the former. In parallel to the "inc" and
-;; "sub" commands, which proclaim with pellucid diction the behavior of
-;; the top stack element upon transgression of the interval [0, 255],
-;; by overflowing or "wrapping", the remaining subset in conjunction and
-;; potency of translating a comprehended item beyond the proper
-;; boundaries, already exhausted by the triple "add", "sub", and
-;; "input", retains destitution anenst such explications.
-;; 
-;; A corollary of the disregard would involve a tolerance towards
-;; non-byte integers. As a conjecture, the three orra commands shall be
-;; furnished with a logical consanguinity in that they also, tacitly,
-;; apply the stack element under scrutiny to an overflow behavior, so as
-;; to ascertain the octet range's conformance.
-;; 
-;; == WHAT USER INPUT SHALL BE ACCEPTED? ==
-;; In counterdistinguishment from its bimodal output facilities,
-;; attending as concomitants to the top stack element's introspection
-;; as both a number and the affiliated ASCII character, the input
-;; mechanism lacks an exact disquisition of the expected perspective.
-;; 
-;; An establishment is thus postulated that the input shall be prompted
-;; and accepted exclusively in the form of integer numbers, not ligated
-;; to any sign or magnitude, but naturalized into the basic byte range
-;; [0, 255].
-;; 
-;; 
 ;; Instructions
 ;; ============
 ;; Instructions in Binerdy entail solely niladic operations, addressable
@@ -142,6 +106,7 @@
 ;; range [0, 13]. The command types enumerate as follows, where each
 ;; alternation, or group size, is juxtaposed with the resulting effect.
 ;; 
+;;   ------------------------------------------------------------------
 ;;   Group size | Command | Effect
 ;;   -----------+---------+--------------------------------------------
 ;;    0         | exit    | Stops the program execution. This situation
@@ -199,6 +164,43 @@
 ;;    12        | char    | Prints the top stack element as a number.
 ;;   ..................................................................
 ;;    13        | rem     | Pops the top stack element.
+;;   ------------------------------------------------------------------
+;; 
+;; 
+;; Lacunae in the Specification
+;; ============================
+;; By adminiculum of Binerdy's plain conception and lucid presentation,
+;; few latibula are accoutred vouchsafement of ambivalence and inroads
+;; of eisegeses; natheless, the products of their detections shall be
+;; listed below.
+;; 
+;; == ARE STACK ELEMENTS ALWAYS OCTETS? ==
+;; The introduction of the stack being a witeless effort, the account of
+;; its members' haecceity desists from investments to ensure a
+;; contribution paragoned to the former. In parallel to the "inc" and
+;; "sub" commands, which proclaim with pellucid diction the behavior of
+;; the top stack element upon transgression of the interval [0, 255],
+;; by overflowing or "wrapping", the remaining subset in conjunction and
+;; potency of translating a comprehended item beyond the proper
+;; boundaries, already exhausted by the triple "add", "sub", and
+;; "input", retains destitution anenst such explications.
+;; 
+;; A corollary of the disregard would involve a tolerance towards
+;; non-byte integers. As a conjecture, the three orra commands shall be
+;; furnished with a logical consanguinity in that they also, tacitly,
+;; apply the stack element under scrutiny to an overflow behavior, so as
+;; to ascertain the octet range's conformance.
+;; 
+;; == WHAT USER INPUT SHALL BE ACCEPTED? ==
+;; In counterdistinguishment from its bimodal output facilities,
+;; attending as concomitants to the top stack element's introspection
+;; as both a number and the affiliated ASCII character, the input
+;; mechanism lacks an exact disquisition of the expected perspective.
+;; 
+;; An establishment is thus postulated that the input shall be prompted
+;; and accepted exclusively in the form of integer numbers, not ligated
+;; to any sign or magnitude, but naturalized into the basic byte range
+;; [0, 255].
 ;; 
 ;; 
 ;; Implementation
