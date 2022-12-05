@@ -143,7 +143,8 @@
 ;;                |  takeInput
 ;;                |  storeInput
 ;;                |  moveLeft
-;;                |  moveRight ;
+;;                |  moveRight
+;;                ;
 ;;   
 ;;   startProgram := "$" ;
 ;;   endProgram   := "$$" ;
