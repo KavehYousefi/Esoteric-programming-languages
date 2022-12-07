@@ -721,6 +721,9 @@
          (declare (ignorable                character))
          (flet
              ((advance ()
+               "Moves the LEXER's position cursor to the next character
+                in its SOURCE, if possible, updates the current
+                CHARACTER, and returns no value."
                (setf character
                  (when (array-in-bounds-p source (1+ position))
                    (char source (incf position))))
@@ -826,6 +829,8 @@
   (declare (type keyword attribute-name))
   (multiple-value-bind (attribute-value contains-attribute-p)
       (gethash attribute-name (node-attributes node))
+    (declare (type T attribute-value))
+    (declare (type T contains-attribute-p))
     (the T
       (if contains-attribute-p
         attribute-value
