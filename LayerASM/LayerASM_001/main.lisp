@@ -989,7 +989,7 @@
 ;; of the same, the evaluation of its operands, producing per such input
 ;; one or two bytes for the ultimate binary data.
 ;; 
-;; == BYTECODE IS PROCESSED BY AN INTERPRETER =
+;; == BYTECODE IS PROCESSED BY AN INTERPRETER ==
 ;; The onus of the bytecode consumption, and the resulting induction of
 ;; effect into the analyzed code, is achieved by the efforts of an
 ;; interpreter, maintaining the program state in conjunction with its
@@ -2428,10 +2428,12 @@
 ;;; -------------------------------------------------------
 
 (defun extract-opcode (byte)
-  "Checks whether the two most significant bits (MSBs), or
-   'sentinel bits', of the CURRENT-BYTE equal the BITS,
-   returning a ``boolean'' result of ``T'' on a match,
-   otherwise ``NIL''."
+  "Extracts and returns from the BYTE, by indagating its two most
+   significant bits (MSBs), acting in this case as 'sentinel bits', the
+   represented opcode.
+   ---
+   If no opcode can be associated with the inspected BYTE section, an
+   error of an unspecified type is signaled."
   (declare (type octet byte))
   (let ((sentinel (ldb (byte 2 6) byte)))
     (declare (type (unsigned-byte 2) sentinel))
@@ -2469,7 +2471,7 @@
                 (let ((instruction-type (extract-opcode current-byte)))
                   (declare (type keyword instruction-type))
                   (case instruction-type
-                    ;; The instruction "cl", "do", and "mv" are
+                    ;; The instructions "cl", "do", and "mv" are
                     ;; constructed of a single byte only.
                     ((:cl :do :mv)
                       (prog1
@@ -2502,7 +2504,8 @@
 
 (defun build-layers ()
   "Builds the four layers which comprise the LayerASM architecture and
-   returns these in a vector."
+   returns these as a one-dimensional simple array of ``Layer''
+   instances."
   (the (simple-array Layer (4))
     (make-array 4
       :element-type 'Layer
@@ -2511,7 +2514,9 @@
           (make-layer :character)
           (make-layer :8-bit-integer)
           (make-layer :16-bit-integer)
-          (make-layer :32-bit-float)))))
+          (make-layer :32-bit-float))
+      :adjustable   NIL
+      :fill-pointer NIL)))
 
 ;;; -------------------------------------------------------
 
@@ -2659,9 +2664,11 @@
                     (declare (type T       comparison-cell))
                     (declare (type boolean is-condition-met))
                     
-                    (when (layer-has-cell-in-direction active-layer direction)
+                    (when (layer-has-cell-in-direction active-layer
+                            direction)
                       (setf comparison-cell
-                        (layer-cell-in-direction active-layer direction)))
+                        (layer-cell-in-direction active-layer
+                          direction)))
                     
                     (case condition
                       ;; Always.
@@ -2712,7 +2719,7 @@
                       (T
                         (read-next-chunk))))))
               
-              (T
+              (otherwise
                 (error "Invalid chunk: ~s."
                   current-chunk))))))))
   
