@@ -203,7 +203,7 @@
 ;;; -------------------------------------------------------
 
 (deftype file-source ()
-  "The ``file-source'' type defines a source when a Braindead program
+  "The ``file-source'' type defines a source whence a Braindead program
    can be loaded."
   '(or pathname stream string))
 
