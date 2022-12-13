@@ -34,8 +34,7 @@
 ;; the program, usually the abstract syntax tree (AST). This action
 ;; homologates their invocation to precede the position of their
 ;; implementation in the source code.
-
-
+;; 
 ;; == MISCELLANEOUS ITERATION CONSTRUCTS ==
 ;; Anenst the iteration facility department, another augmentation of
 ;; brainfault's shows. The original brainfuck language comprehends a
