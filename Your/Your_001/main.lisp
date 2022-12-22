@@ -1,8 +1,54 @@
-;; Date: 2021-12-07
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; This program implements an interpreter for the esoteric programming
+;; language "Your", presented by the Esolang user "Hex96" in the year
+;; 2019, and dioristic in the reliance of the "Your" token's successive
+;; occurrences in a preponderance of instructions as a discriminator.
+;; 
+;; 
+;; Instructions
+;; ============
+;; The Your programming language instruction set's operational syntax
+;; bifurcates into two variants:
+;; 
+;;   (a) Commands represented by a tally of subsequent "Your" tokens.
+;;   (b) The unique command "You’re".
+;; 
+;; == OVERVIEW ==
+;; An apercu shall attend to a cursory intelligence of the instructions.
+;; 
+;;   ------------------------------------------------------------------
+;;   Command                       | Effect
+;;   ------------------------------+-----------------------------------
+;;   Your                          | Prints the text "Hello World".
+;;   ..................................................................
+;;   Your Your                     | Executes a cat program.
+;;   ..................................................................
+;;   Your Your Your                | Executes an "R cat" program.
+;;   ..................................................................
+;;   Your Your Your Your           | Executes the truth-machine
+;;                                 | program.
+;;   ..................................................................
+;;   Your Your Your Your Your      | Prints the lyrics of the song
+;;                                 | "99 bottles of beer on the wall".
+;;   ..................................................................
+;;   Your Your Your Your Your Your | Starts another instance of the
+;;                                 | Your interpreter.
+;;   ..................................................................
+;;   You’re                        | Prints the message
+;;                                 | "SCREAMS AT YOU, THIS IS THE INTERNET!!".
+;;   ------------------------------------------------------------------
+;; 
+;; --------------------------------------------------------------------
+;; 
+;; Author: Kaveh Yousefi
+;; Date:   2021-12-07
 ;; 
 ;; Sources:
 ;;   -> "https://esolangs.org/wiki/Your"
 ;;   -> "https://esolangs.org/wiki/99_bottles_of_beer"
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
@@ -15,7 +61,9 @@
    returning a ``boolean'' result of ``T'' on confirmation and ``NIL''
    on failure."
   (declare (type character character))
-  (not (null (member character '(#\Space #\Tab) :test #'char=))))
+  (the boolean
+    (not (null
+      (member character '(#\Space #\Tab) :test #'char=)))))
 
 ;;; -------------------------------------------------------
 
