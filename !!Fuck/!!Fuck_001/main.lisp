@@ -187,6 +187,10 @@
 ;;; -------------------------------------------------------
 
 (deftype hash-table-of (&optional (key-type T) (value-type T))
+  "The ``hash-table-of'' type defines a hash table composed of zero or
+   more entries, each key of which conforms to the KEY-TYPE, associated
+   with a value of the VALUE-TYPE, both defaulting to the comprehensive
+   ``T''."
   (let ((predicate (gensym)))
     (declare (type symbol predicate))
     (setf (symbol-function predicate)
