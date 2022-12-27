@@ -48,7 +48,7 @@
 ;; 
 ;; == WHITESPACES ==
 ;; All tokens' interstices must be defined in terms of one or more
-;; whitespaces, which encompasses spaces, horizontal tabs, and newline
+;; whitespaces, which encompass spaces, horizontal tabs, and newline
 ;; characters. Their occurrence at any other location constitutes a fact
 ;; of tolerance without signification.
 ;; 
@@ -126,8 +126,8 @@
 ;;   ------------------------------------------------------------------
 ;; 
 ;; == COMMANDS IN SOLBOFUCK AND BRAINFUCK ==
-;; The equipollence commorant in both Solbofuck and brainfuck concludes
-;; in the unambiguous association of both following a bidirectional
+;; The equipollence shared by Solbofuck and brainfuck concludes in the
+;; unambiguous association of both following a bidirectional
 ;; transcription. The respective mapping shall be the coming table's
 ;; cynosure:
 ;; 
@@ -319,7 +319,7 @@
 ;;; -------------------------------------------------------
 
 (defun peek-next-character (stream)
-  "Returns the next character from the STREAM without is removal, or
+  "Returns the next character from the STREAM without its removal, or
    responds with ``NIL'' upon its exhaustion."
   (declare (type stream stream))
   (the (or null character)
@@ -338,7 +338,7 @@
 
 (defun whitespace-follows-p (stream)
   "Checks whether the next character from the STREAM, obtained without
-   its removal, represents whitespace, returning on confirmation a
+   its removal, represents a whitespace, returning on confirmation a
    ``boolean'' value of ``T'', otherwise ``NIL''."
   (declare (type stream stream))
   (let ((next-character (peek-next-character stream)))
@@ -390,7 +390,7 @@
   "Parses the IDENTIFIER string and returns a token representation
    thereof.
    ---
-   An error of an unspecified type is signaled if the IDENTIFER cannot
+   An error of an unspecified type is signaled if the IDENTIFIER cannot
    be recognized."
   (declare (type string identifier))
   (let ((identifier-keyword (intern identifier :keyword)))
@@ -495,7 +495,7 @@
 
 (defstruct (Memory
   (:constructor make-memory ()))
-  "The ``Memory'' class represents a linear arranged of theoretically
+  "The ``Memory'' class represents a linear ordonnance of theoretically
    infinite cells on a bilaterally unbounded tape, each component of
    which stores a signed scalar integer, initially zero (0), with the
    current instance being designated by a mobile cell pointer."
