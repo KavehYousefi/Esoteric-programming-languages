@@ -96,7 +96,7 @@
 
 (defstruct (Instruction
   (:constructor make-instruction (type &optional (argument))))
-  "The ``Instruction'' class describes an BackStart command, optionally
+  "The ``Instruction'' class describes a BackStart command, optionally
    associated with an ARGUMENT."
   (type
     (error "Missing instruction type.")
@@ -365,6 +365,10 @@
          (declare (type fixnum                ip))
          (declare (type (or null Instruction) current-instruction))
          (declare (type integer               counter))
+         (declare (ignorable                  instructions))
+         (declare (ignorable                  ip))
+         (declare (ignorable                  current-instruction))
+         (declare (ignorable                  counter))
          (flet
              ((advance-ip ()
                "Moves the instruction pointer IP to the next position in
