@@ -1683,7 +1683,7 @@
     (graph text
      &key (start-state #x00)
           (path-finder +SHORTEST-PATH-FINDER+))
-  "Given a GRAPH, and an optional START-START designating its initially
+  "Given a GRAPH, and an optional START-STATE designating its initially
    selected vertex (state), creates a ``supply'' of transitions, each
    such a list of bits which, starting from the current state, may be
    followed to arrive at the state tantamount to the next TEXT
@@ -1742,7 +1742,7 @@
      &key (destination NIL)
           (start-state #x00)
           (path-finder +SHORTEST-PATH-FINDER+))
-  "Given a GRAPH, and an optional START-START designating its initially
+  "Given a GRAPH, and an optional START-STATE designating its initially
    selected vertex (state), creates an Array Changer program capable of
    reproducing and printing the TEXT's ASCII character codes, using the
    PATH-FINDER for the traversals from one state to another, and writes
