@@ -99,7 +99,7 @@
 ;;                      ,  argumentSeparator
 ;;                      ,  integer
 ;;                      ;
-;;   accumulatorName    := nameCharacter, { nameCharacter } ;
+;;   accumulatorName    := nameCharacter , { nameCharacter } ;
 ;;   nameCharacter      := letter | digit | "_" ;
 ;;   letter             := "a" | ... | "z" | "A" | ... | "Z" ;
 ;;   integer            := [ "+" | "-" ] , digit , { digit } ;
@@ -530,7 +530,7 @@
 
 (defun parse-INC-instruction (scanner command)
   "Parses the accumulator identifier of an \"INC\"-type instruction by
-   utilizing the SCANNER and the already detected ``:INC'' command
+   utilizing the SCANNER and the already detected ``:INC'' COMMAND
    identifier, and returns an ``instruction'' representation thereof."
   (declare (type Scanner scanner))
   (declare (type command command))
@@ -545,7 +545,7 @@
 
 (defun parse-JZDEC-instruction (scanner command)
   "Parses the arguments of a \"JZDEC\"-type instruction by utilizing the
-   SCANNER and the already detected ``:JZDEC'' command identifier, and
+   SCANNER and the already detected ``:JZDEC'' COMMAND identifier, and
    returns an ``instruction'' representation thereof."
   (declare (type Scanner scanner))
   (declare (type command command))
@@ -829,13 +829,14 @@
               ;; Accumulator value is negative?
               ;; => Invalid state.
               (T
-                (error "Invalid value for accumulator ~d: ~d."
+                (error "Invalid value for accumulator ~s at ~
+                        position ~d."
                   accumulator
                   (interpreter-accumulator-value interpreter
                     accumulator))))))
         
         (otherwise
-          (error "Unrecognized instruction: ~s at position ~d."
+          (error "Unrecognized instruction ~s at position ~d."
             instruction (slot-value interpreter 'ip)))))
   
   (interpreter-print-accumulators interpreter)
@@ -886,7 +887,7 @@
 ;;          |                  | zero by skipping the next line (#9)
 ;;          |                  | and terminating the program.
 ;;   ..................................................................
-;;   9      | JZDEC return, 7  | Repeated invokes the addition line
+;;   9      | JZDEC return, 7  | Repeatedly invokes the addition line
 ;;          |                  | (#7) by jumping using the always
 ;;          |                  | zero-valued RETURN register. The
 ;;          |                  | preceding line (#8) realizes the
