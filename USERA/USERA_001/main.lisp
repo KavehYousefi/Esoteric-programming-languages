@@ -43,24 +43,25 @@
 ;; A formal description of the language shall be furnished by the
 ;; Extended Backus-Naur Form (ENBF):
 ;; 
-;;   program   := [ spaces ]
-;;             ,  [ command ]
-;;             ,  { spaces , command }
-;;             ,  [ spaces ]
-;;             ;
-;;   command   := display | clear | add | subtract ;
-;;   display   := "a" , { spaces , asciiCode } ;
-;;   clear     := "aa" ;
-;;   add       := "a+a" , spaces , number , spaces , number ;
-;;   subtract  := "a-a" , spaces , number , spaces , number ;
+;;   program    := [ spaces ]
+;;              ,  [ command ]
+;;              ,  { spaces , command }
+;;              ,  [ spaces ]
+;;              ;
+;;   command    := display | clear | add | subtract ;
+;;   expression := asciiCode | number | add | subtract ;
+;;   display    := "a" , { spaces , expression } ;
+;;   clear      := "aa" ;
+;;   add        := "a+a" , spaces , expression , spaces , expression ;
+;;   subtract   := "a-a" , spaces , expression , spaces , expression ;
 ;;   
-;;   asciiCode := digit , [ digit , [ digit ] ] ;
-;;   number    := [ "+" | "-" ] , digit , { digit } ;
-;;   digit     := "0" | "1" | "2" | "3" | "4"
-;;             |  "5" | "6" | "7" | "8" | "9"
-;;             ;
-;;   spaces    := space , { space } ;
-;;   space     := " " | "\t" | "\n" ;
+;;   asciiCode  := digit , [ digit , [ digit ] ] ;
+;;   number     := [ "+" | "-" ] , digit , { digit } ;
+;;   digit      := "0" | "1" | "2" | "3" | "4"
+;;              |  "5" | "6" | "7" | "8" | "9"
+;;              ;
+;;   spaces     := space , { space } ;
+;;   space      := " " | "\t" | "\n" ;
 ;; 
 ;; 
 ;; Instructions
@@ -372,6 +373,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftype association-list-of (&optional (key-type T) (value-type T))
+  "The ``association-list-of'' type defines an association list, or
+   alist, as a list of zero or more elements, each member of which
+   either constitutes the ``NIL'' value or a cons whose left moeity
+   conforms to the KEY-TYPE, associated with the value in the right
+   compartment conforming to the VALUE-TYPE, both defaulting to the
+   comprehensive ``T''."
   (let ((predicate (gensym)))
     (declare (type symbol predicate))
     (setf (symbol-function predicate)
@@ -390,6 +397,11 @@
 ;;; -------------------------------------------------------
 
 (deftype property-list-of (&optional (indicator-type T) (value-type T))
+  "The ``property-list-of'' type defines a property list, or plist, as a
+   list of zero or more elements, always of even length, with each
+   indicator, or key, conforming to the INDICATOR-TYPE and associated
+   with the immediately succeeding value of the VALUE type, both
+   defaulting to the comprehensive ``T''."
   (let ((predicate (gensym)))
     (declare (type symbol predicate))
     (setf (symbol-function predicate)
@@ -411,6 +423,9 @@
 ;;; -------------------------------------------------------
 
 (deftype list-of (&optional (element-type T))
+  "The ``list-of'' type defines a list of zero or more elements, each
+   member of which conforms to the ELEMENT-TYPE, defaulting to the
+   comprehensive ``T''."
   (let ((predicate (gensym)))
     (declare (type symbol predicate))
     (setf (symbol-function predicate)
@@ -910,7 +925,6 @@
          TOKENS.
    ---
    This function handles the grammar
-   
      number := [ '+' | '-' ] , digit , { digit } ;"
   (declare (type token-list tokens))
   (the (values node token-list)
@@ -930,9 +944,7 @@
          TOKENS.
    ---
    This function handles the grammar
-   
-     addition := 'a+a' , separator , expression , separator ,
-                  expression ;"
+     add := 'a+a' , spaces , expression , spaces , expression ;"
   (declare (type token-list tokens))
   (let ((remaining-tokens tokens)
         (augend           NIL)
@@ -962,9 +974,7 @@
          TOKENS.
    ---
    This function handles the grammar
-   
-     subtraction := 'a-a' , separator , expression , separator ,
-                     expression ;"
+     subtract  := 'a-a' , spaces , expression , spaces , expression ;"
   (declare (type token-list tokens))
   (with-tokens (tokens tokens current-token)
     (eat :subtract)
@@ -990,7 +1000,10 @@
    literal number or an arithmetic identifier, and returns two values:
      (1) a node representation of the expression and
      (2) a fresh token list containing the items not consumed from the
-         TOKENS."
+         TOKENS.
+   ---
+   This function handles the grammar
+     expression := asciiCode | number | add | subtract ;"
   (declare (type token-list tokens))
   (the (values node token-list)
     (case (token-type (token-list-current tokens))
@@ -1011,7 +1024,10 @@
    returns two values:
      (1) a node representation of the instruction and
      (2) a fresh token list containing the items not consumed from the
-         TOKENS."
+         TOKENS.
+   ---
+   This function handles the grammar
+     display := 'a' , { spaces , expression } ;"
   (declare (type token-list tokens))
   (with-tokens (tokens tokens current-token)
     (eat :display-text)
@@ -1041,7 +1057,10 @@
    and returns two values:
      (1) a node representation of the instruction and
      (2) a fresh token list containing the items not consumed from the
-         TOKENS."
+         TOKENS.
+   ---
+   The function handles the grammar
+     clear := 'aa' ;"
   (declare (type token-list tokens))
   (with-tokens (tokens tokens current-token)
     (eat :clear-screen)
@@ -1057,7 +1076,10 @@
    values:
      (1) a node representation of the parsed instruction and
      (2) a fresh token list containing the items not consumed from the
-         TOKENS."
+         TOKENS.
+   ---
+   This function handles the grammar
+     command := display | clear | add | subtract ;"
   (declare (type token-list tokens))
   (with-tokens (tokens tokens current-token)
     (the (values node token-list)
@@ -1080,7 +1102,14 @@
    returns two values:
      (1) the program node embracing all parsed instructions and
      (2) a fresh token list containing the items not consumed from the
-         TOKENS."
+         TOKENS.
+   ---
+   This function handles the grammar
+     program    := [ spaces ]
+                ,  [ command ]
+                ,  { spaces , command }
+                ,  [ spaces ]
+                ;"
   (declare (type token-list tokens))
   (with-tokens (tokens tokens current-token)
     (let ((statements NIL))
