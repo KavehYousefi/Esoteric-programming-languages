@@ -1193,7 +1193,7 @@
 
 (defun visit-node (node context)
   "Processes the NODE using the CONTEXT and, depending upon the NODE
-   type, either the ``NIL'' value or a signed integer number."
+   type, either returns the ``NIL'' value or a signed integer number."
   (declare (type node    node))
   (declare (type context context))
   (declare (ignorable    context))
