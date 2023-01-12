@@ -393,8 +393,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Set the accumulator to 3 and repeatedly decrement it until it is
-;; negative, in which case its skips the conditional goto instruction
-;; ")" and terminates the program.
+;; negative, in which case it skips the conditional goto instruction ")"
+;; and terminates the program.
 ;; As a consequence thereof, the stack will yet contain the unused
 ;; instruction pointer (IP) position 3.
 (interpret-Mukha "+++(-)")
@@ -414,15 +414,14 @@
 
 ;;; -------------------------------------------------------
 
-;; Push the instruction position 0 unto the stack, move right while
-;; incrementing the accumulator to 3 and avoiding reductions using "/"
-;; for conditional skipping; then move left while decrementing the same
-;; 0, this time preventing the accretion by adminiculum of "\"; and
-;; terminate the program at the left bourne.
+;; Push the instruction pointer position 0 unto the stack, move right
+;; while incrementing the accumulator to 3 and avoiding reductions using
+;; "/" for conditional skipping; then move left while decrementing the
+;; same to 0, this time preventing the accretion by adminiculum of "\";
+;; and finally terminate the program at the left bourne.
 ;; Please note how the stack output attests the recurrence of the
 ;; instruction pointer during its sinistral traversal by comprehending
-;; two copies of the position 0, both accomplished via the "("
-;; command. Concomitantly, the position 13, immediately preceding the
-;; "<" operation, constitutes a testimony to the dextral march's
-;; sojourn.
+;; two copies of the position 0, both accomplished via the "(" command.
+;; Concomitantly, the position 13, immediately preceding the "<"
+;; operation, constitutes a testimony to the dextral march's sojourn.
 (interpret-Mukha "(+\\/-+\\/-+\\/-(\\<")
