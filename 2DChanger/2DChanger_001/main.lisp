@@ -2,7 +2,7 @@
 ;; 
 ;; This program implements an interpreter for the esoteric programming
 ;; language "2DChanger", presented by the Esolang user "ChuckEsoteric08"
-;; in the year 2023, and devised as a two-dimensional variant of
+;; in the year 2022, and devised as a two-dimensional variant of
 ;; Jeffry Johnston's "BitChanger", itself a constricted variation of
 ;; Urban Mueller's "brainfuck", operating, however, on bits.
 ;; 
@@ -222,11 +222,17 @@
 ;;; -------------------------------------------------------
 
 (deftype write-direction ()
+  "The ``write-direction'' type enumerates the recognized directions
+   applying to the text program generator's production of 2DChanger code
+   grid rows."
   '(member :left-to-right :right-to-left))
 
 ;;; -------------------------------------------------------
 
 (deftype print-row-type ()
+  "The ``print-row-type'' type enumerates the recognized variants of
+   2DChanger code grid rows distinguished during a text program
+   generator's operations."
   '(member
     :empty
     :singleton
