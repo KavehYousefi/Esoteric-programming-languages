@@ -407,7 +407,7 @@
     :output                     ;; .
     :execute-if-zero            ;; (
     :repeat-if-zero             ;; )
-    :set-to-value               ;; =1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    :set-to-value               ;; =0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ
     :set-to-binary))            ;; $§¥€¢£₩«»•abcdefghijklmnopwrstuvwxyz
 
 ;;; -------------------------------------------------------
