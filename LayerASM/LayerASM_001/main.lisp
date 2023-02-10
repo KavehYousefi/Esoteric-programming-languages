@@ -2079,7 +2079,11 @@
 
 (defstruct (Pointer
   (:constructor make-pointer (x y)))
-  "The ``Pointer'' class models a cursor into a ``Grid''."
+  "The ``Pointer'' class models a cursor into a ``Grid''.
+   ---
+   The destination's two-dimensional nature propagates into this
+   pointing entity, endowing it with an x- and a y-coordinate
+   specifier."
   (x 0 :type (integer 0 15))
   (y 0 :type (integer 0 15)))
 
@@ -2088,13 +2092,14 @@
 (defmacro with-pointer ((x-variable y-variable) pointer-expression
                         &body body)
   "Evaluates the POINTER-EXPRESSION to a ``Pointer'' object, binds its
-   x-coordinate to the X-VARIABLE and its y-coordinate to the,
-   Y-VARIABLE, evaluated the BODY forms, and returns the result of the
+   x-coordinate to the X-VARIABLE and its y-coordinate to the
+   Y-VARIABLE, evaluates the BODY forms, and returns the result of the
    last processed form."
   (let ((evaluated-pointer (gensym)))
     (declare (type symbol evaluated-pointer))
     `(let ((,evaluated-pointer ,pointer-expression))
        (declare (type Pointer ,evaluated-pointer))
+       (declare (ignorable    ,evaluated-pointer))
        (symbol-macrolet
            ((,x-variable
               (the (integer 0 15)
@@ -2102,6 +2107,10 @@
             (,y-variable
               (the (integer 0 15)
                 (pointer-y ,evaluated-pointer))))
+         (declare (type (integer 0 15) ,x-variable))
+         (declare (ignorable           ,x-variable))
+         (declare (type (integer 0 15) ,y-variable))
+         (declare (ignorable           ,y-variable))
          ,@body))))
 
 
@@ -2225,8 +2234,6 @@
   "Returns the value of the LAYER's active cell."
   (declare (type Layer layer))
   (with-pointer (x y) (slot-value layer 'pointer)
-    (declare (type (integer 0 15) x))
-    (declare (type (integer 0 15) y))
     (the T (aref (slot-value layer 'cells) y x))))
 
 ;;; -------------------------------------------------------
@@ -2237,8 +2244,6 @@
   (declare (type T     new-value))
   (declare (type Layer layer))
   (with-pointer (x y) (slot-value layer 'pointer)
-    (declare (type (integer 0 15) x))
-    (declare (type (integer 0 15) y))
     (setf (layer-cell-at layer x y) new-value))
   (the Layer layer))
 
@@ -2252,8 +2257,6 @@
   (with-slots (pointer) layer
     (declare (type Pointer pointer))
     (with-pointer (x y) pointer
-      (declare (type (integer 0 15) x))
-      (declare (type (integer 0 15) y))
       (the T
         (case direction
           (#b00 (layer-cell-at layer     x  (1- y)))
@@ -2290,8 +2293,6 @@
   (with-slots (pointer cells) layer
     (declare (type Pointer pointer))
     (with-pointer (x y) pointer
-      (declare (type (integer 0 15) x))
-      (declare (type (integer 0 15) y))
       (the boolean
         (not (null
           (case direction
@@ -2779,8 +2780,7 @@
   (make-byte-vector
     #b00101100
     #b00101101
-    #b10001000
-    #b11111110))
+    #b10001000 #b11111110))
 
 ;;; -------------------------------------------------------
 
@@ -2802,8 +2802,7 @@
     #b11011001
     #b00101100
     #b00101101
-    #b10001010
-    #b11111101))
+    #b10001010 #b11111111))
 
 ;;; -------------------------------------------------------
 
@@ -2812,5 +2811,4 @@
   "cl 1           ;; Change to the 8-bit layer (#1).
    do i           ;; Input an integer number.
    do o           ;; Output the current cell value.
-   jp 0, nz, -1   ;; Repeat 'do o' if active cell is not zero.
-  ")
+   jp 0, nz, -1   ;; Repeat 'do o' if active cell is not zero.")
