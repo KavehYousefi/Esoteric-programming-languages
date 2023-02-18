@@ -120,7 +120,8 @@
 ;; 
 ;; --------------------------------------------------------------------
 ;; 
-;; Date: 2023-02-11
+;; Author: Kaveh Yousefi
+;; Date:   2023-02-11
 ;; 
 ;; Sources:
 ;;   -> "https://esolangs.org/wiki/Wasm"
@@ -265,7 +266,7 @@
 
 (defun get-instruction-for-bytecode (bytecode)
   "Returns the instruction corresponding to the BYTECODE, or signals an
-   error of an unspecified in the case of its disrespondency."
+   error of an unspecified type in the case of its disrespondency."
   (declare (type nybble bytecode))
   (the command
     (case bytecode
@@ -774,7 +775,7 @@
              on an iteration or conditional boundary, relocates it to
              the opposite march and returns no value.
              ---
-             In the case of a missing corresponding with the IP
+             In the case of a missing correspondence with the IP
              position in the JUMP-TABLE, an error of an unspecified
              type is signaled."
             (setf ip
@@ -942,9 +943,9 @@
 
 (defun compile-bytecode-to-assembly (chunks &key (destination NIL))
   "Generates for the bytecode CHUNKS the corresponding sequence of
-   assembly language mnemonics to the DESTINATION, returning for a
-   non-``NIL'' DESTINATION the ``NIL'' value, otherwise responding with
-   a fresh string comprehending the result."
+   assembly language mnemonics and writes these to the DESTINATION,
+   returning for a non-``NIL'' DESTINATION the ``NIL'' value, otherwise
+   responding with a fresh string comprehending the result."
   (declare (type nybble-vector chunks))
   (declare (type destination   destination))
   (the (or null string)
