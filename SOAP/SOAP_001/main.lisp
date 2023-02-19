@@ -1874,17 +1874,7 @@
 ;;; -------------------------------------------------------
 
 (defparameter *project-directory*
-  (make-pathname
-    :device    "C"
-    :directory '(:absolute
-                 "Users"
-                 "Kaveh"
-                 "Documents"
-                 "PrograMing"
-                 "CommonLisp"
-                 "Esolangs"
-                 "SOAP"
-                 "SOAP_001_GitHubVersion"))
+  (make-pathname)
   "Specifies the directory containing the Common Lisp project files.")
 
 
