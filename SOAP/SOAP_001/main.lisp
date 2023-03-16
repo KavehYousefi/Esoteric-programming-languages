@@ -1051,7 +1051,7 @@
 ;; finite main set, the complement, perforce, must assume all erstwhile
 ;; excluded elements — a boundless account of such exists.
 ;; 
-;; The material issues thus emanate: How can be represent vexing
+;; The material issues thus emanate: How can we represent vexing
 ;; infinite sets in a programming language, and how can we attune these
 ;; with the less demanding finite sets?
 ;; 
@@ -1153,7 +1153,7 @@
 ;; 
 ;;   ------------------------------------------------------------------
 ;;               | Inclusive set            | Exclusive set
-;;   ---------------------------------------+--------------------------
+;;   ------------+--------------------------+--------------------------
 ;;   Foundation  | Empty set Ø.             | Universe 𝕌.
 ;;   ..................................................................
 ;;   Cardinality | Finite.                  | Infinite.
@@ -1198,11 +1198,11 @@
 ;; always presents a natural number greater than zero (0).
 ;; 
 ;; The following table abbreviates the exclusive form of A using "Ex.",
-;; wheares the inclusive variant is curtailed to "In.".
+;; whereas the inclusive variant is curtailed to "In.".
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   Operation | 𝐴   | Result 𝐴*
-;;   ------------------------------------------------------------------
+;;   ----------+-----+-------------------------------------------------
 ;;   Insertion | Ex. | An exclusive set which is produced by removing
 ;;             |     | from 𝐴's blacklist the element 𝑖:
 ;;             |     |   𝐴*.blacklist = 𝐴.blacklist - {𝑖}

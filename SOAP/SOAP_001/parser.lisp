@@ -292,7 +292,7 @@
 ;;; -------------------------------------------------------
 
 (defun parser-parse-statement (parser)
-  "Parses a signal statement using the PARSER and returns a node
+  "Parses a single statement using the PARSER and returns a node
    representation thereof."
   (declare (type Parser parser))
   (with-parser (parser)

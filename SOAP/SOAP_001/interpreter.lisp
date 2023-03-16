@@ -39,7 +39,7 @@
              (the Node
                (interpreter-tree ,evaluated-interpreter)))
             (main-set
-             (the T
+             (the SOAPSet
                (interpreter-main-set ,evaluated-interpreter)))
             (variable
              (the natural-number
@@ -49,7 +49,7 @@
                (interpreter-input ,evaluated-interpreter))))
          (declare (type Node           tree))
          (declare (ignorable           tree))
-         (declare (type T              main-set))
+         (declare (type SOAPSet        main-set))
          (declare (ignorable           main-set))
          (declare (type natural-number variable))
          (declare (ignorable           variable))
