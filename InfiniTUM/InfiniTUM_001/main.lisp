@@ -538,16 +538,17 @@
 ;;   Esolang contributors, "InfiniTUM - Esolang", 2012
 ;;   URL: "https://esolangs.org/wiki/InfiniTUM"
 ;;   
-;;   [lantsman2018prattparsers]
-;;   Denis Lantsman, "How Desmos uses Pratt Parsers", 2018
-;;   URL: "https://engineering.desmos.com/articles/pratt-parser/"
-;;   
 ;;   [grand1997javalangref]
 ;;   Mark Grand, "Java Language Reference", 2nd Edition July 1997,
 ;;               "Chapter 4.14 Order of Operations"
 ;;   URL: "http://web.deu.edu.tr/doc/oreily/java/langref/ch04_14.htm"
 ;;   # Describes and lists the order of operations established in the
 ;;     Java programming language.
+;;   
+;;   [lantsman2018prattparsers]
+;;   Denis Lantsman, "How Desmos uses Pratt Parsers", 2018
+;;   URL: "https://engineering.desmos.com/articles/pratt-parser/"
+;;   # Provides a pellucid explanation of the Pratt parser concept.
 ;;   
 ;;   [pratt1973top]
 ;;   Vaughan R. Pratt, "Top Down Operator Precedence", 1973
@@ -1776,7 +1777,7 @@
    cell.")
 
 (define-symbol-macro *tape-value*
-  (gethash *tape-head* *tape* 0))
+  (the integer (gethash *tape-head* *tape* 0)))
 
 (defparameter *state* 1
   "The current state.")
@@ -2088,7 +2089,7 @@
 
 ;;; -------------------------------------------------------
 
-;; A counter sicklike to the aboon, but setting elements at odd tape
+;; A counter siclike to the aboon, but setting elements at odd tape
 ;; indices to their negative value.
 (interpret-InfiniTUM
   "IF s != 0
