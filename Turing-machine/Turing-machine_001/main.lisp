@@ -236,6 +236,9 @@
 ;;   (4) the direction into to move the tape's head by one step
 ;;   (5) the new symbol to place into the tape's head location.
 ;; 
+;; Upon settling into the final state "F", and the program's subsequent
+;; halting, the tape is printed to the standard output.
+;; 
 ;; == TURING-MACHINE AND TURING MACHINE: MAPPING LANGUAGE AND MODEL ==
 ;; The Turing-machine language's foundry registered at the eponymous
 ;; abstraction, reason redes to pursue the affiliation of its
@@ -357,7 +360,7 @@
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   Species   | Character | Remarks
-;;   ----------+-------------------------------------------------------
+;;   ----------+-----------+-------------------------------------------
 ;;   Condition | Q         | None.
 ;;             |.......................................................
 ;;             | E         | None.
@@ -394,6 +397,70 @@
 ;;   condition := "Q" | "E" | "O" | "F" ;
 ;;   symbol    := "0" | "1" ;
 ;;   direction := "<" | ">" | "-" ;
+;; 
+;; 
+;; Instructions
+;; ============
+;; All effect in the language ensues from a single statement, serving as
+;; a Turing machine rule, the four parameters of which instil the
+;; diversity in causata, which incorporates the transitioning betwixt
+;; states, modifications to the tape, and a contingent halting.
+;; 
+;; A statement adheres to the following forbisen, which designates the
+;; variable portions by an underline composed of carets ("^"):
+;; 
+;;   currentCondition currentSymbol : nextCondition newSymbol headMove
+;;   ^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^   ^^^^^^^^^^^^^ ^^^^^^^^^ ^^^^^^^^
+;; 
+;; The quadruple parameter list is comprised of:
+;; 
+;;   ------------------------------------------------------------------
+;;   Parameter        | Type      | Role
+;;   -----------------+-----------+------------------------------------
+;;   currentCondition | condition | The current state machine requisite
+;;                    |           | for the rule to be match.
+;;   ..................................................................
+;;   currentCondition | symbol    | The symbol under the tape head
+;;                    |           | requisite for the rule to be match.
+;;   ..................................................................
+;;   nextCondition    | condition | The state to set the state machine
+;;                    |           | to, if the rule matches.
+;;   ..................................................................
+;;   newSymbol        | symbol    | The symbol to write into the cell
+;;                    |           | under the tape head, replacing the
+;;                    |           | current content, if the rule
+;;                    |           | matches.
+;;   ..................................................................
+;;   headMove         | direction | The direction into to move the tape
+;;                    |           | head by one step, if the rule
+;;                    |           | matches.
+;;   ------------------------------------------------------------------
+;; 
+;; The following options appertain to the parameters:
+;; 
+;;   ------------------------------------------------------------------
+;;   Type      | Value     | Remarks
+;;   ----------+-----------+-------------------------------------------
+;;   Condition | Q         | None.
+;;             |.......................................................
+;;             | E         | None.
+;;             |.......................................................
+;;             | O         | None.
+;;             |.......................................................
+;;             | F         | If this condition is assumed, the program
+;;             |           | halts, and the tape state is printed to
+;;             |           | the standard output.
+;;   ==================================================================
+;;   Symbol    | 0         | None.
+;;             |.......................................................
+;;             | 1         | None.
+;;   ==================================================================
+;;   Direction | <         | Moves the tape head left.
+;;             |.......................................................
+;;             | >         | Moves the tape head right.
+;;             |.......................................................
+;;             | -         | Does not move the tape head.
+;;   ------------------------------------------------------------------
 ;; 
 ;; 
 ;; Lacunae in the Specification
@@ -574,7 +641,7 @@
   (declare (type character candidate))
   (the boolean
     (not (null
-      (find candidate "QEOF" :test #'eql)))))
+      (find candidate "QEOF" :test #'char=)))))
 
 ;;; -------------------------------------------------------
 
@@ -584,7 +651,7 @@
   (declare (type character candidate))
   (the boolean
     (not (null
-      (find candidate "01" :test #'eql)))))
+      (find candidate "01" :test #'char=)))))
 
 ;;; -------------------------------------------------------
 
@@ -595,7 +662,7 @@
   (declare (type character candidate))
   (the boolean
     (not (null
-      (find candidate "<>-" :test #'eql)))))
+      (find candidate "<>-" :test #'char=)))))
 
 ;;; -------------------------------------------------------
 
@@ -773,8 +840,11 @@
 ;;; -------------------------------------------------------
 
 (defun parse-rule (source start)
-  "Commencing at the START position in the SOURCE, parses and returns a
-   new ``Rule''."
+  "Commencing at the START position in the SOURCE, parses a single rule
+   and returns two values:
+     (1) the detected rule as a ``Rule'' object
+     (2) the position in the SOURCE immediately succeeding the rule's
+         extent."
   (declare (type string source))
   (declare (type fixnum start))
   (let ((position start))
@@ -1365,7 +1435,6 @@
 ;;        O      |      0       |     E      |     1      |     <
 ;;        O      |      1       |     F      |     1      |     >
 ;;   ------------------------------------------------------------------
-;; 
 (interpret-Turing-machine
   "Q0:E>1
    Q1:O<1
