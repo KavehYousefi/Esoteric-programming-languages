@@ -863,15 +863,15 @@
 ;;       "https://github.com/PythonshellDebugwindow/esolangs/blob/
 ;;        master/n-refine/n-refine.py".
 ;;   
+;;   [esolang2022nndstojmp]
+;;   The Esolang contributors, "nndstojmp", 2022
+;;   URL: "https://esolangs.org/wiki/Nndstojmp"
+;;   
 ;;   [esolang2022Subleq]
 ;;   The Esolang contributors, "Subleq", 2022
 ;;   URL: "https://esolangs.org/wiki/Subleq"
 ;;   Notes:
 ;;     - An esoteric programming language similar to nndstojmp.
-;;   
-;;   [esolang2022nndstojmp]
-;;   The Esolang contributors, "nndstojmp", 2022
-;;   URL: "https://esolangs.org/wiki/Nndstojmp"
 ;;   
 ;;   [esolang2023oisc]
 ;;   The Esolang contributors, "OISC", 2023
@@ -1728,7 +1728,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Generate an nndstojmp capacitated with the printing the ASCII
+;; Generate an nndstojmp program capacitated with the printing the ASCII
 ;; character codes for the message "Hello, World!", and print the same
 ;; to the standard output.
 ;; 
@@ -1752,7 +1752,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Generate an nndstojmp capacitated with the printing the ASCII
+;; Generate an nndstojmp program capacitated with the printing the ASCII
 ;; character codes for the message "Hello, World!", and interpret the
 ;; same.
 (interpret-nndstojmp
