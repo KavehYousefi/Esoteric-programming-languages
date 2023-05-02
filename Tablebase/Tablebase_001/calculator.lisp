@@ -416,7 +416,7 @@
 ;;; -------------------------------------------------------
 
 (defun procedure-signature-matches-p (procedure parameters)
-  "Determins whether the actual PARAMETERS match the PROCEDURE's formal
+  "Determines whether the actual PARAMETERS match the PROCEDURE's formal
    parameter signature, on confirmation returning a ``boolean'' value of
    ``T'', otherwise ``NIL''."
   (declare (type Procedure             procedure))
@@ -434,7 +434,7 @@
 ;;; -------------------------------------------------------
 
 (defun procedure-check-parameters (procedure parameters)
-  "Determins whether the actual PARAMETERS match the PROCEDURE's formal
+  "Determines whether the actual PARAMETERS match the PROCEDURE's formal
    parameter signature, on confirmation returning the unmodified
    PARAMETERS, otherwise signaling an error of an unspecified type."
   (declare (type Procedure             procedure))
