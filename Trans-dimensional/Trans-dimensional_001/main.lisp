@@ -372,10 +372,6 @@
 
 ;;; -------------------------------------------------------
 
-
-
-
-
 (deftype hash-table-of (&optional (key-type T) (value-type T))
   "The ``hash-table-of'' type defines a hash table of zero or more
    entries, each key of which conforms to the KEY-TYPE and associates
@@ -629,7 +625,6 @@
 
 ;;; -------------------------------------------------------
 
-;; Choice.
 (defun .or (&rest choices)
   "Creates and returns a new parser which succeeds if any of its
    CHOICES, themselves parsers, succeeds, the candidates being probed in
@@ -668,8 +663,6 @@
 
 ;;; -------------------------------------------------------
 
-;; >>=
-;; 
 (defun .bind (predicate action)
   "Creates and returns a parser representative of a monadic binding, by
    applying the PREDICATE parser whose result's data, if successful, is
@@ -707,7 +700,6 @@
 
 ;;; -------------------------------------------------------
 
-;; The final BODY form must return a ``Parser'' instance.
 (defmacro .let ((action-parameter-variable parser) &body body)
   "Evaluates the PARSER to a ``Parser'' object, binds its result to a
    local variable designated by the ACTION-PARAMETER-VARIABLE, executes
@@ -728,7 +720,6 @@
 
 ;;; -------------------------------------------------------
 
-;; .do
 (defun .chain (first-parser &rest further-parsers)
   "Creates and returns a new parser which succeeds if all of the input
    parsers, composed of the FIRST-PARSER and the optional
@@ -762,8 +753,6 @@
 
 ;;; -------------------------------------------------------
 
-;; Alternative implementation:
-;;   (.or PREDICATE (.return DEFAULT))
 (defun .optional (predicate default)
   "Creates and returns a new parser which attempts to match the
    PREDICATE parser, upon success returning its result; otherwise
@@ -784,7 +773,6 @@
 
 ;;; -------------------------------------------------------
 
-;; .many1
 (defun .one-or-more (filter)
   "Creates and returns a new parser which parses one or more tokens that
    satisfy the FILTER parser, succeeding if at the FILTER matches at
@@ -823,7 +811,6 @@
 
 ;;; -------------------------------------------------------
 
-;; .many
 (defun .zero-or-more (filter)
   "Creates and returns an always succeeding parser which collects zero
    or more tokens that statisfy the FILTER parser and returns these in
