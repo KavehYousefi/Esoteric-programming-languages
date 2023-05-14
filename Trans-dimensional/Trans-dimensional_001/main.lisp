@@ -891,8 +891,9 @@
          (make-parser
            #'(lambda (,state-variable)
                (declare (type Parse-State ,state-variable))
-               (parser-parse
-                 (.chain ,@parsers) ,state-variable)))))))
+               (the Parse-Result
+                (parser-parse
+                  (.chain ,@parsers) ,state-variable))))))))
 
 
 
