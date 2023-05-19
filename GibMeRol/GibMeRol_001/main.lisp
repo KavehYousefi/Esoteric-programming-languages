@@ -91,8 +91,7 @@
 ;;   l                | ]
 ;;   ---------------------------------------
 ;; 
-
-
+;; 
 ;; Lacunae in the Specification
 ;; ============================
 ;; GibMeRol's perfect congruency with brainfuck ascertains its
@@ -101,11 +100,12 @@
 ;; 
 ;; == WHICH CONCRETE DESIGN APPLIES TO THE MEMORY? ==
 ;; Merely the cell value model, ramose in the variations appertaining to
-;; brainfuck's construe in modern contexts, tharf a more explicit
+;; brainfuck's construe in modern contexts, tharfs a more explicit
 ;; treatise. Its has been adjudged, and ascertained by its aefauld
 ;; "Hello World" example, that each cell maintains an unsigned octet in
 ;; the range [0, 255], wrapping its value around to the opposite
-;; extremum if transgressing one of its marches.
+;; extremum if transgressing one of its marches. The ensconcing tape
+;; is unbounded along both lateralities.
 ;; 
 ;; 
 ;; Implementation
@@ -118,8 +118,8 @@
 ;; 
 ;; A parser either returns a command object, or a list thereof for the
 ;; topmost specimen, which represents the entire program's instruction
-;; sequence. Non-command tokens produce the ``NIL'' value, which is,
-;; however, never captured.
+;; sequence. Non-command tokens produce the ``NIL'' value, a substitute
+;; datum that always eludes capture.
 ;; 
 ;; == PARSERS AND COMBINATORS ARE FUNCTIONS ==
 ;; In eath diction, the parser combinator approach constructs a complete
