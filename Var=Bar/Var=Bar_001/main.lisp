@@ -1006,9 +1006,9 @@
 ;;====================================================================;;
 
 (defun get-consequent-binding-power (token)
-  "Returns the numeric binding power associated with the TOKEN, or
-   signals an error of an unspecified type if no such attribute is
-   affiliated with the same."
+  "Returns the numeric binding power associated with the consequent
+   TOKEN, or signals an error of an unspecified type if no such
+   attribute is affiliated with the same."
   (declare (type Token token))
   (the integer
     (case (token-type token)
@@ -1022,6 +1022,9 @@
 ;;; -------------------------------------------------------
 
 (defun get-initial-binding-power (token)
+  "Returns the numeric binding power associated with the initial TOKEN,
+   or signals an error of an unspecified type if no such attribute is
+   affiliated with the same."
   (declare (type Token token))
   (the integer
     (case (token-type token)
@@ -1879,7 +1882,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Employ arithmetics by utilizing the addition ("+") operator.
+;; Employ arithmetics by utilizing the subtraction ("-") operator.
 (interpret-Var=Bar "x=4
                     J=x - 1
                     J=0UT")
