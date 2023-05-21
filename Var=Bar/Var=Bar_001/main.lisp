@@ -547,6 +547,13 @@
 
 ;;; -------------------------------------------------------
 
+(deftype unary-operator ()
+  "The ``unary-operator'' type enumerates the recognized unary
+   operators."
+  '(member :plus :minus))
+
+;;; -------------------------------------------------------
+
 (deftype binary-operator ()
   "The ``binary-operator'' type enumerates the recognized binary
    operators."
@@ -808,16 +815,6 @@
         ((identifier-character-p character)
           (lexer-read-identifier lexer))
         
-        ((char= character #\*)
-          (prog1
-            (make-token :asterisk character)
-            (advance)))
-        
-        ((char= character #\/)
-          (prog1
-            (make-token :slash character)
-            (advance)))
-        
         ((char= character #\+)
           (prog1
             (make-token :plus character)
@@ -1008,17 +1005,30 @@
 ;; Parser: Pratt parser section.                                      ;;
 ;;====================================================================;;
 
-(defun get-binding-power (token)
+(defun get-consequent-binding-power (token)
   "Returns the numeric binding power associated with the TOKEN, or
    signals an error of an unspecified type if no such attribute is
    affiliated with the same."
   (declare (type Token token))
   (the integer
     (case (token-type token)
-      ((:plus     :minus)                   30)
+      ((:plus         :minus)               30)
       ((:greater-than :less-than :equal-to) 20)
       (otherwise
-        (error "There is no binding power defined for the token ~s."
+        (error "There is no consequent binding power defined for the ~
+                token ~s."
+          token)))))
+
+;;; -------------------------------------------------------
+
+(defun get-initial-binding-power (token)
+  (declare (type Token token))
+  (the integer
+    (case (token-type token)
+      ((:plus :minus) 50)
+      (otherwise
+        (error "There is no initial binding power defined for the ~
+                token ~s."
           token)))))
 
 ;;; -------------------------------------------------------
@@ -1042,6 +1052,16 @@
             (the Node
               (make-node :number
                 :value (token-value initial-token)))))
+      
+      ((:plus :minus)
+        #'(lambda (parser initial-token)
+            (declare (type Parser parser))
+            (declare (type Token  initial-token))
+            (the Node
+              (make-node :unary-operation
+                :operator (token-type initial-token)
+                :operand  (parser-parse-expression parser
+                            (get-initial-binding-power initial-token))))))
       
       (:identifier
         #'(lambda (parser initial-token)
@@ -1103,7 +1123,8 @@
                 :operator (token-type consequent-token)
                 :left     left-node
                 :right    (parser-parse-expression parser
-                            (get-binding-power consequent-token))))))
+                            (get-consequent-binding-power
+                              consequent-token))))))
       
       ;; ">", "<", "=="
       ((:greater-than :less-than :equal-to)
@@ -1116,7 +1137,8 @@
                 :operator (token-type consequent-token)
                 :left     left-node
                 :right    (parser-parse-expression parser
-                            (get-binding-power consequent-token))))))
+                            (get-consequent-binding-power
+                              consequent-token))))))
       
       (otherwise
         NIL))))
@@ -1166,7 +1188,8 @@
             (loop-finish))
           
           ;; Next operator is too weak to claim the LEFT-NODE.
-          ((<= (get-binding-power current-token) current-binding-power)
+          ((<= (get-consequent-binding-power current-token)
+               current-binding-power)
             (loop-finish))
           
           ;; Next operator binds the LEFT-NODE and returns its own node.
@@ -1291,6 +1314,12 @@
                 (:input
                   (make-node :assignment
                     :kind     :input
+                    :variable variable
+                    :value    value-node))
+                
+                (:unary-operation
+                  (make-node :assignment
+                    :kind     :arithmetic
                     :variable variable
                     :value    value-node))
                 
@@ -1743,6 +1772,28 @@
 
 (defmethod dispatch-node ((interpreter Interpreter)
                           (node        Node)
+                          (node-type   (eql :unary-operation)))
+  (declare (type Interpreter interpreter))
+  (declare (type Node        node))
+  (declare (type keyword     node-type))
+  (declare (ignore           node-type))
+  (let ((operator (node-attribute node :operator))
+        (operand  (node-attribute node :operand)))
+    (declare (type unary-operator operator))
+    (declare (type Node           operand))
+    (the vb-object
+      (case operator
+        (:plus
+          (visitor-visit-node interpreter operand))
+        (:minus
+          (- (visitor-visit-node interpreter operand)))
+        (otherwise
+          (error "No unary operator: ~s." operator))))))
+
+;;; -------------------------------------------------------
+
+(defmethod dispatch-node ((interpreter Interpreter)
+                          (node        Node)
                           (node-type   (eql :binary-operation)))
   (declare (type Interpreter interpreter))
   (declare (type Node        node))
@@ -1862,27 +1913,35 @@
 ;;; -------------------------------------------------------
 
 ;; Fibonacci sequence with sequence length determined by the user input.
-;; The user input, expected to be a non-negative integer, specifies the
-;; tally of Fibonacci elements to print following the initial twain
-;;   0, 1
 (interpret-Var=Bar
   "separator           = ,
    numberOfGenerations = 1N
    generationCounter   = 0
+   shallPrintF0        = numberOfGenerations
+   shallPrintF1        = numberOfGenerations - 1
    
-   F0        = 0
-   F1        = 1
+   F0                  = 0
+   F1                  = 1
    
-   F0        = 0UT
-   separator = 0UT
-   F1        = 0UT
+   iteration           = shallPrintF0 > 0
+   F0                  = 0UT
+   shallPrintF0        = 0
+   numberOfGenerations = numberOfGenerations - 1
+   iteration           = STOP
    
-   iteration         = generationCounter < numberOfGenerations
-   FN                = F0 + F1
-   separator         = 0UT
-   FN                = 0UT
-   F0                = F1
-   F1                = FN
-   generationCounter = generationCounter + 1
-   iteration = STOP
+   iteration           = shallPrintF1 > 0
+   separator           = 0UT
+   F1                  = 0UT
+   shallPrintF1        = 0
+   numberOfGenerations = numberOfGenerations - 1
+   iteration           = STOP
+   
+   iteration           = generationCounter < numberOfGenerations
+   FN                  = F0 + F1
+   separator           = 0UT
+   FN                  = 0UT
+   F0                  = F1
+   F1                  = FN
+   generationCounter   = generationCounter + 1
+   iteration           = STOP
   ")
