@@ -527,7 +527,7 @@
 
 (defun parser-parse (parser state)
   "Invokes the PARSER on the parse STATE and returns its
-   ``parse-result''"
+   ``parse-result''."
   (declare (type parser      parser))
   (declare (type parse-state state))
   (the parse-result
@@ -698,7 +698,6 @@
                 (setf new-state (parse-result-state result))
               else do
                 (loop-finish)
-              
               finally
                 (return
                   (make-parse-result :successful new-state
