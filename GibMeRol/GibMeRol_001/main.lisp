@@ -57,12 +57,12 @@
 ;;   ..................................................................
 ;;   o       | If the current cell value equals zero (0), moves the
 ;;           | instruction pointer (IP) forward to the position
-;;           | immediately succeeding the matching "âŸ­". Otherwise
+;;           | immediately succeeding the matching "o". Otherwise
 ;;           | proceeds as usual.
 ;;   ..................................................................
 ;;   l       | If the current cell value does not equal zero (0), moves
 ;;           | the instruction pointer (IP) back to the position
-;;           | immediately succeeding the matching "âŸ¬". Otherwise
+;;           | immediately succeeding the matching "o". Otherwise
 ;;           | proceeds as usual.
 ;;   ------------------------------------------------------------------
 ;; 
