@@ -305,7 +305,7 @@
 ;;   | Executed program            |
 ;;   +-----------------------------+
 ;; 
-;; == HOMOICONITY: CODE = DATA = CODE = ... ==
+;; == HOMOICONICITY: CODE = DATA = CODE = ... ==
 ;; Homoiconicity as a language characteristic refers to the concomitant
 ;; disposition of a data structure for both data storage purposes and
 ;; source code representation. In the case of Lisp, the "LISt Processing
