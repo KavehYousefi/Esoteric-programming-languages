@@ -11,7 +11,7 @@
 ;; Concept
 ;; =======
 ;; The wepmlrio programming language is founded upon brainfuck,
-;; approprating its entire concepts verbatim, while merely employing a
+;; appropriating its entire concepts verbatim, while merely employing a
 ;; different set of characters for the command tokens' representation,
 ;; the selection of the same relays to the requirements of Morse code
 ;; communication.
