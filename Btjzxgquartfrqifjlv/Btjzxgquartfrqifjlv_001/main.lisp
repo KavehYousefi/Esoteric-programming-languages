@@ -576,7 +576,8 @@
     
     (the s-expression
       `(loop until (zerop current-cell) do
-         ,@(nreverse loop-body)))))
+         ,@(or (nreverse loop-body)
+               '('()))))))
 
 ;;; -------------------------------------------------------
 
@@ -685,6 +686,7 @@
            "Stores the NEW-VALUE in the MEMORY cell at the CELL-POINTER,
             contingently preceded by a wrapping into the unsigned byte
             range [0, 255], and returns the final value."
+           (declare (type integer new-value))
            (setf (gethash cell-pointer memory 0)
                  (mod new-value 256))
            (the octet
@@ -692,10 +694,10 @@
        
        (symbol-macrolet
            ((current-cell
-             (the octet
+             (the integer
                (access-current-cell))))
-         (declare (type octet current-cell))
-         (declare (ignorable  current-cell))
+         (declare (type integer current-cell))
+         (declare (ignorable    current-cell))
          
          ,@(transform-commands
              (make-lisp-converter
@@ -712,7 +714,7 @@
 
 ;; Print "Hello, World!".
 (interpret-Btjzxgquartfrqifjlv
-"rtfrtfrqirtfrqirqiquabtjquabtjrqiquafrtfrtfrtffrtffrtffrtfrqirqirqizxgfzxgrqirqirtfrtflvrqiquaquaquaquaquaqualvrqirqirtflvlvrqirqilvrqiqualvfflvfflvrqirqirqilvquaquaqualvfflvffrtflvrqirqirqiqualv")
+  "quabtjrtfrtffrtfbtjffquafrtfrtfrtfrtfrtfrqirqizxgrqirtfrtfrqirtfrtfrtfzxgfrtflvfffqualvfflvlvquaquaquabtjlvfzxgrqirqirqirqilvquaquaqualvrtfrtfrtfrtfrtfrtflvrqirqirtflvffffqualv")
 
 ;;; -------------------------------------------------------
 
