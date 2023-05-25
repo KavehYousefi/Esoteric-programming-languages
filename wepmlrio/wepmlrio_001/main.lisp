@@ -751,7 +751,8 @@
                 (parse-let (statements (parse-statements))
                   (parse-return
                     `(loop until (zerop (current-cell)) do
-                       ,@statements))))
+                       ,@(or statements
+                             '('()))))))
               
               (parse-chain (parse-character #\p)
                 (parse-return
