@@ -361,31 +361,31 @@
 ;; A formulation of the syntax in the Extended Backus-Naur Form (EBNF)
 ;; avails in the language's delineation:
 ;; 
-;; program            := lineSeparator
-;;                    ,  [ initalizationLine ,
-;;                         { lineSeparator , loopBodyLine }
-;;                       ]
-;;                    ,  lineSeparator
-;;                    ;
-;; lineSeparator      := { emptyLine , linebreak } ;
-;; emptyLine          := spaces ;
-;; initializationLine := [ number , { "," , number } ] ;
-;; loopBodyLine       := [ expression , { "," , expression } ] ;
-;; expression         := number
-;;                    |  variable
-;;                    |  expression , operator , expression
-;;                    |  "(" , expression , ")"
-;;                    ;
-;; operator           := "+" | "-" | "*" | "/" ;
-;; variable           := "a" | "b" | ... | "z" | "A" | "B" | ... | "Z" ;
-;; number             := [ "+" | "-" ] , digits , [ "." , digits ] ;
-;; digits             := digit , { digit } ;
-;; digit              := "0" | "1" | "2" | "3" | "4"
-;;                    |  "5" | "6" | "7" | "8" | "9"
-;;                    ;
-;; linebreak          := "\n" ;
-;; spaces             := { space } ;
-;; space              := " " | "\t" ;
+;;   program            := lineSeparator
+;;                      ,  [ initalizationLine ,
+;;                           { lineSeparator , loopBodyLine }
+;;                         ]
+;;                      ,  lineSeparator
+;;                      ;
+;;   lineSeparator      := { emptyLine , linebreak } ;
+;;   emptyLine          := spaces ;
+;;   initializationLine := [ number , { "," , number } ] ;
+;;   loopBodyLine       := [ expression , { "," , expression } ] ;
+;;   expression         := number
+;;                      |  variable
+;;                      |  expression , operator , expression
+;;                      |  "(" , expression , ")"
+;;                      ;
+;;   operator           := "+" | "-" | "*" | "/" ;
+;;   variable           := "a" | "b" | ... | "z" | "A" | "B" | ... | "Z" ;
+;;   number             := [ "+" | "-" ] , digits , [ "." , digits ] ;
+;;   digits             := digit , { digit } ;
+;;   digit              := "0" | "1" | "2" | "3" | "4"
+;;                      |  "5" | "6" | "7" | "8" | "9"
+;;                      ;
+;;   linebreak          := "\n" ;
+;;   spaces             := { space } ;
+;;   space              := " " | "\t" ;
 ;; 
 ;; 
 ;; Instructions
@@ -455,7 +455,18 @@
 ;; Date:   2023-05-26
 ;; 
 ;; Sources:
-;;   [crockford2007tdopparse.js]
+;;   [crockford2007topdownopprec]
+;;   Douglas Crockford, "Top Down Operator Precedence", 2007-02-21
+;;   URL: "http://crockford.com/javascript/tdop/tdop.html"
+;;   Notes:
+;;     - Describes a Pratt parser implementing a subset of JavaScript,
+;;       yclept "Simplified JavaScript".
+;;     - Introduces the concept of "statement denotation" ("std") for
+;;       incorporating statements into the Pratt parser's homogeneous
+;;       expression system.
+;;   
+;;   [crockford2010tdopparse.js]
+;;   Douglas Crockford, "parse.js", 2010-06-26
 ;;   URL: "http://crockford.com/javascript/tdop/parse.js"
 ;;   Notes:
 ;;     - Presents the source code for a Pratt parser implementing a
@@ -475,6 +486,14 @@
 ;;     - Describes and lists the order of operations established in the
 ;;       Java programming language.
 ;;   
+;;   [kumar2016javaprecassoc]
+;;   Krishan Kumar, "Java Operators: Precedence and Associativity", 2016
+;;   URL: "https://cs-fundamentals.com/java-programming/
+;;         java-operators-precedence-and-associativity"
+;;   Notes:
+;;     - Lists the operator precedences and associativities specified
+;;       for the Java programming language.
+;;   
 ;;   [lantsman2018prattparsers]
 ;;   Denis Lantsman, "How Desmos uses Pratt Parsers", 2018
 ;;   URL: "https://engineering.desmos.com/articles/pratt-parser/"
@@ -492,6 +511,14 @@
 ;;   URL: "https://introcs.cs.princeton.edu/java/11precedence/"
 ;;   Notes:
 ;;     - Operator precedence in Java.
+;;   
+;;   [stackoverflow2011q2811319]
+;;   The Stack Overflow contributors, "What is the difference between
+;;     >>> and >> operators in Java?", 2011
+;;   URL: "https://stackoverflow.com/questions/2811319/
+;;         difference-between-and"
+;;   Notes:
+;;     - Describes the ">>>" operator in Java an unsigned right shift.
 ;;   
 ;;   [williams2022onrecursivedescent]
 ;;   URL: "https://chidiwilliams.com/post/
@@ -983,7 +1010,11 @@
     :initform      (error "Missing initial parselet callback.")
     :accessor      initial-parselet-callback
     :type          (function (Token Token-Stream) Node)
-    :documentation ""))
+    :documentation "The parsing function which, provided with the
+                    initial or nud token to parse and a token stream for
+                    a potential dextral operand's generation, responds
+                    with a node representation of the initial or nud
+                    token."))
   (:documentation
     "The ``Initial-Parselet'' class represents an initial or nud token's
      parsing capability, compact of the ubiquitous binding power and
@@ -998,7 +1029,13 @@
     :initform      (error "Missing consequent parselet callback.")
     :accessor      consequent-parselet-callback
     :type          (function (Token Token-Stream Node) Node)
-    :documentation ""))
+    :documentation "The parsing function which, provided with the
+                    consequent or led token to parse, a token stream for
+                    a potential dextral operand's generation, and the
+                    preceding left operand, having already been
+                    converted from its token form into a node, responds
+                    with a node representation of the consequent or led
+                    token."))
   (:documentation
     "The ``Consequent-Parselet'' class represents a consequent or led
      token's parsing capability, compact of the uniquitous binding power
@@ -1621,7 +1658,7 @@
     :initarg       :cycle-delay
     :initform      0.5
     :type          real
-    :documentation "The number of second to wait betwixt to iteration
+    :documentation "The number of seconds to wait betwixt to iteration
                     cycles or betwixt the end of the initialization
                     line and the first iteration cycle."))
   (:documentation
