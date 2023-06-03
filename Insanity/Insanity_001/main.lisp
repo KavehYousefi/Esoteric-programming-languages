@@ -400,7 +400,7 @@
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   Expression       | Description
-;;   ------------------------------------------------------------------
+;;   -----------------+------------------------------------------------
 ;;   {number}         | A signed integer or floating-point literal.
 ;;   ..................................................................
 ;;   {variable}       | The single-letter identifier of a variable
@@ -1742,12 +1742,13 @@
     (declare (type (or null Node) initializations))
     (declare (type (list-of Node) body))
     
+    ;; Initialize the variables.
     (variable-registry-assign-values
       (slot-value interpreter 'variables)
       (loop
         for initial-expression
-        of-type Node
-        in      (node-attribute initializations :elements)
+          of-type Node
+          in      (node-attribute initializations :elements)
         collect
           (interpreter-visit-node interpreter initial-expression)))
     
