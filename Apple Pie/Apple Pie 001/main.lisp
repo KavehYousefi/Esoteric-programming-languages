@@ -203,6 +203,10 @@
 ;; identified by single Latin letters, and admissive to numbers or
 ;; strings.
 ;; 
+;; == APPLE PIE FILES END WITH A ".pie" ==
+;; A source code file comprehending an Apple Pie program is associated
+;; the file extension ".pie".
+;; 
 ;; 
 ;; Architecture
 ;; ============
@@ -299,7 +303,9 @@
 ;; A formulation of the language's syntaxis according to the Extended
 ;; Backus-Naur Form (EBNF) shall serve in its elucidation:
 ;; 
-;;   program            := statementList ;
+;;   program            := preamble , statementList , coda ;
+;;   preamble           := "Good luck reading this lol u" ;
+;;   coda               := "!!!" ;
 ;;   
 ;;   statementList      := { statement } ;
 ;;   
@@ -348,7 +354,7 @@
 ;;   binaryOperand      := decimalNumber
 ;;                      |  variableAccess
 ;;                      |  binaryOperation
-;;                      ;
+;;                      ;
 ;;   binaryOperator     := "+" | "-" | "*" | "/" | "^" ;
 ;;   
 ;;   HQ9+interpreter    := "G" , HQ9+program , space , "P" ;
@@ -1099,7 +1105,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of lexer and parser.                          -- ;;
+;; -- Declaration of global variables and constants.               -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (declaim (type (or null string)    *source*))
