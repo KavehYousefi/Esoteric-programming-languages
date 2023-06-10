@@ -1555,7 +1555,7 @@
   "The ``Interpreter'' class applies itself to the evaluation of an
    abstract syntax tree (AST) in order to accompass its effects."
   (tree   (error "Missing interpreter AST.") :type Node)
-  (memory (make-hash-table :test #'equal)    :type memory))
+  (memory (make-memory)                      :type memory))
 
 ;;; -------------------------------------------------------
 
