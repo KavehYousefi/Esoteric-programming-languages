@@ -474,6 +474,31 @@
    bits, thus being a commorant of the integer range [0, 255]."
   '(unsigned-byte 8))
 
+;;; -------------------------------------------------------
+
+(deftype memory ()
+  "The ``memory'' type defines the program memory as a sparse vector of
+   unsigned byte-valued cells, amenable to signed integer subscripts,
+   and realized in the form of a hash table that associates integer keys
+   with ``octet'' values."
+  (let ((predicate (gensym)))
+    (declare (type symbol predicate))
+    (setf (symbol-function predicate)
+      #'(lambda (candidate)
+          (declare (type T candidate))
+          (and
+            (hash-table-p candidate)
+            (loop
+              for key
+                of-type T
+                being the hash-keys in (the hash-table candidate)
+              using
+                (hash-value value)
+              always
+                (and (typep key   'integer)
+                     (typep value 'octet))))))
+    `(satisfies ,predicate)))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -493,7 +518,7 @@
 
 (defun parse-state-advance (parse-state)
   "Returns a copy of the PARSE-STATE sharing the same source, but having
-   its position cursor advanced to the next location in the same."
+   its position cursor advanced to the next location."
   (declare (type Parse-State parse-state))
   (the Parse-State
     (make-parse-state
@@ -787,24 +812,25 @@
    zero or more times in immediate succession, embracing in its result
    a list of the input PARSER's outputs in the order of encounter."
   (declare (type parser parser))
-  #'(lambda (current-state)
-      (declare (type Parse-State current-state))
-      (the Parse-Result
-        (loop
-          for new-state
-            of-type Parse-State
-            =       current-state
-            then    (parse-result-state result)
-          for result
-            of-type Parse-Result
-            =       (funcall parser new-state)
-          while (parse-result-succeeded-p result)
-            collect (parse-result-output result)
-            into    outputs
-          finally
-            (return
-              (make-parse-result T
-                (parse-result-state result) outputs))))))
+  (the parser-function
+    #'(lambda (current-state)
+        (declare (type Parse-State current-state))
+        (the Parse-Result
+          (loop
+            for new-state
+              of-type Parse-State
+              =       current-state
+              then    (parse-result-state result)
+            for result
+              of-type Parse-Result
+              =       (funcall parser new-state)
+            while (parse-result-succeeded-p result)
+              collect (parse-result-output result)
+              into    outputs
+            finally
+              (return
+                (make-parse-result T
+                  (parse-result-state result) outputs)))))))
 
 ;;; -------------------------------------------------------
 
@@ -821,7 +847,7 @@
 
 (defun parse-statements ()
   "Returns a new parser which always succeeds, embracing in its result
-   a list Common Lisp code fragment matching the extracted wepmlrio
+   a list of Common Lisp code fragment matching the extracted wepmlrio
    instructions."
   (the parser-function
     (parse-many
@@ -865,8 +891,8 @@
   "Interprets the piece of wepmlrio source CODE and returns no value."
   `(let ((memory       (make-hash-table :test #'eql))
          (cell-pointer 0))
-     (declare (type hash-table memory))
-     (declare (type integer    cell-pointer))
+     (declare (type memory  memory))
+     (declare (type integer cell-pointer))
      
      (labels
          ((current-cell ()
