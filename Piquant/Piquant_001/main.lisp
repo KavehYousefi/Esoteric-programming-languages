@@ -33,7 +33,7 @@
 ;;      tested, either executing the first eligible candidate, or, if
 ;;      none matches, immediately terminating the program.
 ;; 
-;; == (A) INITIALIZATION: POPULATING THE MEMORY ONCE ==
+;; == (A) MEMORY INITIALIZATION: POPULATING THE MEMORY ONCE ==
 ;; The initalization step, exercised once at the program's inchoation,
 ;; populates the memory's foremost cells.
 ;; 
@@ -52,8 +52,8 @@
 ;; 
 ;; the following process, formulated in pseudocode, applies:
 ;; 
-;;   for cellIndex from 0 to (N-1) do
-;;     memory[cellIndex] <- initValue[N+1]
+;;   for cellIndex from 0 to (N - 1) do
+;;     memory[cellIndex] <- initValue[cellIndex + 1]
 ;;   end for
 ;; 
 ;; == (B) CASE SELECTION: REPEATEDLY TEST AND EXECUTE ==
@@ -63,7 +63,7 @@
 ;; 
 ;; The first expression provides the test criterion; the subsequent
 ;; constituents define the statements to execute upon the condition's
-;; satisfication, in the stated order.
+;; satisfaction, in the stated order.
 ;; 
 ;; An implicit loop iterates over all cases in their specification
 ;; ordonnance, testing each condition. The first satisfied case
@@ -282,10 +282,10 @@
 ;;                     |  rangeReference
 ;;                     |  indirectReference
 ;;                     ;
-;;   indirectReference := "A" , [ indirectReference
+;;   indirectReference := "A" , ( indirectReference
 ;;                              | scalarReference
 ;;                              | rangeReference
-;;                              ]
+;;                              )
 ;;                     ;
 ;;   scalarReference   := "A" , index ;
 ;;   rangeReference    := "A" , index , ":" , index ;
@@ -460,7 +460,6 @@
 ;;              | character or character sequence.
 ;;   ------------------------------------------------------------------
 ;; 
-
 ;; == MEMORY REFERENCES ==
 ;; A variable component's introduction in the language proceeds from the
 ;; capacitation to employ memory cell references in lieu of literal
@@ -1113,7 +1112,6 @@
    Upon its source's exhaustion, the LEXER responds to any request with
    a fresh end-of-file (EOF) token."
   (declare (type Lexer lexer))
-  
   (with-lexer (lexer)
     (the Token
       (cond
@@ -2700,7 +2698,7 @@
      The OPERATION must be a callback function conforming to the
      signature
      
-       lambda (integer integer) integer")
+       lambda (integer integer) => integer")
   
   (:method ((operation     function)
             (left-operand  Integer-Vector)
@@ -3238,9 +3236,9 @@
   (:method ((object integer) destination)
     (declare (type integer     object))
     (declare (type destination destination))
-    (the (or null string)
-      (format destination "~c "
-        (code-char object))))
+    (format destination "~c "
+      (code-char object))
+    (values))
   
   (:method ((object Integer-Vector) destination)
     (declare (type Integer-Vector object))
@@ -3305,6 +3303,8 @@
 ;;; -------------------------------------------------------
 
 (defun value-of (interpreter object)
+  "Resolves the OBJECT in the INTERPRETER's context and returns its
+   value."
   (declare (type Interpreter interpreter))
   (declare (type T           object))
   (the piquant-object
@@ -3862,6 +3862,19 @@
   "[1]
    {A0 >= A1; pA0; A1 = A0 + A1}
    {A0 < A1; pA1; A0 = A0 + A1}")
+
+;;; -------------------------------------------------------
+
+;; Factorial.
+;; 
+;; Memory layout:
+;;   A0 --- the current factorial value
+;;   A1 --- the input N, for which the factorial N! shall be computed.
+(interpret-Piquant
+  "[]
+   {A0 == 0; A0 = 1; iA1}
+   {A1 > 1; A0 = A0 * A1; A1 = A1 - 1}
+   {A1 == 1; pA0 ; A1 = 0}")
 
 ;;; -------------------------------------------------------
 
