@@ -1746,6 +1746,7 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Print "Hello, World!".
 (interpret-Trans-dimensional
   "dimension X;
    put [X:1] -> \"Hello, World!\";
@@ -1753,6 +1754,7 @@
 
 ;;; -------------------------------------------------------
 
+;; Store and print a negative floating-point number.
 (interpret-Trans-dimensional
   "dimension A;
    put [A:1] -> -0.5;
@@ -1760,6 +1762,7 @@
 
 ;;; -------------------------------------------------------
 
+;; Assign memory cells among each other.
 (interpret-Trans-dimensional
   "dimension X;
    dimension Y;
@@ -1769,6 +1772,7 @@
 
 ;;; -------------------------------------------------------
 
+;; Employ a numeric dimension identifier.
 (interpret-Trans-dimensional
   "dimension 100;
    put [100:1] -> -8;
@@ -1776,6 +1780,7 @@
 
 ;;; -------------------------------------------------------
 
+;; Demonstrate the absence of effect if requesting a nonexistent cell.
 (interpret-Trans-dimensional
   "dimension X;
    output get [X:1];")
