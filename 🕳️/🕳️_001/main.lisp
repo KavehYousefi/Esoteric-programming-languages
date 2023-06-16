@@ -160,7 +160,9 @@
 ;; variables, ligated into a consanguinity with global variables as a
 ;; general species, and exacerbated by their implicit and contingently
 ;; arbitrary declarations, merit the wite of encumbering programs with
-;; superfluous complexity.
+;; superfluous complexity. For a more detailed treatise on the
+;; contingency for detriments incurred by this feature please refer to
+;; [stackoverflow2019q56725814].
 ;; 
 ;; Please note that the concrete character set deployed constitutes a
 ;; dependency on the Common Lisp implementation; in corollary, Unicode
@@ -175,15 +177,21 @@
 ;; Date:   2023-05-16
 ;; 
 ;; Sources:
-;;   [esolang2022🕳️]
-;;   The Esolang contributors, "🕳️", 2022
-;;   URL: "https://esolangs.org/wiki/%F0%9F%95%B3%EF%B8%8F"
+;;   [christensen2013lispcabinet035]
+;;   G. Christensen, "Lisp Cabinet 0.3.5", 2013
+;;   URL: "https://sourceforge.net/projects/lispcabinet/"
+;;   Notes:
+;;     - Download page of the "Lisp Cabinet" project.
 ;;   
 ;;   [emojipedia2023hole]
 ;;   Emojipedia, "🕳️ Hole", 2023
 ;;   URL: "https://emojipedia.org/hole/"
 ;;   Notes:
 ;;     - Describes the "hole" emoji "🕳️".
+;;   
+;;   [esolang2022🕳️]
+;;   The Esolang contributors, "🕳️", 2022
+;;   URL: "https://esolangs.org/wiki/%F0%9F%95%B3%EF%B8%8F"
 ;;   
 ;;   [stackoverflow2012q41091118]
 ;;   The Stack Overflow contributors,
@@ -192,6 +200,27 @@
 ;;   Notes:
 ;;     - Demonstrates the usance of special variables in the context of
 ;;       the ``format'' function.
+;;   
+;;   [stackoverflow2019q56725814]
+;;   The Stack Overflow contributors, "Using Local Special Variables",
+;;     2019
+;;   URL: "https://stackoverflow.com/questions/56725814/
+;;         using-local-special-variables"
+;;   Notes:
+;;     - Discusses the disadvantages of special variables, which
+;;       comprehend:
+;;        o Lack of referential transparency, ...
+;;          ... which renders it more difficult to reason functionally
+;;          about one's code, meaning that functions may produce
+;;          different results with syntactically equivalent calls.
+;;        o Introduction of bugs, ...
+;;          ... as lexical variable at other locations in the code,
+;;          e.g. in a system function, will be overwritten.
+;;        o Confusion ...
+;;          .. for readers unacquainted with special (dynamic) binding
+;;        o Dubious necessity, ...
+;;          ... as lexical binding or even anaphoric macros may be
+;;          utilized instead.
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
