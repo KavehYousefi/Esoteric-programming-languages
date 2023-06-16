@@ -1592,6 +1592,22 @@
 
 ;;; -------------------------------------------------------
 
+(define-instruction-dispatch :cmp (instruction)
+  (declare (special ip))
+  (destructuring-bind (left-operand right-operand target)
+      (validate-instruction-signature instruction)
+    (declare (type Operand left-operand))
+    (declare (type Operand right-operand))
+    (declare (type Operand target))
+    (write-to-operand target
+      (if (= (read-from-operand left-operand)
+             (read-from-operand right-operand))
+        1
+        0)))
+  (incf ip))
+
+;;; -------------------------------------------------------
+
 (define-instruction-dispatch :je (instruction)
   (declare (special ip))
   (declare (special tags))
