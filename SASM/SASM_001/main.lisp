@@ -248,6 +248,9 @@
 ;;                           | confirmation relocating the instruction
 ;;                           | pointer (IP) to the TAG. Aliter,
 ;;                           | proceeds without effect.
+;;                           | If the TAG cannot be found in the
+;;                           | program, an error of an unspecified type
+;;                           | is signaled.
 ;;                           |-----------------------------------------
 ;;                           | The LEFT operand must be a literal
 ;;                           | integer, a register name, or an address.
@@ -264,6 +267,9 @@
 ;;                           | confirmation relocating the instruction
 ;;                           | pointer (IP) to the TAG. Aliter,
 ;;                           | proceeds without effect.
+;;                           | If the TAG cannot be found in the
+;;                           | program, an error of an unspecified type
+;;                           | is signaled.
 ;;                           |-----------------------------------------
 ;;                           | The LEFT operand must be a literal
 ;;                           | integer, a register name, or an address.
@@ -274,6 +280,11 @@
 ;;                           | The TAG must be a valid label name. If
 ;;                           | none such exists, an error of an
 ;;                           | unspecified type is signaled.
+;;   ..................................................................
+;;   tag:                    | Defines a tag (label) identified by the
+;;   ***                     | name TAG.
+;;                           |-----------------------------------------
+;;                           | The TAG must be a valid label name.
 ;;   ------------------------------------------------------------------
 ;; 
 ;; == TAGS ==
@@ -1739,8 +1750,7 @@
    
    countdown:
      sub bx, 1
-   
-   jne bx, 0, countdown")
+     jne bx, 0, countdown")
 
 ;;; -------------------------------------------------------
 
@@ -1766,8 +1776,7 @@
      mov [bx], ax
      add bx,   1
      sub ax,   1
-   
-   jne ax, -1, countdown")
+     jne ax, -1, countdown")
 
 ;;; -------------------------------------------------------
 
@@ -1783,9 +1792,9 @@
   "je [bx], 0, _halt
    
    _goback:
-     add bx, 1
+     add bx,   1
      mov [bx], 1
-     je [bx], 1, _goback
+     je  [bx], 1, _goback
    
    _halt:"
   :initial-memory (make-memory-of 0))
@@ -1803,7 +1812,7 @@
    _goback:
      add bx, 1
      mov [bx], 1
-     je [bx], 1, _goback
+     je  [bx], 1, _goback
    
    _halt:"
   :initial-memory (make-memory-of 1))
