@@ -1,0 +1,47 @@
+OPEN "stdin.stream";
+OPEN "stdout.stream";
+OPEN "a";
+OPEN "b";
+
+/// Input variables a, b.
+OVERWRITE "a" READ "stdin.stream";
+OVERWRITE "b" READ "stdin.stream";
+
+/// Increment a.
+OVERWRITE "a" READ "a" + 1;
+/// Decrement b.
+OVERWRITE "b" READ "b" - 1;
+
+/// Test of a.
+READ  "a" = 0? 11;
+OVERWRITE "stdout.stream" READ "a" + "\n";
+OVERWRITE "a" 0;
+
+/// LINE 11
+/// Test of b.
+READ  "b" = 1? 13;
+OVERWRITE "stdout.stream" READ "b" + "\n";
+
+/// LINE 13
+/// While loop.
+READ  "b" = 0? 17;
+OVERWRITE "stdout.stream" READ "b" + "\n";
+OVERWRITE "b" READ "b" - 1;
+READ  "b" ! 0? 13;
+
+/// LINE 17
+/// Input a, b.
+OVERWRITE "a" READ "stdin.stream";
+OVERWRITE "b" READ "stdin.stream";
+
+/// Print a - b.
+OVERWRITE "stdout.stream" READ "a" - READ "b";
+OVERWRITE "stdout.stream" "\n";
+/// Print "ABC".
+OVERWRITE "stdout.stream" "ABC" + "\n";
+
+/// Terminate program.
+CLOSE "stdin.stream";
+CLOSE "stdout.stream";
+CLOSE "a";
+CLOSE "b";
