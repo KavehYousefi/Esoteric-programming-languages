@@ -120,11 +120,12 @@
 ;;   
 ;;   prelude           := "Stu wants to " ,
 ;;   
-;;   input             := prelude , inputStart , inputStore , 
-;;                     |  "!"
-;;                     |  inputNew , "."
-;;                     |  inputNew , condition
-;;                     |  condition
+;;   input             := prelude , inputStart , inputStore
+;;                     ,  ( "!"
+;;                        | ( inputNew , "." )
+;;                        | ( inputNew , condition )
+;;                        | condition
+;;                        )
 ;;                     ;
 ;;   inputStart        := ( "know something " , [ ", " ] )
 ;;                     |  ( "ask you something " , [ ", "] )
@@ -138,14 +139,10 @@
 ;;                     ;
 ;;   outputExpressions := { " " , expression } ;
 ;;   
-;;   quit              := prelude , "leave now"
-;;                     |  "."
-;;                     |  condition
-;;                     ;
+;;   quit              := prelude , "leave now" , ( "." | condition ) ;
 ;;   
 ;;   jump              := prelude , "go home now"
-;;                     |  "."
-;;                     |  condition
+;;                     , ( "." |  condition )
 ;;                     ;
 ;;   
 ;;   condition         := " if " , expression , " and " , expression
