@@ -1336,7 +1336,7 @@
   (:documentation
     "The ``Lexer'' class' onus designates its lexical analyzation of a
      piece of Stu source code in order to extract and returns the
-     percepted tokens."))
+     perceived tokens."))
 
 ;;; -------------------------------------------------------
 
@@ -1531,7 +1531,7 @@
      the deployment in a ``Token-Queue''.
      ---
      A paragon of efficiency and simplicity's coefficacy, the singly
-     listed node comprehends merely two pieces of information: the
+     linked node comprehends merely two pieces of information: the
      element to the bestored, which constitutes in our case a ``Token'',
      and a reference to the succeeding node, or ``NIL'' if none such
      exists."))
@@ -1771,7 +1771,7 @@
    immediately succeeding the template STATE's cursor node.
    ---
    In concrete diction, the following steps apply to the process:
-     (1) Creates a new ``Parse-State'' NEW-STATE, appropriating from the
+     (1) Create a new ``Parse-State'' NEW-STATE, appropriating from the
          template STATE the shared token queue reference and the shared
          token provider. Please note that these are references, not
          copies.
@@ -2578,21 +2578,6 @@
                     (.period)))))))))))
 
 ;;; -------------------------------------------------------
-
-#|
-(defun .output-expressions ()
-  "Returns a new ``Parser'' which succeeds if zero or more string or
-   variable expressions, each differentiated from the next by a single
-   space, follow, returning in its ``Parse-Result'' output a list of
-   these items' node representations."
-  (the Parser
-    (.optional
-      (.chain
-        (.space)
-        (.one-or-more-separated-by
-          (.chain (.potential-conditional) (.expression))
-          (.space))))))
-|#
 
 (defun .output-expressions ()
   "Returns a new ``Parser'' which succeeds if zero or more string or
