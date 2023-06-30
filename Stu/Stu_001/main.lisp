@@ -544,13 +544,13 @@
 ;; name does not yet exist, aliter being adhibited desuetude.
 ;; 
 ;; If any of the two input variants, that is, distinguished by the
-;; variable's existence, shall be effected in dependence on a equality
-;; or non-equality test, any of the two conditional phrases
+;; variable's existence, shall be effected in dependence on an equality
+;; or inequality test, any of the two conditional phrases
 ;; 
 ;;   " if {left} and {right} are similar."
 ;;   " if {left} and {right} are not similar."
 ;; 
-;; may be prepended; for their effects please consult the section
+;; may be appended; for their effects please consult the section
 ;; "CONDITIONAL EXECUTION" aboon.
 ;; 
 ;; A kenspeckle terminating curiosity, the basic form, expressed in the
@@ -585,6 +585,7 @@
 ;;   |    |(conditional initialization form)
 ;;   |    |
 ;;   |    +--> " if {left} and {right} are similar."
+;;   |         " if {left} and {right} are not similar."
 ;;   |
 ;;   |(conditional rassignment form)
 ;;   |
@@ -644,6 +645,7 @@
 ;;   |    |(conditional expression form)
 ;;   |    |
 ;;   |    +--> " if {left} and {right} are similar."
+;;   |         " if {left} and {right} are not similar."
 ;;   |
 ;;   |(empty conditional form)
 ;;   |
@@ -1052,6 +1054,637 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of class "Token".                             -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defstruct (Token
+  (:constructor make-token (type value)))
+  "The ``Token'' class encapsulates the information requisite for the
+   delination of a significant object extracted during a piece of Stu
+   source code's lexical analyzation."
+  (type  (error "Missing token type.")  :type keyword)
+  (value (error "Missing token value.") :type T))
+
+;;; -------------------------------------------------------
+
+(defun token-type-p (token expected-type)
+  "Determines whether the TOKEN conforms to the EXPECTED-TYPE, returning
+   on confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
+  (declare (type Token   token))
+  (declare (type keyword expected-type))
+  (the boolean
+    (not (null
+      (eq (token-type token) expected-type)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of character operations.                      -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun identifier-character-p (candidate)
+  "Determines whether the CANDIDATE represents an identifier name
+   constituent, returning on confirmation a ``boolean'' value of ``T'',
+   otherwise ``NIL''."
+  (declare (type character candidate))
+  (the boolean
+    (not (null
+      (alphanumericp candidate)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of class "Lexer".                             -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defclass Lexer ()
+  ((source
+    :initarg       :source
+    :initform      (error "Missing lexer source.")
+    :type          string
+    :documentation "The piece of Stu source code to analyze.")
+   (position
+    :initarg       :position
+    :initform      0
+    :type          fixnum
+    :documentation "The current index into the SOURCE.")
+   (character
+    :initarg       :character
+    :initform      NIL
+    :type          (or null character)
+    :documentation "The character at the current POSITION into the
+                    SOURCE, or ``NIL'' if the same is exhausted."))
+  (:documentation
+    "The ``Lexer'' class' onus designates its lexical analyzation of a
+     piece of Stu source code in order to extract and return the
+     perceived tokens."))
+
+;;; -------------------------------------------------------
+
+(defmethod initialize-instance :after ((lexer Lexer) &key)
+  "Sets the LEXER's position cursor to the first character in its
+   SOURCE, if possible, and returns the modified LEXER."
+  (declare (type Lexer lexer))
+  (with-slots (source position character) lexer
+    (declare (type string              source))
+    (declare (type fixnum              position))
+    (declare (type (or null character) character))
+    (setf character
+      (when (array-in-bounds-p source position)
+        (char source position))))
+  (the Lexer lexer))
+
+;;; -------------------------------------------------------
+
+(defun make-lexer (source)
+  "Creates and returns a new ``Lexer'' which analyzes the Stu SOURCE
+   code."
+  (declare (type string source))
+  (the Lexer
+    (make-instance 'Lexer :source source)))
+
+;;; -------------------------------------------------------
+
+(defun lexer-advance (lexer)
+  "Returns the LEXER's current character, while concomitantly moving the
+   LEXER's position cursor to the next character in its source, if
+   possible, updating in the process the current character."
+  (declare (type Lexer lexer))
+  (with-slots (source position character) lexer
+    (declare (type string              source))
+    (declare (type fixnum              position))
+    (declare (type (or null character) character))
+    (the (or null character)
+      (prog1 character
+        (setf character
+          (when (array-in-bounds-p source (1+ position))
+            (char source (incf position))))))))
+
+;;; -------------------------------------------------------
+
+(defun lexer-read-word (lexer)
+  "Proceeding from the current position into the LEXER's source, reads a
+   single word, composed of one or more identifier characters, and
+   returns a ``:word'' token representation thereof."
+  (declare (type Lexer lexer))
+  (with-slots (character) lexer
+    (declare (type (or null character) character))
+    (the Token
+      (make-token :word
+        (with-output-to-string (identifier)
+          (declare (type string-stream identifier))
+          (loop
+            while (and character (identifier-character-p character))
+            do    (write-char (lexer-advance lexer) identifier)))))))
+
+;;; -------------------------------------------------------
+
+(defun lexer-read-symbol (lexer token-type)
+  "Reads the character at the current position into the LEXER's source,
+   returns a TOKEN-TYPE representation thereof with the character as the
+   token value, and concomitantly advances the position cursor."
+  (declare (type Lexer   lexer))
+  (declare (type keyword token-type))
+  (the Token
+    (make-token token-type
+      (lexer-advance lexer))))
+
+;;; -------------------------------------------------------
+
+(defun lexer-skip-comment (lexer)
+  "Proceeding from the current position into the LEXER's source, skips
+   a comment section which extends to the end of the line or the end of
+   the file, and returns the modified LEXER."
+  (declare (type Lexer lexer))
+  (with-slots (character) lexer
+    (declare (type (or null character) character))
+    (loop while (and character (char/= character #\Newline)) do
+      (lexer-advance lexer)))
+  (the Lexer lexer))
+
+;;; -------------------------------------------------------
+
+(defun lexer-read-string (lexer)
+  "Proceeding from the current position in the LEXER's source, reads a
+   string, delimited by double quotation marks, and returns a
+   ``:string'' token representation thereof."
+  (declare (type Lexer lexer))
+  (lexer-advance lexer)
+  (with-slots (character) lexer
+    (declare (type (or null character) character))
+    (the Token
+      (make-token :string
+        (with-output-to-string (content)
+          (declare (type string-stream content))
+          (loop do
+            (case character
+              ((NIL)
+                (error "Unterminated string at position ~d."
+                  (slot-value lexer 'position)))
+              (#\Newline
+                (error "Linebreak in string at position ~d."
+                  (slot-value lexer 'postiion)))
+              (#\"
+                (lexer-advance lexer)
+                (loop-finish))
+              (otherwise
+                (write-char (lexer-advance lexer) content)))))))))
+
+;;; -------------------------------------------------------
+
+(defun lexer-get-next-token (lexer)
+  "Returns the next token from the LEXER.
+   ---
+   Upon the LEXER source's exhaustion, every request is answered with a
+   fresh ``:eof'' (end of file) token."
+  (declare (type Lexer lexer))
+  (with-slots (character) lexer
+    (declare (type (or null character) character))
+    (the Token
+      (cond
+        ((null character)
+          (make-token :eof NIL))
+        
+        ((char= character #\;)
+          (lexer-skip-comment   lexer)
+          (lexer-get-next-token lexer))
+        
+        ((char= character #\Space)
+          (lexer-read-symbol lexer :space))
+        
+        ((char= character #\Newline)
+          (lexer-read-symbol lexer :newline))
+        
+        ((char= character #\,)
+          (lexer-read-symbol lexer :comma))
+        
+        ((char= character #\!)
+          (lexer-read-symbol lexer :exclamation-mark))
+        
+        ((char= character #\:)
+          (lexer-read-symbol lexer :colon))
+        
+        ((char= character #\.)
+          (lexer-read-symbol lexer :period))
+        
+        ((char= character #\")
+          (lexer-read-string lexer))
+        
+        ((alphanumericp character)
+          (lexer-read-word lexer))
+        
+        (T
+          (lexer-read-symbol lexer :character))))))
+
+;;; -------------------------------------------------------
+
+(defun make-lexer-token-provider (lexer)
+  "Creates and returns a function which acts as a ``token-provider'' for
+   the LEXER, upon each invocation returning its next token."
+  (declare (type Lexer lexer))
+  (the function
+    #'(lambda ()
+        (the Token
+          (lexer-get-next-token lexer)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of class "SLNode".                            -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defclass SLNode ()
+  ((element
+    :initarg       :element
+    :initform      NIL
+    :accessor      slnode-element
+    :type          (or null Token)
+    :documentation "A reference to the element stored in this node")
+   (next
+    :initarg       :next
+    :initform      NIL
+    :accessor      slnode-next
+    :type          (or null SLNode)
+    :documentation "A reference to the successor node, or ``NIL'' if
+                    this node represents the queue's tail."))
+  (:documentation
+    "The ``SLNode'' class represent a singly linked node, intended for
+     the deployment in a ``Token-Queue''.
+     ---
+     A paragon of efficiency and simplicity's coefficacy, the singly
+     linked node comprehends merely two pieces of information: the
+     element to the be stored, which constitutes in our case a ``Token'',
+     and a reference to the succeeding node, or ``NIL'' if none such
+     exists."))
+
+;;; -------------------------------------------------------
+
+(defun make-slnode (element next)
+  "Creates and returns a new ``SLNode'' which stores the ELEMENT, while
+   being linked to the optional NEXT node as its successor."
+  (declare (type (or null Token)  element))
+  (declare (type (or null SLNode) next))
+  (the SLNode
+    (make-instance 'SLNode
+      :element element
+      :next    next)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of class "Token-Queue".                       -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defclass Token-Queue ()
+  ((head
+    :initarg       :head
+    :initform      NIL
+    :type          (or null SLNode)
+    :documentation "The head node.")
+   (tail
+    :initarg       :tail
+    :initform      NIL
+    :type          (or null SLNode)
+    :documentation "The tail node.")
+   (size
+    :initarg       :size
+    :initform      0
+    :reader        token-queue-size
+    :type          (integer 0 *)
+    :documentation "The number of elements in the queue.
+                    ---
+                    Please note that the HEAD and TAIL nodes, of course,
+                    do contribute to this account."))
+  (:documentation
+    "The ``Token-Queue'' class implements a positional list stored as a
+     singly linked list, intended to maintain ``Token'' objects.
+     ---
+     Both the head and tail node, for a non-empty queue, constitute
+     actual nodes, not sentinels."))
+
+;;; -------------------------------------------------------
+
+(defun make-token-queue ()
+  "Creates and returns an empty ``Token-Queue''."
+  (the Token-Queue
+    (make-instance 'Token-Queue)))
+
+;;; -------------------------------------------------------
+
+(defun token-queue-empty-p (queue)
+  "Determines whether the token QUEUE is empty, returning on
+   confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
+  (declare (type Token-Queue queue))
+  (the boolean
+    (not (null
+      (zerop (slot-value queue 'size))))))
+
+;;; -------------------------------------------------------
+
+(defun token-queue-first (queue)
+  "Returns the first ``SLNode'' in the QUEUE, or ``NIL'' if the same is
+   empty."
+  (declare (type Token-Queue queue))
+  (the (or null SLNode)
+    (unless (token-queue-empty-p queue)
+      (slot-value queue 'head))))
+
+;;; -------------------------------------------------------
+
+(defun token-queue-add-last (queue element)
+  "Inserts the ELEMENT at the back of the QUEUE and returns the
+   ``SLNode'' generated for it."
+  (declare (type Token-Queue queue))
+  (declare (type Token       element))
+  (let ((new-node (make-slnode element NIL)))
+    (declare (type SLNode new-node))
+    (if (token-queue-empty-p queue)
+      (setf (slot-value queue 'head) new-node)
+      ;; The NEW-NODE is inserted after the TAIL.
+      (setf (slnode-next (slot-value queue 'tail)) new-node))
+    ;; The NEW-NODE becomes the TAIL.
+    (setf (slot-value queue 'tail) new-node)
+    (incf (slot-value queue 'size))
+    (the SLNode new-node)))
+
+;;; -------------------------------------------------------
+
+(defun token-queue-after (queue node)
+  "Returns the ``SLNode'' immediately succeeding the NODE in the QUEUE,
+   or ``NIL'', if the NODE represents the QUEUE's desinent component."
+  (declare (type Token-Queue queue))
+  (declare (ignore           queue))
+  (declare (type SLNode      node))
+  (the (or null SLNode)
+    (slnode-next node)))
+
+;;; -------------------------------------------------------
+
+(defmethod print-object ((queue Token-Queue) stream)
+  (declare (type Token-Queue queue))
+  (declare (type destination stream))
+  (with-slots (head tail) queue
+    (declare (type SLNode head))
+    (declare (type SLNode tail))
+    (format stream "(Token-Queue")
+    (loop
+      for node of-type (or null SLNode)
+        =    head
+        then (slnode-next node)
+      while node
+      do
+        (format stream " ~s"
+          (slnode-element node)))
+    (format stream ")")))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of class "Parse-State".                       -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defgeneric parse-state-current-element (parse-state)
+  (:documentation
+    "Returns the token associated with the PARSE-STATE, commorant under
+     its personal cursor inside of the shared token queue."))
+
+(defgeneric parse-state-advance (parse-state)
+  (:documentation
+    "Returns a new ``Parse-State'' as a derivation of the extant
+     PARSE-STATE, representing an advance in its source's processing."))
+
+;;; -------------------------------------------------------
+
+(defclass Parse-State ()
+  ((tokens
+    :initarg       :tokens
+    :initform      (error "Missing token queue.")
+    :accessor      parse-state-tokens
+    :type          Token-Queue
+    :documentation "The token queue shared betwixt all parse states, to
+                    whom each instance stores a CURSOR, this being a
+                    reference to the queue node comprehending the token
+                    affiliated with the state.")
+   (token-provider
+    :initarg       :token-provider
+    :initform      (error "Missing token provider.")
+    :accessor      parse-state-token-provider
+    :type          token-provider
+    :documentation "A function shared betwixt all parse states,
+                    responsible for producing the tokens to be added at
+                    the shared token queue TOKENS' rear.")
+   (cursor
+    :initarg       :cursor
+    :initform      NIL
+    :accessor      parse-state-cursor
+    :type          (or null SLNode)
+    :documentation "A reference to the node in the shared TOKENS queue
+                    whose token has been tested with this state."))
+  (:documentation
+    "The ``Parse-State'' class serves in the encapsulation of the
+     parsing process' advancement, as its paravaunt constituent
+     maintaining the node in the token queue shared betwixt all parse
+     states which contains its personally indagated token."))
+
+;;; -------------------------------------------------------
+
+(defun parse-state-load-next-token (state)
+  "Queries from the parse STATE's token provider the next token, inserts
+   it in the shared token queue's rear, and returns the STATE."
+  (declare (type Parse-State state))
+  (with-slots (tokens token-provider) state
+    (token-queue-add-last tokens
+      (funcall token-provider)))
+  (the Parse-State state))
+
+;;; -------------------------------------------------------
+
+(defun parse-state-initialize (state)
+  "Inserts at the rear of the STATE's shared token queue the next token
+   from its token provider, sets the STATE's cursor to the same, and
+   returns the modified STATE."
+  (declare (type Parse-State state))
+  (parse-state-load-next-token state)
+  (setf (parse-state-cursor state)
+    (token-queue-first
+      (parse-state-tokens state)))
+  (the Parse-State state))
+
+;;; -------------------------------------------------------
+
+(defun make-parse-state (tokens token-provider)
+  "Creates and returns a new ``Parse-State'' which refers to the shared
+   token queue TOKENS and the shared TOKEN-PROVIDER, but contains no
+   node cursor into the former yet."
+  (the Parse-State
+    (make-instance 'Parse-State
+      :tokens         tokens
+      :token-provider token-provider)))
+
+;;; -------------------------------------------------------
+
+(defun make-initial-parse-state (token-provider)
+  "Creates and returns a new ``Parse-State'' which incorporates a fresh
+   token queue intended to be shared among all parse states, in
+   conjunction with the equally shared TOKEN-PROVIDER, but lacks the
+   node cursor into the queue."
+  (the Parse-State
+    (parse-state-initialize
+      (make-instance 'Parse-State
+        :tokens         (make-token-queue)
+        :token-provider token-provider))))
+
+;;; -------------------------------------------------------
+
+(defmethod parse-state-current-element ((state Parse-State))
+  "Returns the parse STATE's token, located in the shared token queue's
+   node referenced by this instance."
+  (declare (type Parse-State state))
+  (the Token
+    (slnode-element
+      (parse-state-cursor state))))
+
+;;; -------------------------------------------------------
+
+(defmethod parse-state-advance ((state Parse-State))
+  "Creates and returns a new ``Parse-State'' based upon the input STATE,
+   comprehending a reference to the node in the shared token queue
+   immediately succeeding the template STATE's cursor node.
+   ---
+   In concrete diction, the following steps apply to the process:
+     (1) Create a new ``Parse-State'' NEW-STATE, appropriating from the
+         template STATE the shared token queue reference and the shared
+         token provider. Please note that these are references, not
+         copies.
+     (2) If the template STATE's own cursor node is succeeded by at
+         least one node in the token queue, that is, it does not
+         constitute the desinent position, store a reference to the
+         immediate successor node in the NEW-STATE.
+     (3) If instead the template STATE's cursor node constitutes the
+         shared token queue's last node, query the next token from the
+         shared token provider, insert it at the token queue's rear, and
+         store a reference to the newly created node into the NEW-STATE
+         as its cursor."
+  (declare (type Parse-State state))
+  (let ((new-state
+          (make-parse-state
+            (parse-state-tokens         state)
+            (parse-state-token-provider state))))
+    (declare (type Parse-State new-state))
+    
+    ;; If the STATE's cursor possedes no successor node, query and
+    ;; insert a new one to the shared token queue.
+    (unless (token-queue-after (parse-state-tokens state)
+              (parse-state-cursor state))
+      (parse-state-load-next-token state))
+    
+    ;; Set the NEW-STATE to the node immediately following the template
+    ;; STATE's cursor.
+    (setf (parse-state-cursor new-state)
+          (token-queue-after (parse-state-tokens state)
+            (parse-state-cursor state)))
+    
+    (the Parse-State new-state)))
+
+;;; -------------------------------------------------------
+
+(defmethod print-object ((state Parse-State) stream)
+  (declare (type Parse-State state))
+  (declare (type destination stream))
+  (format stream "(Parse-State cursor=~s)"
+    (slot-value state 'cursor)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of class "Parse-Result".                      -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defgeneric parse-result-succeeded-p (parse-result)
+  (:documentation
+    "Determines whether the ``Parser'' responsible for this
+     PARSE-RESULT's generation has matched, returning on confirmation a
+     ``boolean'' value of ``T'', otherwise ``NIL''."))
+
+(defgeneric parse-result-state (parse-result)
+  (:documentation
+    "Returns the ``Parse-State'' allied with this PARSE-RESULT"))
+
+(defgeneric parse-result-output (parse-result)
+  (:documentation
+    "Returns the output of the ``Parser'' responsible for this
+     PARSE-RESULT's generation, usually constituting a contribution to
+     the complete parsing process result.
+     ---
+     The output commonly amounts to ``NIL'' for a failed ``Parser'', for
+     which also see the return value of the ``parse-result-succeeded-p''
+     operation."))
+
+;;; -------------------------------------------------------
+
+(defclass Parse-Result ()
+  ((succeeded-p
+    :initarg       :succeeded-p
+    :initform      NIL
+    :reader        parse-result-succeeded-p
+    :type          boolean
+    :documentation "Determines whether the parser or combinator having
+                    produced this result has matched its input state.")
+   (state
+    :initarg       :state
+    :initform      NIL
+    :reader        parse-result-state
+    :type          (or null Parse-State)
+    :documentation "The parse state affiliated with the result, either
+                    constituting the final output or an input into the
+                    consequent ``Parser'' invocation.")
+   (output
+    :initarg       :output
+    :initform      NIL
+    :reader        parse-result-output
+    :type          T
+    :documentation "The parsing process' output, usually an abstract
+                    syntax tree (AST) node in the case of a successful
+                    matching, and ``NIL'' commonly chosen if failed."))
+  (:documentation
+    "The ``Parse-Result'' encapsulates a ``Parser'' instance's response
+     to its invocation, comprehending a success/failure flag, the parse
+     state ensuing from the attempt, and an optional output that
+     accounts for the parser's contribution to the complete process'
+     product, usually in the form of an abstract syntax tree (AST)
+     node."))
+
+;;; -------------------------------------------------------
+
+(defun make-parse-result (succeeded-p
+                          &optional (state NIL) (output NIL))
+  "Creates and returns a new ``Parse-Result'' whose SUCCEEDED-P flag
+   determines its success, comprehending an optional parse STATE for
+   contingently following parsing operations, and an OUTPUT that
+   represents the generating ``Parser'' object's contribution to the
+   complete parsing result."
+  (declare (type boolean               succeeded-p))
+  (declare (type (or null Parse-State) state))
+  (declare (type T                     output))
+  (the Parse-Result
+    (make-instance 'Parse-Result
+      :succeeded-p succeeded-p
+      :state       state
+      :output      output)))
+
+;;; -------------------------------------------------------
+
+(defmethod print-object ((result Parse-Result) stream)
+  (declare (type Parse-Result result))
+  (declare (type destination  stream))
+  (format stream "(Parse-Result succeeded-p=~s, state=~s, output=~s)"
+    (slot-value result 'succeeded-p)
+    (slot-value result 'state)
+    (slot-value result 'output)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of abstract syntax tree (AST) nodes.          -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1269,637 +1902,6 @@
   (declare (type destination  stream))
   (format stream "(Program-Node statements=~s)"
     (slot-value node 'statements)))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of class "Token".                             -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defstruct (Token
-  (:constructor make-token (type value)))
-  "The ``Token'' class encapsulates the information requisite for the
-   delination of a significant object extracted during a piece of Stu
-   source code's lexical analyzation."
-  (type  (error "Missing token type.")  :type keyword)
-  (value (error "Missing token value.") :type T))
-
-;;; -------------------------------------------------------
-
-(defun token-type-p (token expected-type)
-  "Determines whether the TOKEN conforms to the EXPECTED-TYPE, returning
-   on confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
-  (declare (type Token   token))
-  (declare (type keyword expected-type))
-  (the boolean
-    (not (null
-      (eq (token-type token) expected-type)))))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of character operations.                      -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun identifier-character-p (candidate)
-  "Determines whether the CANDIDATE represents an identifier name
-   constituent, returning on confirmation a ``boolean'' value of ``T'',
-   otherwise ``NIL''."
-  (declare (type character candidate))
-  (the boolean
-    (not (null
-      (alphanumericp candidate)))))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of class "Lexer".                             -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defclass Lexer ()
-  ((source
-    :initarg       :source
-    :initform      (error "Missing lexer source.")
-    :type          string
-    :documentation "The piece of Stu source code to analyze.")
-   (position
-    :initarg       :position
-    :initform      0
-    :type          fixnum
-    :documentation "The current index into the SOURCE.")
-   (character
-    :initarg       :character
-    :initform      NIL
-    :type          (or null character)
-    :documentation "The character at the current POSITION into the
-                    SOURCE, or ``NIL'' if the same is exhausted."))
-  (:documentation
-    "The ``Lexer'' class' onus designates its lexical analyzation of a
-     piece of Stu source code in order to extract and returns the
-     perceived tokens."))
-
-;;; -------------------------------------------------------
-
-(defmethod initialize-instance :after ((lexer Lexer) &key)
-  "Sets the LEXER's position to cursor to the first character in its
-   SOURCE, if possible, and returns the modified LEXER."
-  (declare (type Lexer lexer))
-  (with-slots (source position character) lexer
-    (declare (type string              source))
-    (declare (type fixnum              position))
-    (declare (type (or null character) character))
-    (setf character
-      (when (array-in-bounds-p source position)
-        (char source position))))
-  (the Lexer lexer))
-
-;;; -------------------------------------------------------
-
-(defun make-lexer (source)
-  "Creates and returns a new ``Lexer'' which analyzes the Stu SOURCE
-   code."
-  (declare (type string source))
-  (the Lexer
-    (make-instance 'Lexer :source source)))
-
-;;; -------------------------------------------------------
-
-(defun lexer-advance (lexer)
-  "Moves the LEXER's position cursor to the next character in its
-   source, if possible, updates the current character, and returns the
-   modified LEXER."
-  (declare (type Lexer lexer))
-  (with-slots (source position character) lexer
-    (declare (type string              source))
-    (declare (type fixnum              position))
-    (declare (type (or null character) character))
-    (the (or null character)
-      (prog1 character
-        (setf character
-          (when (array-in-bounds-p source (1+ position))
-            (char source (incf position))))))))
-
-;;; -------------------------------------------------------
-
-(defun lexer-read-word (lexer)
-  "Proceeding from the current position into the LEXER's source, reads a
-   single word, composed of one or more identifier characters, and
-   returns a ``:word'' token representation thereof."
-  (declare (type Lexer lexer))
-  (with-slots (character) lexer
-    (declare (type (or null character) character))
-    (the Token
-      (make-token :word
-        (with-output-to-string (identifier)
-          (declare (type string-stream identifier))
-          (loop
-            while (and character (identifier-character-p character))
-            do    (write-char (lexer-advance lexer) identifier)))))))
-
-;;; -------------------------------------------------------
-
-(defun lexer-read-symbol (lexer token-type)
-  "Reads the character at the current position into the LEXER's source,
-   returns a TOKEN-TYPE representation thereof with the character as the
-   token value, and concomitantly advances the position cursor."
-  (declare (type Lexer   lexer))
-  (declare (type keyword token-type))
-  (the Token
-    (make-token token-type
-      (lexer-advance lexer))))
-
-;;; -------------------------------------------------------
-
-(defun lexer-skip-comment (lexer)
-  "Proceeding from the current position into the LEXER's source, skips
-   a comment section which extends to the end of the line or the end of
-   the file, and returns the modified LEXER."
-  (declare (type Lexer lexer))
-  (with-slots (character) lexer
-    (declare (type (or null character) character))
-    (loop while (and character (char/= character #\Newline)) do
-      (lexer-advance lexer)))
-  (the Lexer lexer))
-
-;;; -------------------------------------------------------
-
-(defun lexer-read-string (lexer)
-  "Proceeding from the current position in the LEXER's source, reads a
-   string, delimited by double quotation marks, and returns a
-   ``:string'' token representation thereof."
-  (declare (type Lexer lexer))
-  (lexer-advance lexer)
-  (with-slots (character) lexer
-    (declare (type (or null character) character))
-    (the Token
-      (make-token :string
-        (with-output-to-string (content)
-          (declare (type string-stream content))
-          (loop do
-            (case character
-              ((NIL)
-                (error "Unterminated string at position ~d."
-                  (slot-value lexer 'position)))
-              (#\Newline
-                (error "Linebreak in string at position ~d."
-                  (slot-value lexer 'postiion)))
-              (#\"
-                (lexer-advance lexer)
-                (loop-finish))
-              (otherwise
-                (write-char (lexer-advance lexer) content)))))))))
-
-;;; -------------------------------------------------------
-
-(defun lexer-get-next-token (lexer)
-  "Returns the next token from the LEXER.
-   ---
-   Upon the LEXER source's exhaustion, every request is answered with a
-   fresh ``:eof'' (end of file) token."
-  (declare (type Lexer lexer))
-  (with-slots (character) lexer
-    (declare (type (or null character) character))
-    (the Token
-      (cond
-        ((null character)
-          (make-token :eof NIL))
-        
-        ((char= character #\;)
-          (lexer-skip-comment   lexer)
-          (lexer-get-next-token lexer))
-        
-        ((char= character #\Space)
-          (lexer-read-symbol lexer :space))
-        
-        ((char= character #\Newline)
-          (lexer-read-symbol lexer :newline))
-        
-        ((char= character #\,)
-          (lexer-read-symbol lexer :comma))
-        
-        ((char= character #\!)
-          (lexer-read-symbol lexer :exclamation-mark))
-        
-        ((char= character #\:)
-          (lexer-read-symbol lexer :colon))
-        
-        ((char= character #\.)
-          (lexer-read-symbol lexer :period))
-        
-        ((char= character #\")
-          (lexer-read-string lexer))
-        
-        ((alphanumericp character)
-          (lexer-read-word lexer))
-        
-        (T
-          (lexer-read-symbol lexer :character))))))
-
-;;; -------------------------------------------------------
-
-(defun make-lexer-token-provider (lexer)
-  "Creates and returns a function which acts as a ``token-provider'' for
-   the LEXER, upon each invocation returning its next token."
-  (declare (type Lexer lexer))
-  (the function
-    #'(lambda ()
-        (the Token
-          (lexer-get-next-token lexer)))))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of class "SLNode".                            -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defclass SLNode ()
-  ((element
-    :initarg       :element
-    :initform      NIL
-    :accessor      slnode-element
-    :type          (or null Token)
-    :documentation "A reference to the element stored in this node")
-   (next
-    :initarg       :next
-    :initform      NIL
-    :accessor      slnode-next
-    :type          (or null SLNode)
-    :documentation "A reference to the successor node, or ``NIL'' if
-                    this node represents the queue's tail."))
-  (:documentation
-    "The ``SLNode'' class represent a singly linked node, intended for
-     the deployment in a ``Token-Queue''.
-     ---
-     A paragon of efficiency and simplicity's coefficacy, the singly
-     linked node comprehends merely two pieces of information: the
-     element to the bestored, which constitutes in our case a ``Token'',
-     and a reference to the succeeding node, or ``NIL'' if none such
-     exists."))
-
-;;; -------------------------------------------------------
-
-(defun make-slnode (element next)
-  "Creates and returns a new ``SLNode'' which stores the ELEMENT, while
-   being linked to the optional NEXT node as its successor."
-  (declare (type (or null Token)  element))
-  (declare (type (or null SLNode) next))
-  (the SLNode
-    (make-instance 'SLNode
-      :element element
-      :next    next)))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of class "Token-Queue".                       -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defclass Token-Queue ()
-  ((head
-    :initarg       :head
-    :initform      NIL
-    :type          (or null SLNode)
-    :documentation "The head node.")
-   (tail
-    :initarg       :tail
-    :initform      NIL
-    :type          (or null SLNode)
-    :documentation "The tail node.")
-   (size
-    :initarg       :size
-    :initform      0
-    :reader        token-queue-size
-    :type          (integer 0 *)
-    :documentation "The number of elements in the queue.
-                    ---
-                    Please note that the HEAD and TAIL nodes, of course,
-                    do contribute to this account."))
-  (:documentation
-    "The ``Token-Queue'' class implements a positional list stored as a
-     singly linked list, intended to maintain ``Token'' objects.
-     ---
-     Both the head and tail node, for a non-empty queue, constitute
-     actual nodes, not sentinels."))
-
-;;; -------------------------------------------------------
-
-(defun make-token-queue ()
-  "Creates and returns an empty ``Token-Queue''."
-  (the Token-Queue
-    (make-instance 'Token-Queue)))
-
-;;; -------------------------------------------------------
-
-(defun token-queue-empty-p (queue)
-  "Determines whether the token QUEUE is empty, returning on
-   confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
-  (declare (type Token-Queue queue))
-  (the boolean
-    (not (null
-      (zerop (slot-value queue 'size))))))
-
-;;; -------------------------------------------------------
-
-(defun token-queue-first (queue)
-  "Returns the first ``SLNode'' in the QUEUE, or ``NIL'' if the same is
-   empty."
-  (declare (type Token-Queue queue))
-  (the (or null SLNode)
-    (unless (token-queue-empty-p queue)
-      (slot-value queue 'head))))
-
-;;; -------------------------------------------------------
-
-(defun token-queue-add-last (queue element)
-  "Inserts the ELEMENT at the back of the QUEUE and returns the
-   ``SLNode'' generated for it."
-  (declare (type Token-Queue queue))
-  (declare (type Token       element))
-  (let ((new-node (make-slnode element NIL)))
-    (declare (type SLNode new-node))
-    (if (token-queue-empty-p queue)
-      (setf (slot-value queue 'head) new-node)
-      ;; The NEW-NODE is inserted after the TAIL.
-      (setf (slnode-next (slot-value queue 'tail)) new-node))
-    ;; The NEW-NODE becomes the TAIL.
-    (setf (slot-value queue 'tail) new-node)
-    (incf (slot-value queue 'size))
-    (the SLNode new-node)))
-
-;;; -------------------------------------------------------
-
-(defun token-queue-after (queue node)
-  "Returns the ``SLNode'' immediately succeeding the NODE in the QUEUE,
-   or ``NIL'', if the NODE represents the QUEUE's desinent component."
-  (declare (type Token-Queue queue))
-  (declare (ignore           queue))
-  (declare (type SLNode      node))
-  (the (or null SLNode)
-    (slnode-next node)))
-
-;;; -------------------------------------------------------
-
-(defmethod print-object ((queue Token-Queue) stream)
-  (declare (type Token-Queue queue))
-  (declare (type destination stream))
-  (with-slots (head tail) queue
-    (declare (type SLNode head))
-    (declare (type SLNode tail))
-    (format stream "(Token-Queue")
-    (loop
-      for node of-type (or null SLNode)
-        =    head
-        then (slnode-next node)
-      while node
-      do
-        (format stream " ~s"
-          (slnode-element node)))
-    (format stream ")")))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of class "Parse-State".                       -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defgeneric parse-state-current-element (parse-state)
-  (:documentation
-    "Returns the token associated with the PARSE-STATE, commorant under
-     its personal cursor inside of the shared token queue."))
-
-(defgeneric parse-state-advance (parse-state)
-  (:documentation
-    "Returns a new ``Parse-State'' as a derivation of the extant
-     PARSE-STATE, representing an advance in its source's processing."))
-
-;;; -------------------------------------------------------
-
-(defclass Parse-State ()
-  ((tokens
-    :initarg       :tokens
-    :initform      (error "Missing token queue.")
-    :accessor      parse-state-tokens
-    :type          Token-Queue
-    :documentation "The token queue shared betwixt all parse states, to
-                    whom each instance stores a CURSOR, this being a
-                    reference to the queue node comprehending the token
-                    affiliated with the state.")
-   (token-provider
-    :initarg       :token-provider
-    :initform      (error "Missing token provider.")
-    :accessor      parse-state-token-provider
-    :type          token-provider
-    :documentation "A function shared betwixt all parse states,
-                    responsible for producing the tokens to be added at
-                    the shared token queue TOKENS' rear.")
-   (cursor
-    :initarg       :cursor
-    :initform      NIL
-    :accessor      parse-state-cursor
-    :type          (or null SLNode)
-    :documentation "A reference to the node in the shared TOKENS queue
-                    whose token has been tested with this state."))
-  (:documentation
-    "The ``Parse-State'' class serves in the encapsulation of the
-     parsing process' advancement, as its paravaunt constituent
-     maintaining the node in the token queue shared betwixt all parse
-     states which contains its personally indagated token."))
-
-;;; -------------------------------------------------------
-
-(defun parse-state-load-next-token (state)
-  "Queries from the parse STATE's token provider the next token, inserts
-   it in the shared token queue's rear, and returns the STATE."
-  (declare (type Parse-State state))
-  (with-slots (tokens token-provider) state
-    (token-queue-add-last tokens
-      (funcall (parse-state-token-provider state))))
-  (the Parse-State state))
-
-;;; -------------------------------------------------------
-
-(defun parse-state-initialize (state)
-  "Inserts at the STATE's shared token queue the next token from its
-   token provider, sets the STATE's cursor to the same, and returns the
-   modified STATE."
-  (declare (type Parse-State state))
-  (parse-state-load-next-token state)
-  (setf (parse-state-cursor state)
-    (token-queue-first
-      (parse-state-tokens state)))
-  (the Parse-State state))
-
-;;; -------------------------------------------------------
-
-(defun make-parse-state (tokens token-provider)
-  "Creates and returns a new ``Parse-State'' which refers to the shared
-   token queue TOKENS and the shared TOKEN-PROVIDER, but contains no
-   node cursor into the former yet."
-  (the Parse-State
-    (make-instance 'Parse-State
-      :tokens         tokens
-      :token-provider token-provider)))
-
-;;; -------------------------------------------------------
-
-(defun make-initial-parse-state (token-provider)
-  "Creates and returns a new ``Parse-State'' which incorporates a fresh
-   token queue intended to be shared among all parse states, in
-   conjunction with the equally shared TOKEN-PROVIDER, but lacks the
-   node cursor into the queue."
-  (the Parse-State
-    (parse-state-initialize
-      (make-instance 'Parse-State
-        :tokens         (make-token-queue)
-        :token-provider token-provider))))
-
-;;; -------------------------------------------------------
-
-(defmethod parse-state-current-element ((state Parse-State))
-  "Returns the parse STATE's token, located in the shared token queue's
-   node referenced by this instance."
-  (declare (type Parse-State state))
-  (the Token
-    (slnode-element
-      (parse-state-cursor state))))
-
-;;; -------------------------------------------------------
-
-(defmethod parse-state-advance ((state Parse-State))
-  "Creates and returns a new ``Parse-State'' based upon the input STATE,
-   comprehending a reference to the node in the shared token queue
-   immediately succeeding the template STATE's cursor node.
-   ---
-   In concrete diction, the following steps apply to the process:
-     (1) Create a new ``Parse-State'' NEW-STATE, appropriating from the
-         template STATE the shared token queue reference and the shared
-         token provider. Please note that these are references, not
-         copies.
-     (2) If the template STATE's own cursor node is succeeded by at
-         least one node in the token queue, that is, it does not
-         constitute the desinent position, store a reference to the
-         immediate successor node in the NEW-STATE.
-     (3) If instead the template STATE's cursor node constitutes the
-         shared token queue's last node, query the next token from the
-         shared token provider, insert it at the token queue's rear, and
-         store a reference to the newly created node into the NEW-STATE
-         as its cursor."
-  (declare (type Parse-State state))
-  (let ((new-state
-          (make-parse-state
-            (parse-state-tokens         state)
-            (parse-state-token-provider state))))
-    (declare (type Parse-State new-state))
-    
-    ;; If the STATE's cursor possedes no successor node, query and
-    ;; insert a new one to the shared token queue.
-    (unless (token-queue-after (parse-state-tokens state)
-              (parse-state-cursor state))
-      (parse-state-load-next-token state))
-    
-    ;; Set the NEW-STATE to the node immediately following the template
-    ;; STATE's cursor.
-    (setf (parse-state-cursor new-state)
-          (token-queue-after (parse-state-tokens state)
-            (parse-state-cursor state)))
-    
-    (the Parse-State new-state)))
-
-;;; -------------------------------------------------------
-
-(defmethod print-object ((state Parse-State) stream)
-  (declare (type Parse-State state))
-  (declare (type destination stream))
-  (format stream "(Parse-State cursor=~s)"
-    (slot-value state 'cursor)))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of class "Parse-Result".                      -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defgeneric parse-result-succeeded-p (parse-result)
-  (:documentation
-    "Determines whether the ``Parser'' responsible for this
-     PARSE-RESULT's generation has matched, returning on confirmation a
-     ``boolean'' value of ``T'', otherwise ``NIL''."))
-
-(defgeneric parse-result-state (parse-result)
-  (:documentation
-    "Returns the ``Parse-State'' allied with this PARSE-RESULT"))
-
-(defgeneric parse-result-output (parse-result)
-  (:documentation
-    "Returns the output of the ``Parser'' responsible for this
-     PARSE-RESULT's generation, usually constituting a contributing to
-     the complete parsing process result.
-     ---
-     The output commonly amounts to ``NIL'' for a failed ``Parser'', for
-     which also see the return value of the ``parse-result-succeeded-p''
-     operation."))
-
-;;; -------------------------------------------------------
-
-(defclass Parse-Result ()
-  ((succeeded-p
-    :initarg       :succeeded-p
-    :initform      NIL
-    :reader        parse-result-succeeded-p
-    :type          boolean
-    :documentation "Determines whether the parser or combinator having
-                    produced this result has matches its input state.")
-   (state
-    :initarg       :state
-    :initform      NIL
-    :reader        parse-result-state
-    :type          (or null Parse-State)
-    :documentation "The parse state affiliated with the result, either
-                    constituting the final output or an input into the
-                    consequent ``Parser'' invocation.")
-   (output
-    :initarg       :output
-    :initform      NIL
-    :reader        parse-result-output
-    :type          T
-    :documentation "The parsing process' output, usually an abstract
-                    syntax tree (AST) node in the case of a successful
-                    matching, and ``NIL'' commonly chosen if failed."))
-  (:documentation
-    "The ``Parse-Result'' encapsulates a ``Parser'' instance's response
-     to its invocation, comprehending a success/failure flag, the parse
-     state ensuing from the attempt, and an optional output that
-     accounts for the parser's contribution to the complete process'
-     product, usually in the form of an abstract syntax tree (AST)
-     node."))
-
-;;; -------------------------------------------------------
-
-(defun make-parse-result (succeeded-p
-                          &optional (state NIL) (output NIL))
-  "Creates and returns a new ``Parse-Result'' whose SUCCEEDED-P flag
-   determines its success, comprehending an optional parse STATE for
-   contingently following parsing operations, and an OUTPUT that
-   represents the generating ``Parser'' object's contribution to the
-   complete parsing result."
-  (declare (type boolean               succeeded-p))
-  (declare (type (or null Parse-State) state))
-  (declare (type T                     output))
-  (the Parse-Result
-    (make-instance 'Parse-Result
-      :succeeded-p succeeded-p
-      :state       state
-      :output      output)))
-
-;;; -------------------------------------------------------
-
-(defmethod print-object ((result Parse-Result) stream)
-  (declare (type Parse-Result result))
-  (declare (type destination  stream))
-  (format stream "(Parse-Result succeeded-p=~s, state=~s, output=~s)"
-    (slot-value result 'succeeded-p)
-    (slot-value result 'state)
-    (slot-value result 'output)))
 
 
 
@@ -2232,7 +2234,8 @@
                 (mapcar
                   #'(lambda (parser)
                       (declare (type Parser parser))
-                      (.chain separator parser))
+                      (the Parser
+                        (.chain separator parser)))
                   (rest parsers))))
         (declare (type (list-of T) further-outputs))
         (.return
@@ -2873,7 +2876,7 @@
 ;;; -------------------------------------------------------
 
 (defun make-interpreter (tree)
-  "Creates and returns a new ``Interpreter'' capaciated to process the
+  "Creates and returns a new ``Interpreter'' capacitated to process the
    abstract syntax TREE (AST)."
   (declare (type Node tree))
   (the Interpreter
