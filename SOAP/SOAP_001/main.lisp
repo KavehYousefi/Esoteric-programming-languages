@@ -1875,7 +1875,28 @@
 
 (defparameter *project-directory*
   (make-pathname)
-  "Specifies the directory containing the Common Lisp project files.")
+  "Specifies the directory containing the Common Lisp project files.
+   ---
+   Please substitute this global variable's content by the actual
+   directory on your system which contains the SOAP interpreter's source
+   files.
+   ---
+   Several facilities are offered by the Common Lisp standard library
+   for engaging in such an activity, enumerating, for instance:
+   
+     ------------------------------------------------------------
+     Function         | Exemplary invocation
+     -----------------+------------------------------------------
+     make-path-name   | (make-pathname
+                      |   :device    \"C\"
+                      |   :directory '(:absolute
+                      |                 \"Users\"
+                      |                 \"Kaveh\"
+                      |                 \"SOAP\"
+                      |                 \"SOAP_001\"))
+     parse-namestring | (parse-namestring
+                      |   \"C:/Users/Kaveh/SOAP/SOAP_001/\")
+     ------------------------------------------------------------")
 
 
 

@@ -261,7 +261,6 @@
 ;;; -------------------------------------------------------
 
 (define-node-dispatch :input-character (interpreter node)
-  (format T "~&Please enter a character: ")
   (with-interpreter (interpreter)
     (setf input (read-char)))
   (clear-input)

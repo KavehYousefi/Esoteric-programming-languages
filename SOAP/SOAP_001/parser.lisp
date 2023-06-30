@@ -108,6 +108,7 @@
    ``:variable'' node representation thereof."
   (declare (type Parser parser))
   (with-parser (parser)
+    (eat :percent)
     (the Node
       (make-node :variable))))
 
@@ -168,7 +169,7 @@
    thereof."
   (declare (type Parser parser))
   (with-parser (parser)
-    (the Token
+    (the Node
       (case (token-type current-token)
         (:empty-set
           (parser-parse-empty-set parser))
@@ -321,7 +322,7 @@
         
         (:semicolon
           (parser-parse-simple-instruction parser :semicolon
-            :increment-variable))
+            :decrement-variable))
         
         (:tilde
           (parser-parse-simple-instruction parser :tilde

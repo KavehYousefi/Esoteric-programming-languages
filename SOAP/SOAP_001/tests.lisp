@@ -33,6 +33,41 @@
 
 ;;; -------------------------------------------------------
 
+;; Print the message "HaHaHa" by employing the variable "%" in
+;; conjunction with a superset iteration.
+;; 
+;; The program comprehends a twain of stages:
+;;   (1) The main set M is set to M = {1, 2, 3}.
+;;   (2) As long as the value of variable "%", initially assuming 1, is
+;;       comprehended in M, the following loop operates:
+;;       (2.1) "Ha" is printed to the standard output.
+;;       (2.2) The variable "%" is incremented.
+;;             If "%" acquires the value 4, an object not listed in the
+;;             main set M, the iteration ceases.
+(interpret-SOAP "*1*2*10
+                 ⊇{%}[\"H\"a :]")
+
+;;; -------------------------------------------------------
+
+;; Print the message "HaHaHa" by employing the variable "%" in
+;; conjunction with a superset iteration.
+;; 
+;; The program comprehends a treble of stages:
+;;   (1) The main set M is set to M = {2, 3, 4}.
+;;   (2) The variable "%", initially assuming 1, is increment to the
+;;       value 4.
+;;   (3) As long as the value of variable "%", is comprehended in M, the
+;;       following loop operates:
+;;       (3.1) "Ha" is printed to the standard output.
+;;       (3.2) The variable "%" is decremented.
+;;             If "%" acquires the value 1, an object not listed in the
+;;             main set M, the iteration ceases.
+(interpret-SOAP "*2*10*11
+                 :::
+                 ⊇{%}[\"H\"a ;]")
+
+;;; -------------------------------------------------------
+
 ;; One-time cat program which recognizes the printable characters in the
 ;; ASCII code range [32, 255].
 (interpret-SOAP
