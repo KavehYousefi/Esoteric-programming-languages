@@ -22,7 +22,7 @@
 ;; The language Stu follows the English grammar in order to express its
 ;; instructions in conformance with an optative request for actions.
 ;; 
-;; == SIMON SAYS ... AND "STU WANTS TO ..."
+;; == SIMON SAYS ... AND "STU WANTS TO ..." ==
 ;; All operations are expressed in English sentences akin to natural
 ;; language, entailing the optations communicated by a boy named Stu,
 ;; its inchoation always introduced with the parasceuastic
@@ -934,7 +934,7 @@
 ;;   Notes:
 ;;     - Describes the concept and an implementation of the singly
 ;;       linked list in the Java programming language.
-;;     - The pages 276 through 280 describes the concept and an
+;;     - The pages 276 through 280 describe the concept and an
 ;;       implementation of the doubly linked list in the Java
 ;;       programming language, significant for the introduction and
 ;;       deployment of the positional list principles.
@@ -2020,9 +2020,8 @@
 
 (defun .chain (&rest parsers)
   "Returns a new ``Parser'' which succeeds if all of the PARSERS, in
-   this exact order, match, returning on confirmation in its
-   ``Parse-Result'' output a list of the collected PARSERS outputs in
-   the specified sequence."
+   this exact order, match, returning on confirmation the desinent
+   parser's successful ``Parse-Result''."
   (declare (type (list-of Parser) parsers))
   (the Parser
     (make-parser
@@ -2053,7 +2052,7 @@
   "Returns a new ``Parser'' which implements a monadic binding,
    succeeding if both the ANTECEDENT parser matches, in this case
    requesting from the PARSER-GENERATOR, invoked with the ANTECEDENT's
-   result state, a consequent parser that also requires to match,
+   result output, a consequent parser that also requires to match,
    returning on confirmation the consequent parser's result, otherwise
    the failed ANTECEDENT's one."
   (declare (type Parser                antecedent))
@@ -2419,7 +2418,9 @@
 
 (defun .stu-wants-to ()
   "Returns a new ``Parser'' which succeeds if the phrase
-   \"Stu want to\", followed by a space, can be ascertained."
+   \"Stu wants to\", followed by a space, can be ascertained, returning
+   on confirmation in its ``Parse-Result'' output the concluding space
+   token."
   (the Parser
     (.chain
       (.all-separated-by
@@ -2457,9 +2458,9 @@
 ;;; -------------------------------------------------------
 
 (defun .variable ()
-  "Returns a new ``Parser'' which succeeds if a non-keyword identifier
-   follows, construed as a variable name, comprehending in its results a
-   fresh ``Variable-Node'' representation of the matched token's value."
+  "Returns a new ``Parser'' which succeeds if an identifier follows,
+   construed as a variable name, comprehending in its results a fresh
+   ``Variable-Node'' representation of the matched token's value."
   (the Parser
     (.let (variable-token (.type-of :word))
       (declare (type Token variable-token))
@@ -2534,8 +2535,8 @@
 (defun .probe-if-not (parser)
   "Returns a new ``Parser'' which succeeds if the PARSER does not match,
    returning in any case in its ``Parse-Result'' output the PARSER's
-   output, always in conjunction with the the new parser's input state,
-   that is, the parse state does not advance."
+   output, always in conjunction with the new parser's input state, that
+   is, the parse state does not advance."
   (declare (type Parser parser))
   (the Parser
     (make-parser
@@ -2600,8 +2601,9 @@
 (defun .output ()
   "Returns a new ``Parser'' which succeeds if an output statement,
    represented by its fragmentary introduction \"tell you something\",
-   on confirmation returning in its ``Parse-Result'' output an
-   ``Output-Node''."
+   follows, on confirmation returning in its ``Parse-Result'' output
+   either directly an ``Output-Node'' or a ``Conditional-Node''
+   enveloping the former."
   (the Parser
     (.chain
       (.words "tell" "you" "something")
@@ -2635,8 +2637,9 @@
 
 (defun .input ()
   "Returns a new ``Parser'' which succeeds if an input command follows,
-   returning on confirmation in its ``Parse-Result'' output an
-   ``Input-Node'' representation."
+   on confirmation returning in its ``Parse-Result'' output either
+   directly an ``Input-Node'' or a ``Conditional-Node'' enveloping the
+   former."
   (the Parser
     (.chain
       (.or (.words "know" "something")
@@ -2672,9 +2675,9 @@
 ;;; -------------------------------------------------------
 
 (defun .quit ()
-  "Returns a new ``Parser'' which succeeds if a quit command follows,
-   returning on confirmation in its ``Parse-Result'' output a
-   ``Quit-Node'' representation."
+  "Returns a new ``Parser'' which succeeds if a quit command follows, on
+   confirmation returning in its ``Parse-Result'' output either directly
+   a ``Quit-Node'' or a ``Conditional-Node'' enveloping the former."
   (the Parser
     (.chain
       (.words "leave" "now")
@@ -2689,9 +2692,9 @@
 ;;; -------------------------------------------------------
 
 (defun .jump ()
-  "Returns a new ``Parser'' which succeeds if a jump command follows,
-   returning on confirmation in its ``Parse-Result'' output a
-   ``Jump-Node'' representation."
+  "Returns a new ``Parser'' which succeeds if a jump command follows, on
+   confirmation returning in its ``Parse-Result'' output either directly
+   a ``Jump-Node'' or a ``Conditional-Node'' enveloping the former."
   (the Parser
     (.chain
       (.words "go" "home" "now")
@@ -2735,7 +2738,7 @@
 ;;; -------------------------------------------------------
 
 (defun .optional-spaces ()
-  "Returns a new ``Parser'' which always succeeds by skiipping zero or
+  "Returns a new ``Parser'' which always succeeds by skipping zero or
    more adjacent space tokens, returning in its ``Parse-Result'' output
    the ``NIL'' value."
   (the Parser
@@ -2782,8 +2785,8 @@
 
 (defun .program ()
   "Returns a new ``Parser'' which succeeds if a valid Stu program has
-   been parsed, returning in its ``Parse-Result'' the root
-   ``Program-Node'' of the Stu program's abstract syntax tree (AST)
+   been parsed, returning on confirmation in its ``Parse-Result'' the
+   root ``Program-Node'' of the Stu program's abstract syntax tree (AST)
    representation."
   (.let (statements (.statement-list))
     (declare (type node-list statements))
@@ -2836,8 +2839,8 @@
    ---
    The thus returned function accepts two strings as its inputs,
    responding with a generalized Boolean of \"true\" in the case of
-   their equality, otherwise with ``NIL''. In corollary, it adheres to
-   the following signature:
+   their conjoined satisfaction of the predicate, otherwise with
+   ``NIL''. In corollary, it adheres to the following signature:
      lambda (first-string second-string) => generalized-boolean"
   (declare (type comparison-operator comparison-operator))
   (the function
@@ -2986,8 +2989,8 @@
      (node        Input-Node))
   "Processes the input NODE in the INTERPRETER's context, querying the
    user for a line of text which is subsequently stored in the specified
-   variable, depending upon the requisitum of an unbounded speciment,
-   and returns no value."
+   variable, depending upon the requisitum of an unbound specimen, and
+   returns no value."
   (declare (type Interpreter interpreter))
   (declare (type Input-Node  node))
   (let ((target
@@ -3028,6 +3031,10 @@
 (defmethod interpreter-visit-node
     ((interpreter Interpreter)
      (node        Output-Node))
+  "Processes the output NODE in the INTERPRETER's context, concatenating
+   its zero or more arguments, without a particular vinculum, into a
+   single entity, which is subsequently printed to the system's standard
+   output, and returns no value."
   (declare (type Interpreter interpreter))
   (declare (type Output-Node node))
   (let ((arguments (output-node-arguments node)))

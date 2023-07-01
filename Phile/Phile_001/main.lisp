@@ -121,7 +121,7 @@
 ;; ensconced in double quotes, and of arbitrary extent, including the
 ;; contingence for vacancy. A compernage of the literally construed
 ;; characters, several escape sequences, affiliated with the backslash
-;; ("\") prefix are defined:
+;; ("\") prefix, are defined:
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   Escape sequence | Description
@@ -166,7 +166,7 @@
 ;; ======
 ;; Phile programs entail a sequence of zero or more statements, each
 ;; enharboring a separate line and terminated by a semicolon.
-;; Expressions supplement the instrucction argument portions.
+;; Expressions supplement the instruction argument portions.
 ;; 
 ;; == FILE NAMES ==
 ;; File names are represented by string literals, a composite of zero or
@@ -181,7 +181,7 @@
 ;; The quantitative preponderance among the members, prefix statements
 ;; demonstrate a homogeneous construction, with the command name being
 ;; succeeded by the file designator, and concluding with zero or one
-;; values as the ultimate argument. A semicolon as the terminator closes
+;; value as the ultimate argument. A semicolon as the terminator closes
 ;; the statement. Five specimens subsume into this tier:
 ;; 
 ;;   CLOSE {fname}
@@ -199,7 +199,7 @@
 ;; 
 ;;   {value}? {lineNumber};
 ;; 
-;; An arbitary expression, {value}, serves as an introduction,
+;; An arbitrary expression, {value}, serves as an introduction,
 ;; establishing the predicate, segregated by a question mark ("?") from
 ;; the destination line index {lineNumber}, and again demarcated by a
 ;; semicolon.
@@ -219,7 +219,7 @@
 ;; administration unto preceding and trailing occurrences.
 ;; 
 ;; == LINEBREAKS ==
-;; With each line being either a statement's occupancy, or an empty
+;; With each line being either a statement's occupancy or an empty
 ;; instance, linebreaks appropriate the role of sepiments betwixt
 ;; successive instructions. Their vacant forms may appear in an
 ;; arbitrary tally and at any location.
@@ -232,10 +232,11 @@
 ;; == GRAMMAR ==
 ;; The Extended Backus-Naur Form (EBNF) describes the language syntax:
 ;; 
-;;   program              := { emptyLine } ,
-;;                           { innerInstruction } ,
-;;                           { emptyLine } ,
-;;                           terminalInstruction ;
+;;   program              := { emptyLine }
+;;                        ,  { innerInstruction }
+;;                        ,  { emptyLine }
+;;                        ,  terminalInstruction
+;;                        ;
 ;;   innerInstruction     := instruction , newline ;
 ;;   terminalInstruction  := { instruction } , { emptyLine } ;
 ;;   emptyLine            := { space } , [ linebreak ] ;
@@ -279,10 +280,10 @@
 ;; 
 ;; Instructions
 ;; ============
-;; Phile's instruction set is compact of quintuple membership engaged in
-;; the simulation of file operations --- a tally conceptually expanded
-;; by binary operations spanning basic arithmetics and relational
-;; specimens.
+;; Phile's instruction set is compact of a quintuple membership engaged
+;; in the simulation of file operations --- a tally conceptually
+;; expanded by binary operations spanning basic arithmetics and
+;; relational specimens.
 ;; 
 ;; == OVERVIEW ==
 ;; A cursory apercu shall juxtapose the language's command set to the
@@ -450,7 +451,7 @@
 ;;                 | Reading: Is prohibited and results in an error.
 ;;                 | ..................................................
 ;;                 | Writing: The value is written to the standard
-;;                 |          output, usually the console.
+;;                 |          error output, usually the console.
 ;;   ------------------------------------------------------------------
 ;; 
 ;; Please beware that, as with any file, the protocols of opening and
@@ -3430,21 +3431,21 @@
   OVERWRITE \"b\" READ \"b\" - 1;
   
   /// Test of a.
-  READ  \"a\" = 0? 11;
+  READ      \"a\" = 0? 11;
   OVERWRITE \"stdout.stream\" READ \"a\" + \"\\n\";
   OVERWRITE \"a\" 0;
   
   /// Line 11:
   /// Test of b.
-  READ  \"b\" = 1? 13;
+  READ      \"b\" = 1? 13;
   OVERWRITE \"stdout.stream\" READ \"b\" + \"\\n\";
   
   /// Line 13:
   /// While loop.
-  READ  \"b\" = 0? 17;
+  READ      \"b\" = 0? 17;
   OVERWRITE \"stdout.stream\" READ \"b\" + \"\\n\";
   OVERWRITE \"b\" READ \"b\" - 1;
-  READ  \"b\" ! 0? 13;
+  READ      \"b\" ! 0? 13;
   
   /// Line 17:
   /// Input a, b.
