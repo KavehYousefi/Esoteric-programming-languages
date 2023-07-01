@@ -466,3 +466,19 @@
   'þ/\"þ\\
   'ÿ/\"ÿ\\
   ]")
+
+;;; -------------------------------------------------------
+
+;; Load and execute the SOAP script "resources/Deadfish.soap", an
+;; interpreter developed by Esolang user BoundedBeans for the esoteric
+;; programming language "Deadfish".
+;; 
+;; Please do not forget to insert your own file path under which the
+;; "Deadfish.soap" file is located in lieu of this exemplary
+;; specification.
+(load-SOAP-script
+  (make-pathname
+    :device    "C"
+    :directory '(:relative "resources")
+    :name      "Deadfish"
+    :type      "soap"))

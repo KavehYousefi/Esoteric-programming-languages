@@ -20,6 +20,20 @@
     (not (null
       (member candidate '(#\Newline #\Space #\Tab) :test #'char=)))))
 
+;;; -------------------------------------------------------
+
+(defun ignorable-character-p (candidate)
+  "Determines whether the CANDIDATE represents an ignorable character,
+   which is subsequently tolerated but skipped by during lexical
+   analyzation process, returning on confirmation a ``boolean'' value of
+   ``T'', otherwise ``NIL''."
+  (declare (type character candidate))
+  (the boolean
+    (not (null
+      (member (char-code candidate)
+        '(0 13)
+        :test #'=)))))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -293,6 +307,10 @@
         
         ((character-equals-p #\\)
           (lexer-read-singleton-token lexer :backslash))
+        
+        ((ignorable-character-p character)
+          (advance)
+          (lexer-get-next-token lexer))
         
         (T
           (error "Invalid character \"~c\" at position ~d."

@@ -291,7 +291,11 @@
     (interpreter-visit-node interpreter
       (interpreter-tree interpreter))))
 
-;;; -------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of basic interpreter operation.               -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun interpret-SOAP (code)
   "Interprets the piece of SOAP source CODE and returns the last
@@ -303,3 +307,171 @@
         (parser-parse
           (make-parser
             (make-lexer code)))))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of SOAP script loaders.                       -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun read-buffered-stream-content (source number-of-characters)
+  "Reads the first NUMBER-OF-CHARACTERS length of the SOURCE stream's
+   content and returns a simple string comprehending the same.
+   ---
+   The reading process applies bulk reading using the ``read-sequence''
+   facility, thus being theoretically capacitated to execute with
+   enhanced performance."
+  (declare (type stream        source))
+  (declare (type (integer 0 *) number-of-characters))
+  (let ((buffer
+          (make-array number-of-characters
+            :element-type 'character
+            :adjustable   NIL
+            :fill-pointer NIL)))
+    (declare (type simple-string buffer))
+    (read-sequence buffer source)
+    (the simple-string buffer)))
+
+;;; -------------------------------------------------------
+
+(defun read-iterative-stream-content (source)
+  "Reads the SOURCE stream's complete content and returns a string
+   representation thereof.
+   ---
+   The reading process applies a character-wise query from the SOURCE,
+   thus being contingently inflicted with inferior performance."
+  (declare (type stream source))
+  (the string
+    (with-output-to-string (content)
+      (declare (type string-stream content))
+      (loop
+        for character
+          of-type (or null character)
+          =       (read-char source NIL NIL)
+        while character
+        do (write-char character content)))))
+
+;;; -------------------------------------------------------
+
+(defgeneric load-SOAP-script (source)
+  (:documentation
+    "Loads a SOAP script file from the SOURCE, executes it, and returns
+     no value."))
+
+;;; -------------------------------------------------------
+
+(defmethod load-SOAP-script ((source stream))
+  "Loads a SOAP script file from the SOURCE stream, executes it, and
+   returns no value.
+   ---
+   If the SOURCE stream homologates access to its size, bulk reading,
+   theoretically superior in performance, is applied; otherwise the
+   operation resorts to the contingently slower character-wise
+   consumption."
+  (declare (type stream source))
+  (handler-case
+    (let ((source-length (file-length source)))
+      (declare (type (or null (integer 0 *)) source-length))
+      (interpret-SOAP
+        (if source-length
+          (read-buffered-stream-content  source source-length)
+          (read-iterative-stream-content source))))
+    ;; If the STREAM is not associated with a file, the ``file-length''
+    ;; function will signal a ``type-error'', which shall here be
+    ;; handled so as to employ the character-wise content obtention.
+    (type-error ()
+      (interpret-SOAP
+        (read-iterative-stream-content source))))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defmethod load-SOAP-script ((source pathname))
+  "Loads a SOAP script file from the SOURCE file path, executes it, and
+   returns no value.
+   ---
+   An error of the type ``file-error'' is signaled if the SOURCE does
+   not designate an existing and accessible file."
+  (declare (type pathname source))
+  (with-open-file (source-stream source
+                   :element-type      'character
+                   :direction         :input
+                   :external-format   :utf-8
+                   :if-does-not-exist :error)
+    (load-SOAP-script source-stream))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defmethod load-SOAP-script ((source string))
+  "Loads a SOAP script file from the SOURCE file path, executes it, and
+   returns no value.
+   ---
+   An error of the type ``file-error'' is signaled if the SOURCE does
+   not designate an existing and accessible file."
+  (declare (type string source))
+  (with-open-file (source-stream source
+                   :element-type      'character
+                   :direction         :input
+                   :external-format   :utf-8
+                   :if-does-not-exist :error)
+    (load-SOAP-script source-stream))
+  (values))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of interactive SOAP script processors.        -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun input-SOAP-script ()
+  "Reads zero or more lines from the standard input until a completely
+   empty line is provided, concatenates the same, interprets the result
+   as a piece of SOAP source code, executes it, and returns no value.
+   ---
+   Please note that no prompt message is issued to the standard output
+   preceding the querying process.
+   ---
+   The function evaluates the code as a SOAP script if and only if an
+   utterly blank line, even destitute of whitespaces, is supplied."
+  (interpret-SOAP
+    (with-output-to-string (code)
+      (declare (type string-stream code))
+      (loop
+        for line
+          of-type (or null string)
+          =       (read-line *standard-input* NIL NIL)
+        while
+          (and line
+               (plusp (length line)))
+        do
+          (format code "~&~a" line))))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defun run-interactive-SOAP ()
+  "Starts the interactive SOAP interpreter which consumes SOAP code line
+   for line, terminated by entering a completely empty line, and returns
+   no value.
+   ---
+   During its iterative procedure, the interactive interpreter queries
+   for a line of SOAP code, the prompt constituting the three-character
+   sequence
+     >> 
+   The input is submitted via a linebreak, usually by aid of the
+   \"Enter\" key on the keyboard.
+   ---
+   A single line, destitute of any content, which excludes also the
+   admission of whitespaces, terminates the interpreter."
+  (format T "~&This interactive interpreter consumes SOAP code in a ~
+               linewise fashion. To terminate the program please ~
+               enter a completely empty line.~2%")
+  (loop do
+    (format T "~&>> ")
+    (let ((input (read-line)))
+      (declare (type string input))
+      (if (zerop (length input))
+        (return)
+        (interpret-SOAP input))))
+  (values))
