@@ -108,7 +108,7 @@
 ;;; -------------------------------------------------------
 
 (deftype set-relationship ()
-  "The ``set-relationship'' type enumerates the recognized relationship
+  "The ``set-relationship'' type enumerates the recognized relationships
    betwixt two sets, most commonly employed in the indagation of a
    loop's continuation predicate."
   '(member

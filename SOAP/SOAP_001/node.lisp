@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
-;; This class comprehends the definition of "Node" class and its
+;; This class comprehends the definition of the "Node" class and its
 ;; appertaining operations, serving to represent an abstract syntax tree
 ;; (AST) node.
 ;; 
@@ -50,7 +50,7 @@
   "Returns the value of the attribute registered with the ATTRIBUTE-NAME
    at the NODE, or signals an error of an unspecified type upon the
    designator's absence."
-  (declare (type Node node))
+  (declare (type Node    node))
   (declare (type keyword attribute-name))
   (multiple-value-bind (attribute-value contains-name-p)
       (gethash attribute-name (node-attributes node))
