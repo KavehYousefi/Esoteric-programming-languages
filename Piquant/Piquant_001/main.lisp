@@ -507,7 +507,7 @@
 ;;                 |   {start} >= {end}
 ;;   ..................................................................
 ;;   A reference   | Establishes an indirect reference, that is, a
-;;     *********   | reference that target another reference. The cell
+;;     *********   | reference that targets another reference. The cell
 ;;                 | values selected by the incorporated locator are
 ;;                 | thus interpreted as cell indices and employed in
 ;;                 | the actual access operation.
@@ -524,10 +524,10 @@
 ;; The desinent species, borrowed from Boolean algebra, partakes of a
 ;; rather narrow involvement, being nexible only in its unassuming
 ;; true-false dichotomy, maintaining no interactions with the remaining
-;; sets. The integer scalar and vector types encumbered with augmented
-;; peccability for a more peisant complexity's introduction, as their
-;; combinations might very well apply in arithmetic and relational
-;; circumstances.
+;; sets. The integer scalar and vector types remain encumbered with
+;; augmented peccability for a more peisant complexity's introduction,
+;; as their combinations might very well apply in arithmetic and
+;; relational circumstances.
 ;; 
 ;; Cognate with the always ensuing production of a Boolean truth value
 ;; from the conjoined activities related to integer scalars and/or
@@ -3874,7 +3874,7 @@
   "[]
    {A0 == 0; A0 = 1; iA1}
    {A1 > 1; A0 = A0 * A1; A1 = A1 - 1}
-   {A1 == 1; pA0 ; A1 = 0}")
+   {A1 == 1; pA0; A1 = 0}")
 
 ;;; -------------------------------------------------------
 
