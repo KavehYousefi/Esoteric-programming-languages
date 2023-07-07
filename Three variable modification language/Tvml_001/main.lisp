@@ -4,8 +4,7 @@
 ;; language "Three variable modification language", invented by the
 ;; Esolang user "Lemonz" and presented in the year 2022, whose concept
 ;; resolves around the manipulation of three available variables via
-;; unary and binary arithmetics, input, output, and control flow
-;; helming.
+;; unary and binary arithmetics, output, and control flow helming.
 ;; 
 ;; 
 ;; Concept
