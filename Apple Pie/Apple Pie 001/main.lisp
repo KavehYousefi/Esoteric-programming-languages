@@ -1862,18 +1862,6 @@
       (char string 0)))
   (values))
 
-#|
-;;; -------------------------------------------------------
-
-(defmethod output ((integer integer))
-  "Prints the digit immediately preceding the INTEGER's first character
-   to the standard output and returns no value."
-  (declare (integer integer))
-  (format T "~d"
-    (get-previous-number integer))
-  (values))
-|#
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
