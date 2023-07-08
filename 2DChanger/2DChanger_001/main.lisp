@@ -580,9 +580,9 @@
               
               (accommodate-space-for-pointer ()
                "Upon necessity, shifts the MEMORY's BITS and updates the
-                MINIMUM-INDEX and MAXIMUM-INDEX in order to ascetain the
-                POINTER's commorancy inside of the MEMORY's recognized
-                cell portion, and returns no value."
+                MINIMUM-INDEX and MAXIMUM-INDEX in order to ascertain
+                the POINTER's commorancy inside of the MEMORY's
+                recognized cell portion, and returns no value."
                (accommodate-space-for-index pointer)
                (values))
               
