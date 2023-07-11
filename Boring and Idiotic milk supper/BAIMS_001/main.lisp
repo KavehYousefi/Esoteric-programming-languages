@@ -41,7 +41,7 @@
 ;; == A DAY IN A MILK DRINKER'S LIFE ==
 ;; The language's tenet resolves to a modelling of the cotidian
 ;; endeavors which the enjoyment of milk --- and its natural
-;; epiphenoma --- transpire upon a consumer's actions.
+;; epiphenomena --- transpire upon a consumer's actions.
 ;; 
 ;; From this metaphor are borrowed the linguistic elements that, as its
 ;; commands, serve in a program's construction.
@@ -139,7 +139,7 @@
 ;;                | by the " L" label as a designator of the metric
 ;;                | unit "liters".
 ;;   ..................................................................
-;;   hunger       | Queries the standard input of an ASCII character
+;;   hunger       | Queries the standard input for an ASCII character
 ;;                | and stores its character code in the current
 ;;                | accumulator.
 ;;                | An error of the type "NoInputError" is signaled if
@@ -183,7 +183,7 @@
 ;;                | is signaled if the "thought" instance cannot be
 ;;                | matched against a corresponding "nevermind" entity.
 ;;   ..................................................................
-;;   nevermind    | End a comment block which has been commenced by a
+;;   nevermind    | Ends a comment block which has been commenced by a
 ;;                | "thought" instruction.
 ;;                | Comments can be nested.
 ;;                | An error of the type "IncorrectCommentClosureError"
@@ -318,6 +318,8 @@
 ;;   ..................................................................
 ;;   screamCount > 10,000 | TooMuchScreamingError
 ;;   ..................................................................
+;;   Stackoverflow        | TooMuchScreamingError
+;;   ..................................................................
 ;;   input = nil          | NoInputError
 ;;   ..................................................................
 ;;   input = EOF          | NoInputError
@@ -335,7 +337,7 @@
 ;;   Compiler error       | CompilerError
 ;;   ------------------------------------------------------------------
 ;; 
-;; Each error species reponds to an explicating message's stringency.
+;; Each error species responds to an explicating message's stringency.
 ;; 
 ;; The table below shall educate about this correlation; as, however,
 ;; the tabular format's acquisition is defrayed in spatial impositions,
@@ -593,7 +595,7 @@
    ``default-initarg'' ``:message'' that bears the MESSAGE value and an
    optional DOCUMENTATION string for the ``:documentation'' option.
    ---
-   A concomitant of this diorism, a new function with the CONDITON-NAME
+   A concomitant of this diorism, a new function with the CONDITION-NAME
    based agnomination
      signal-CONDITION-NAME
    is declared, which upon its invocation signals an error of the same
@@ -624,7 +626,7 @@
     :reader        baims-error-message
     :type          string
     :documentation "The ``format''-compliant control string employed in
-                    the communication of a elucidating notification.
+                    the communication of an epexegetic notification.
                     ---
                     The ``BAIMS-Error'' report function does not intend
                     to supply any format arguments; in corollary, the
@@ -665,7 +667,10 @@
 (define-baims-error Milk-Underload-Error (Accumulator-Error)
   "Problem achieved: Your stomach was so empty your cells ~
    gave you up.~%~
-   You died.")
+   You died."
+  "The ``Milk-Underload-Error'' condition serves to signal an anomaly
+   concerning the accumulator's descent below the minimum value of
+   zero (0).")
 
 ;;; -------------------------------------------------------
 
@@ -682,9 +687,9 @@
 (define-condition Syntax-Error (BAIMS-Error)
   ()
   (:documentation
-    "The abstract ``Syntax-Error'' condition institutionalizes a foundry
-     for errors committed to the relationship with syntactical anomalies
-     in a BAIMS program's interpretation."))
+    "The ``Syntax-Error'' condition institutionalizes a sub-interface
+     foundry for errors committed to the relationship with syntactical
+     anomalies in a BAIMS program's interpretation."))
 
 ;;; -------------------------------------------------------
 
@@ -712,7 +717,7 @@
   "Problem achieved: You screamed so much you forgot how to breath.~%~
    You died."
   "The ``Too-Much-Screaming-Error'' condition serves to either apprize
-   about an undly amount of over 10000 character output operations, or
+   about an unduly amount of over 10000 character output operations, or
    communicate a stack overflow error.")
 
 ;;; -------------------------------------------------------
@@ -1136,7 +1141,7 @@
 (defun terminate-program (interpreter)
   "Designates the INTEPRETER's program as terminated by relocating its
    instruction pointer (IP) beyond the desinent location in its
-   instruction s equence and returns no value."
+   instruction sequence and returns no value."
   (declare (type Interpreter interpreter))
   (setf (interpreter-ip interpreter)
     (length (interpreter-instructions interpreter)))
@@ -1385,7 +1390,7 @@
 
 (defun interpret-BAIMS (code)
   "Interprets the piece of \"Boring and Idiotic milk supper\" source
-   code and returns no value."
+   CODE and returns no value."
   (declare (type string code))
   (process-instructions
     (make-interpreter
@@ -1440,7 +1445,7 @@ fart fart scream overdose")
 ;;; -------------------------------------------------------
 
 ;; Example for a restarting error: If the user enters a negative
-;; integer, the processes of query and checking repeats.
+;; integer, the processes of query and checking repeat.
 (interpret-BAIMS "quantity examination")
 
 ;;; -------------------------------------------------------
