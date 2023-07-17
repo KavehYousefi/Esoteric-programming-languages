@@ -1,7 +1,91 @@
-;; Date: 2022-05-13
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; This program implements an interpreter for the esoteric programming
+;; language "Kak", invented by the Esolang user "ChuckEsoteric08" and
+;; presented in the year 2022, founded upon the manipulation of an
+;; infinite bit tape by mediation of a minimalistic syntax that embraces
+;; a scant treble membership.
+;; 
+;; 
+;; Concept
+;; =======
+;; The Kak programming language ostends a stark niggardliness in its
+;; operational facilities, enumerated already by a treble account, for
+;; the indagation and manipulation of an infinite tape of bits.
+;; 
+;; == AGNOMINATION ==
+;; The nevening of the language as "Kak" translates to the Russian term
+;; for "how".
+;; 
+;; == KAK OPERATES ON A BIT TAPE ==
+;; Kak programs accomplish their tasks by inquiry and manipulation of a
+;; tape of bits, infinite in its tally and enumerated starting with the
+;; index one (1); the current storage unit of which, the cell, answers
+;; to a cursor, the cell pointer.
+;; 
+;; == KAK'S INSTRUCTION SET: A CURTAILED SPECIMEN ==
+;; Its composition proceeding from a trinity of participants only, Kak
+;; can only flip the current bit's value and translate the cell pointer
+;; in a gradual fashion. These twain of basic operations may, depending
+;; upon the concrete case, either manifest as a epiphenomenon or a
+;; conditional ultimity.
+;; 
+;; 
+;; Architecture
+;; ============
+;; A Kak program operates on a theoretically infinitely large tape of
+;; bit-valued cells, amenable to subscripts that, commencing with the
+;; minimum index of one (1), are enumerated accordingly. At the
+;; program's inchoation, every cell is initialized to zero (0).
+;; 
+;; A cell pointer, initially empighted on the first cell at the index
+;; one, at any instant denotes the currently active member. Commands
+;; exist for poco a poco sinistral and dextral translations.
+;; 
+;; 
+;; Data Types
+;; ==========
+;; Kak's type system represents utter homogeneity by employing as its
+;; singly expression bit values, that is, the integer zero (0) and one
+;; (1).
+;; 
+;; 
+;; Instructions
+;; ============
+;; Three members already exhaust Kak's instruction set, which offers,
+;; beside the navigation across the tape and its rudimentary
+;; manipulative warklumes, no further actuators.
+;; 
+;; == OVERVIEW ==
+;; The following apercu shall entalent the reader with a cursory
+;; apprehension anenst the language's available commands:
+;; 
+;;   ------------------------------------------------------------------
+;;   Command | Effect
+;;   --------+---------------------------------------------------------
+;;   !       | Moves the cell pointer one step to the right and flips
+;;           | the bit at the new location.
+;;   ..................................................................
+;;   ?       | If the current cell value equals zero (0), skips the
+;;           | immediately following instruction; aliter proceeds as
+;;           | usual.
+;;   ..................................................................
+;;   <       | If the cell pointer's index is greater than one (1),
+;;           | moves the cell pointer one step to the left; aliter
+;;           | remains ineffectuous.
+;;   ------------------------------------------------------------------
+;; 
+;; --------------------------------------------------------------------
+;; 
+;; Author: Kaveh Yousefi
+;; Date:   2022-05-13
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Kak"
+;;   [esolang2022Kak]
+;;   The Esolang contributors, "Kak", 2022
+;;   URL: "https://esolangs.org/wiki/Kak"
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
