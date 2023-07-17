@@ -1639,9 +1639,9 @@
     :type          Precedence
     :documentation "The reference's precedence information."))
   (:documentation
-    "The ``Reference-Parselet'' class furnishes a code  which transforms
-     memory reference tokens into the respective abstract syntax tree
-     (AST) nodes."))
+    "The ``Reference-Parselet'' class furnishes a code generator which
+     transforms memory reference tokens into the respective abstract
+     syntax tree (AST) nodes."))
 
 ;;; -------------------------------------------------------
 
