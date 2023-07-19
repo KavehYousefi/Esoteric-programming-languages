@@ -18,23 +18,23 @@
 ;; 
 ;; Architecture
 ;; ============
-;; Two storage entities’ champarty contribute in the program memory’s
+;; Two storage entities' champarty contribute in the program memory's
 ;; entirety, the first, more generously invested with prominence and
 ;; intricacy, constituted by the infinite integer stack, its complement
 ;; and compernage realized in the integer scalar accumulator.
 ;; 
-;; A paravant significance’s appropriation is vindicated by stack
-;; component’s deployment in arithmetics, input/output communication,
+;; A paravant significance's appropriation is vindicated by the stack
+;; component's deployment in arithmetics, input/output communication,
 ;; as well as one moeity of the conditional execution facility. This
 ;; last-in-first-out (LIFO) storage maintains an arbitrarily large
 ;; amount of unbounded signed integers, amenable to insertions and
 ;; deletions at the front, also known as its top, as well as instruments
-;; capacitating its layout’s manipulation.
+;; capacitating its layout's manipulation.
 ;; 
 ;; A rather paravail, yet potent companion, the accumulator permits the
 ;; rudimentary modifiers incrementation and decrementation, augmented in
-;; its influence upon a program’s control flow by an alternative to the
-;; stack’s conditional execution. The accumulator stores a single
+;; its influence upon a program's control flow by an alternative to the
+;; stack's conditional execution. The accumulator stores a single
 ;; unbounded signed integer.
 ;; 
 ;; 
@@ -180,7 +180,7 @@
 ;;   i       | Increments the accumulator by one.
 ;;   ..................................................................
 ;;   d       | Decrements the accumulator by one.
-;;   ..................................................................
+;;   ..................................................................
 ;;   +       | Pops the top stack element, here designated as "a", and
 ;;           | the new top stack element, designated as "b", calculates
 ;;           | the sum
@@ -189,7 +189,7 @@
 ;;           | An error of the type "InsufficientStackSizeError" is
 ;;           | signaled if the stack does not contain at least two
 ;;           | items.
-;;   ..................................................................
+;;   ..................................................................
 ;;   -       | Pops the top stack element, here designated as "a", and
 ;;           | the new top stack element, designated as "b", calculates
 ;;           | the difference
@@ -198,7 +198,7 @@
 ;;           | An error of the type "InsufficientStackSizeError" is
 ;;           | signaled if the stack does not contain at least two
 ;;           | items.
-;;   ..................................................................
+;;   ..................................................................
 ;;   *       | Pops the top stack element, here designated as "a", and
 ;;           | the new top stack element, designated as "b", calculates
 ;;           | the product
@@ -207,7 +207,7 @@
 ;;           | An error of the type "InsufficientStackSizeError" is
 ;;           | signaled if the stack does not contain at least two
 ;;           | items.
-;;   ..................................................................
+;;   ..................................................................
 ;;   !       | Pops the top stack element, here designated as "a", and
 ;;           | the new top stack element, designated as "b", calculates
 ;;           | the quotient
