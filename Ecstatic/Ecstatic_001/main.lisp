@@ -1,9 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; This program implements an interpreter for the esoteric programming
-;; language "Ecstatic", invented by the Esolang user "JWinslow23", as
-;; well as routines for encoding and decoding betwixt this language and
-;; "brainfuck" by Urban Mueller.
+;; language "Ecstatic", invented by the Esolang user "JWinslow23" and
+;; presented in the year 2013, as well as routines for encoding and
+;; decoding betwixt this language and "brainfuck" by Urban Mueller.
+;; 
 ;; 
 ;; Concept
 ;; =======
@@ -26,16 +27,25 @@
 ;; bit series. The following table describes the encoding adhibited to
 ;; the brainfuck instruction:
 ;; 
+;;   ---------------------------------------------
 ;;   brainfuck instruction | Binary representation
 ;;   ----------------------+----------------------
-;;    +                    | 000
-;;    -                    | 001
-;;    >                    | 010
-;;    <                    | 011
-;;    .                    | 100
-;;    ,                    | 101
-;;    [                    | 110
-;;    ]                    | 111
+;;   +                     | 000
+;;   .............................................
+;;   -                     | 001
+;;   .............................................
+;;   >                     | 010
+;;   .............................................
+;;   <                     | 011
+;;   .............................................
+;;   .                     | 100
+;;   .............................................
+;;   ,                     | 101
+;;   .............................................
+;;   [                     | 110
+;;   .............................................
+;;   ]                     | 111
+;;   ---------------------------------------------
 ;; 
 ;; With all instructions having been encoded, a final bit group "001"
 ;; is inserted at the most significant position of the total bits. The
@@ -83,16 +93,25 @@
 ;; significant. When decoding such a triplet, the above encoder table
 ;; is perused anew, the columns now interchanged, whence one gains:
 ;; 
+;;   --------------------------------------
 ;;   Binary pattern | brainfuck instruction
 ;;   ---------------+----------------------
-;;    000           | +
-;;    001           | -
-;;    010           | >
-;;    011           | <
-;;    100           | .
-;;    101           | ,
-;;    110           | [
-;;    111           | ]
+;;   000            | +
+;;   ......................................
+;;   001            | -
+;;   ......................................
+;;   010            | >
+;;   ......................................
+;;   011            | <
+;;   ......................................
+;;   100            | .
+;;   ......................................
+;;   101            | ,
+;;   ......................................
+;;   110            | [
+;;   ......................................
+;;   111            | ]
+;;   --------------------------------------
 ;; 
 ;; By transferring the brainfuck instructions into a common sink, the
 ;; decoded program is produced.
@@ -129,7 +148,9 @@
 ;; Date:   2021-10-09
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Ecstatic"
+;;   [esolang2020Ecstatic]
+;;   The Esolang contributors, "Ecstatic", 2020
+;;   URL: "https://esolangs.org/wiki/Ecstatic"
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -501,9 +522,8 @@
 ;;; -------------------------------------------------------
 
 (defun interpret-Ecstatic-code (code)
-  "Interprets the Ecstatic code provided in its binary form by the BITS,
-   which is tantamount to the number of necessary exclamation marks '!',
-   and returns no value."
+  "Interprets the piece of Ecstatic CODE provided in the form of a
+   sequence of ecphonemes (\"!\") and returns no value."
   (declare (type string code))
   (interpret-Ecstatic-commands
     (extract-Ecstatic-binary-commands
