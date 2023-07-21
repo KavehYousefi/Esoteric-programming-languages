@@ -222,7 +222,7 @@
 ;;   ................|............|................|..............
 ;;   (unit sep.)     |     31     |       Ti       |      22     
 ;;   ................|............|................|..............
-;;                   |     32     |       V        |      23     
+;;   (space)         |     32     |       V        |      23     
 ;;   ................|............|................|..............
 ;;   !               |     33     |       Cr       |      24     
 ;;   ................|............|................|..............
@@ -539,7 +539,7 @@
 (deftype ascii-code ()
   "The ``ascii-code'' type defines the range of ASCII character codes
    admissive to the PTotE decoding and encoding process, namely the
-   closed integer interval [0, 127]."
+   closed integer interval [10, 127]."
   '(integer 10 127))
 
 ;;; -------------------------------------------------------
