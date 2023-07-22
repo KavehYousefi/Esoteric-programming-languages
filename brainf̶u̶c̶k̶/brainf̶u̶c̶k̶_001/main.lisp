@@ -20,7 +20,7 @@
 ;; Architecture
 ;; ============
 ;; The desuetude of operations whose capacitation to perquire or
-;; manipulate data would impose a requisitum in this bailiwick renders
+;; manipulate data would impose a requisitum in this bailiwick
 ;; effectively renders the inquisition into the language architecture an
 ;; exercise in mateotechny.
 ;; 
@@ -58,7 +58,7 @@
 ;; or a no-operation (NOP) role.
 ;; 
 ;; == GRAMMAR ==
-;; An Extended Backus-Naur Form (EBNF) delineation shall be adhbited to
+;; An Extended Backus-Naur Form (EBNF) delineation shall be adhibited to
 ;; the syntaxis --- rather to assuage the pruritus for patration than
 ;; the desideratum for utile gnarity:
 ;; 
@@ -97,7 +97,7 @@
 ;; This simple implementation has been accomplished in the programming
 ;; language Common Lisp.
 ;; 
-;; An adscititously introduced dependency, this interpreter's usance of
+;; A dependency of advenient encheson, this interpreter's usance of
 ;; the programming language name "brainf̶u̶c̶k̶" encumbers the executing
 ;; Common Lisp with the imperative to accept Unicode characters. This
 ;; nominal requirement can be eradicated by substituting the main
