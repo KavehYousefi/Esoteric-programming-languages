@@ -103,8 +103,8 @@
 ;;   ------------------------------------------------------------------
 ;;   Command        | Effect
 ;;   ---------------+--------------------------------------------------
-;;   {}             | Queries the user for a line of input and returns
-;;                  | the same as a string.
+;;   {}             | Queries the user for a single character and
+;;                  | returns the same as a string.
 ;;                  |--------------------------------------------------
 ;;                  | This operation, constituting an expression, can
 ;;                  | be utilized in any place admissive to strings.
@@ -884,7 +884,7 @@
   (format T "~&>> ")
   (the string
     (prog1
-      (read-line)
+      (string (read-char *standard-input* NIL #\Null))
       (clear-input))))
 
 ;;; -------------------------------------------------------
@@ -1002,12 +1002,12 @@
 
 ;;; -------------------------------------------------------
 
-;; Query the user for their name, here designated as {NAME}, and output
-;; the message
+;; Query the user for a single character of their name, here designated
+;; as {NAME}, and output the message
 ;;   Hello, {NAME}! How are you?
 (interpret-Setlang "( { \"Hello, \", {}, !, \" How are you?\" } )")
 
 ;;; -------------------------------------------------------
 
-;; Output a raw character as a string.
+;; Output the bare character "H" as a string.
 (interpret-Setlang "(H)")
