@@ -504,7 +504,7 @@
     :initform      (error "Missing node type.")
     :reader        get-node-type
     :type          node-type
-    :documentation "The categorizing type of this.")
+    :documentation "The node's categorizing type.")
    (attributes
     :initarg       :attributes
     :initform      NIL
