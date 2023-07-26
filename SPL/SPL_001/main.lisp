@@ -34,17 +34,27 @@
 
 ;;; -------------------------------------------------------
 
+(deftype octet ()
+  '(unsigned-byte 8))
+
+;;; -------------------------------------------------------
+
 (deftype memory ()
   "The ``memory'' type defines the SPL program memory as a hash table
-   which associates with each integer cell index another integer cell
+   which associates with each integer cell index an unsigned byte
    value."
-  '(hash-table-of integer integer))
+  '(hash-table-of integer octet))
 
 ;;; -------------------------------------------------------
 
 (deftype direction ()
   "The ``direction'' type enumerates the recognized directions for
-   traversing a piece of SPL code."
+   traversing a piece of SPL code.
+   ---
+   This dichotomy imposes a requirement in the context of forward and
+   back jump operations, as string literal and comment sections may be
+   skipped in both sinistrodextral and dextrosinistral airts, any of
+   these necessitate an accommodated handling policy."
   '(member :forward :backward))
 
 
@@ -67,7 +77,7 @@
       (declare (type (or null character) character))
       (declare (type memory              memory))
       (declare (type integer             pointer))
-      (declare (type integer             accumulator))
+      (declare (type octet               accumulator))
       
       (labels
           ((advance ()
@@ -183,7 +193,21 @@
               (loop
                 for     input of-type T = (read)
                 until   (integerp input)
-                finally (return input)))))
+                finally (return input))))
+           
+           (current-cell ()
+            "Returns the current cell's byte value."
+            (the octet
+              (gethash pointer memory 0)))
+           
+           ((setf current-cell) (new-value)
+            "Stores the NEW-VALUE, contingently wrapped around to match
+             the unsigned byte range of [0, 255], in the current cell
+             and returns no value."
+            (declare (type integer new-value))
+            (setf (gethash pointer memory 0)
+                  (mod new-value 256))
+            (values)))
         
         (loop do
           (case character
@@ -203,7 +227,8 @@
             
             ;; Output the current cell's integer value.
             (#\.
-              (format T "~d" (gethash pointer memory 0))
+              (format T "~d"
+                (current-cell))
               (advance))
             
             ;; Input an integer and store it in the current cell.
@@ -211,7 +236,7 @@
               (let ((input (prompt-input)))
                 (declare (type integer input))
                 (clear-input)
-                (setf (gethash pointer memory) input))
+                (setf (current-cell) input))
               (advance))
             
             ;; Jump past the matching "]" if the accumulator is zero.
@@ -275,17 +300,17 @@
             
             ;; Increase the current cell value by one.
             (#\+
-              (incf (gethash pointer memory 0))
+              (incf (current-cell))
               (advance))
             
             ;; Decrease the current cell value by one.
             (#\-
-              (decf (gethash pointer memory 0))
+              (decf (current-cell))
               (advance))
             
             ;; Load the current cell value into the accumulator.
             (#\^
-              (setf accumulator (gethash pointer memory 0))
+              (setf accumulator (current-cell))
               (advance))
             
             ;; Store the user input in the accumulator.
@@ -293,36 +318,38 @@
               (let ((input (prompt-input)))
                 (declare (type integer input))
                 (clear-input)
-                (setf accumulator input))
+                (setf accumulator
+                      (mod input 256)))
               (advance))
             
             ;; Set the current cell value to its remainder when divided
             ;; by the accumulator.
             (#\%
-              (setf (gethash pointer memory)
-                    (rem (gethash pointer memory 0) accumulator))
+              (setf (current-cell)
+                    (rem (current-cell) accumulator))
               (advance))
             
             ;; Multiply the current cell value by the accumulator.
             (#\m
-              (setf (gethash pointer memory)
-                    (* (gethash pointer memory 0) accumulator))
+              (setf (current-cell)
+                    (* (current-cell) accumulator))
               (advance))
             
             ;; Add the accumulator to the current cell value.
             (#\a
-              (incf (gethash pointer memory 0) accumulator)
+              (incf (current-cell) accumulator)
               (advance))
             
             ;; Subtract the accumulator from the current cell value.
             (#\s
-              (decf (gethash pointer memory 0) accumulator)
+              (decf (current-cell) accumulator)
               (advance))
             
             ;; Divide the current cell value by the accumulator.
             (#\d
-              (setf (gethash pointer memory)
-                    (round (gethash pointer memory 0) accumulator))
+              (setf (current-cell)
+                    (round (current-cell)
+                           accumulator))
               (advance))
             
             ;; Terminate the program.
