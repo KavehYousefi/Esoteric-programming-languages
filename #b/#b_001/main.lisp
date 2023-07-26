@@ -794,7 +794,7 @@
 
 (defun interpret-program (interpreter)
   "Evaluates the INTERPRETER's internally managed #b command sequence
-   returns no value."
+   and returns no value."
   (declare (type Interpreter interpreter))
   (loop
     until (program-finished-p interpreter)
