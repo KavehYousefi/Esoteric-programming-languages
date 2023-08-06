@@ -875,12 +875,29 @@
 ;;   void        | :null        | The ``NIL'' constant.
 ;;   ------------------------------------------------------------------
 ;; 
+;; == UNICODE SUPPORT ==
+;; The symbols naited by the 8 programming language institute the
+;; imposition of Unicode support.
+;; 
+;; Please note that the concrete character set deployed constitutes a
+;; dependency on the Common Lisp implementation; in corollary, Unicode
+;; support may or may not be a feature incorporated in the personal
+;; environment. The interpreter at hand has been developed and tested
+;; with "Steel Bank Common Lisp" (SBCL) version 1.1.4 as part of the
+;; "Lisp Cabinet 0.3.5" bundle ([christensen2013lispcabinet035]).
+;; 
 ;; --------------------------------------------------------------------
 ;; 
 ;; Author: Kaveh Yousefi
 ;; Date:   2022-04-02
 ;; 
 ;; Sources:
+;;   [christensen2013lispcabinet035]
+;;   G. Christensen, "Lisp Cabinet 0.3.5", 2013
+;;   URL: "https://sourceforge.net/projects/lispcabinet/"
+;;   Notes:
+;;     - Download page of the "Lisp Cabinet" project.
+;;   
 ;;   [esolang2021_8]
 ;;   The Esolang contributors, "8", June 28th, 2021
 ;;   URL: "https://esolangs.org/wiki/8"
