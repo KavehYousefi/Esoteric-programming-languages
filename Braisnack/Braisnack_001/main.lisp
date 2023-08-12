@@ -2,7 +2,7 @@
 ;; 
 ;; This program implements an interpreter for the esoteric programming
 ;; language "Braisnack, invented by the Esolang user "Cinnamony" and
-;; presented on pppp xxxx, 2023, the foundation of which bifurcates into
+;; presented on June 23rd, 2023, the foundation of which bifurcates into
 ;; the unit of information designed by the same author, the "SNACBIT",
 ;; and Urban Mueller's language "brainfuck".
 ;; 
