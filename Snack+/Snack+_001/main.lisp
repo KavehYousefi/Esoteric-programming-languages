@@ -90,7 +90,6 @@
 ;; Date:   2023-08-11
 ;; 
 ;; Sources:
-;; 
 ;;   [esolang2023Snack+]
 ;;   The Esolang contributors, "Snack+", June 23rd, 2023
 ;;   URL: "https://esolangs.org/wiki/Snack%2B"
