@@ -48,10 +48,19 @@
 ;; decimal digits.
 ;; 
 ;; == STRINGS ==
-;; Strings are ensconced in a jumelle of opening and closing double
-;; quotation marks, that is, "“" and "”", the tally of entities
-;; contained being a thing of one's own deliberation. Strings may be
-;; nested, such that
+;; Strings are capacitated to assume two guises: the basic and the
+;; augmented form.
+;; 
+;; The basic form embraces an arbitrary number of characters in two
+;; straight double quotation marks, '"" and '"'. Any character, except
+;; the marches' signifier, may be installed; yet, no contingency for
+;; nesting quotes exists.
+;; 
+;; The second, augmented variant ensconces its content in a jumelle of
+;; opening and closing double quotation marks, that is, "“" and "”", the
+;; tally of entities contained being again a thing of one's own
+;; deliberation. The asymmetrical nature of the posts enables nestings
+;; to any depth, such that
 ;; 
 ;;   “The bunny says: “Hello,” and leaves.”
 ;; 
@@ -82,10 +91,11 @@
 ;; 
 ;; == STRINGS ==
 ;; The diorism of strings encompasses character sequences compact of
-;; zero or more elements ensconced in a jumelle of opening ("“") and
-;; closing ("”") double quotation marks. The two distinct components'
-;; differentiating nature permits a nesting of quoted sections to any
-;; level.
+;; zero or more elements ensconced either in a twain of identical
+;; straight quotation marks ('"'), or in a jumelle of opening ("“") and
+;; closing ("”") double quotation marks. In the latter case, the two
+;; distinct components' differentiating nature permits a nesting of
+;; quoted sections to any level.
 ;; 
 ;; An exemption from the stringency in linebreaks as programmatic
 ;; conductors, strings may cross several lines in their prosecution of
@@ -164,7 +174,9 @@
 ;;   
 ;;   newlines           := newline , { newline } ;
 ;;   newline            := "\n" ;
-;;   
+;;   string             := basicString | augmentedString ;
+;;   basicString        := '"' , { character - '"' } , '"' ;
+;;   augmentedString    := "“" , { character - ( "“" | "”" ) } , "”" ;
 ;;   number             := [ "+" | "-" ] , digit , { digit } ;
 ;;   digit              := "0" | "1" | "2" | "3" | "4"
 ;;                      |  "5" | "6" | "7" | "8" | "9"
@@ -369,12 +381,33 @@
 ;;       its nodes' evaluation, thus accompassing actual causata to the
 ;;       static objects.
 ;; 
+;; == UNICODE SUPPORT IS IMPLEMENTATION-DEPENDENT ==
+;; Please note that the concrete character set deployed constitutes a
+;; dependency on the Common Lisp implementation; in corollary, Unicode
+;; support may or may not be a feature incorporated in the personal
+;; environment. The interpreter at hand has been developed and tested
+;; with "Steel Bank Common Lisp" (SBCL) version 1.1.4 as part of the
+;; "Lisp Cabinet 0.3.5" bundle ([christensen2013lispcabinet035]).
+;; 
 ;; --------------------------------------------------------------------
 ;; 
 ;; Author: Kaveh Yousefi
 ;; Date:   2023-08-09
 ;; 
 ;; Sources:
+;;   [christensen2013lispcabinet035]
+;;   G. Christensen, "Lisp Cabinet 0.3.5", 2013
+;;   URL: "https://sourceforge.net/projects/lispcabinet/"
+;;   Notes:
+;;     - Download page of the "Lisp Cabinet" project.
+;;   
+;;   [esolang2023Kiwiscript]
+;;   The Esolang contributors, "Kiwiscript", July 23rd, 2023
+;;   URL: "https://esolangs.org/wiki/Kiwiscript"
+;;   Notes:
+;;     - Provides an implementation of the "Kiwiscript" program form in
+;;       several programming languages, including :].
+;;   
 ;;   [esolang2023RoboticSmileyFace]
 ;;   The Esolang contributors, "Robotic Smiley Face", June 24th, 2023
 ;;   URL: "https://esolangs.org/wiki/Robotic_smiley_face"
@@ -1029,9 +1062,36 @@
 
 ;;; -------------------------------------------------------
 
-(defun lexer-read-string (lexer)
+(defun lexer-read-basic-string (lexer)
   "Proceeding from the current position into the LEXER's source, reads a
-   string literal and returns its ``:string'' token representation."
+   basic string literal, ensconced betwixt two straight double quotation
+   marks '\"' and '\"', and returns a ``:string'' token representation."
+  (declare (type Lexer lexer))
+  (the Token
+    (make-token :string
+      (with-output-to-string (content)
+        (declare (type string-stream content))
+        (with-lexer (lexer)
+          (lexer-advance lexer)
+          (loop do
+            (case character
+              ((NIL)
+                (error "Unterminated string literal at postiion ~d."
+                    position))
+              (#\"
+                (lexer-advance lexer)
+                (loop-finish))
+              (otherwise
+                (write-char character content)
+                (lexer-advance lexer)))))))))
+
+;;; -------------------------------------------------------
+
+(defun lexer-read-augmented-string (lexer)
+  "Proceeding from the current position into the LEXER's source, reads a
+   nestable string literal, ensconced betwixt the jumelle of opening and
+   closing double quotation marks \"“\" and \"”\", and returns a
+   ``:string'' token representation."
   (declare (type Lexer lexer))
   (the Token
     (make-token :string
@@ -1153,8 +1213,11 @@
                   (lexer-digit-follows-p lexer)))
           (lexer-read-number lexer))
         
+        ((char= character #\")
+          (lexer-read-basic-string lexer))
+        
         ((char= character #\“)
-          (lexer-read-string lexer))
+          (lexer-read-augmented-string lexer))
         
         ((identifier-character-p character)
           (let ((token NIL))
@@ -2022,4 +2085,11 @@
      :0 :)
    :[[
    :0 :)
+   :(")
+
+;;; -------------------------------------------------------
+
+;; Kiwiscript: Print the word "kiwi" in minuscles.
+(interpret-Robotic-smiley-face
+  ":0 \"kiwi\"
    :(")
