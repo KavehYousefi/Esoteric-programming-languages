@@ -118,6 +118,18 @@
 (defmacro define-predicated-type
     (type-name (candidate-variable &rest further-parameters)
      &body body)
+  "Establishes a new ``deftype'' type definition based upon the
+   ``satisfies'' construct, the agnomination of which is desumed from
+   the TYPE-NAME, optionally amplecting in its parameter list the
+   FURTHER-PARAMETERS, while the anonymous predicate function designates
+   its probed object via the CANDIDATE-VARIABLE name, executing the BODY
+   forms, and returning the desinent evaluated form's result.
+   ---
+   If the incipient BODY form constitutes a string, the same is assumed
+   to provide a documentation string to the type definition, and is
+   hence relocated to the location immediately following the ``deftype''
+   parameter list, meanwhile the remaining BODY forms specify the
+   predicate body."
   (let ((predicate-variable (gensym)))
     (declare (type symbol predicate-variable))
     `(deftype ,type-name (,@further-parameters)
