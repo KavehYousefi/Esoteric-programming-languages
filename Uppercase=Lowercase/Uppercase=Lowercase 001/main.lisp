@@ -47,8 +47,6 @@
 ;; repertoire, occupies the communiation channels.
 ;; 
 ;; 
-
-
 ;; Syntax
 ;; ======
 ;; An Uppercase=Lowercase program is compact of zero or more
@@ -153,6 +151,25 @@
 ;;                  |--------------------------------------------------
 ;;                  | {x} must be an integer literal or cell reference.
 ;;   ------------------------------------------------------------------
+;; 
+;; 
+;; Lacunae in the Specification
+;; ============================
+;; Maugre the eath nature of its subject, the Uppercase=Lowercase
+;; protolog is inflicted with a few elements of ambiguity, a subset of
+;; which shall be the following treatise's cynosure.
+;; 
+;; == WHICH REGULATIONS APPLY TO LABEL IDENTIFIERS? ==
+;; The original specification desists from an accoutrement regarding the
+;; goto label's designation; a consectary of this, the requirements for
+;; its agnomination remain ensconced in a form of crepuscle.
+;; 
+;; It has been adjudged, ensuing from experience and the absence of
+;; ambiguous inflictions, to homologate both integer numbers and strings
+;; composed of letters, decimal digits, and the underscore ("_") to
+;; partake in such a composition. The first and third of species may be
+;; produced at a name's inchoation, whereas the zero or more subsequent
+;; elements will be desumed from the entire treble.
 ;; 
 ;; 
 ;; Implementation
