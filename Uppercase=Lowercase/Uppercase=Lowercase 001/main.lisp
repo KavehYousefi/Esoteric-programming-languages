@@ -115,6 +115,56 @@
 ;; instruction set, incorporating basic arithmetics, conditional goto
 ;; control flow, as well as character input and output.
 ;; 
+;; == OPERANDS ==
+;; The various operand types' excellent role vindicates a section of its
+;; own in order to communicate a sufficently designed intelligence.
+;; 
+;; Please heed that placeholder sections are underlined with a double
+;; underline ("="), expected to be supplanted by valid
+;; Uppercase=Lowercase code:
+;; 
+;;   ------------------------------------------------------------------
+;;   Operand   | Syntax  | Description
+;;   ----------+---------+---------------------------------------------
+;;   Integer   | digits  | An integer literal, optionally preceded by a
+;;             | ======  | sign, "+" or "-", and composed of one or
+;;             |         | more decimal {digits}.
+;;             |         |---------------------------------------------
+;;             |         | Depending on the context, the value may
+;;             |         | either be construed as a literal number, a
+;;             |         | cell index --- imposing a strictly positive
+;;             |         | value greater than or equal to one (1) ---,
+;;             |         | or a label identifier.
+;;   ..................................................................
+;;   Reference | *digits | An integer value, unsigned and composed of
+;;             |  ====== | one or more decimal {digits}, and always
+;;             |         | employed in the agency of a memory cell
+;;             |         | reference.
+;;             |         |---------------------------------------------
+;;             |         | If used in the context of an integer
+;;             |         | literal, the value instead selects the cell
+;;             |         | at the index {digits}.
+;;             |         |---------------------------------------------
+;;             |         | If employed in a cell index situation, an
+;;             |         | indirect reference is assumed, that is, the
+;;             |         | value of the cell at the index {digits} is
+;;             |         | queried and used itself as the ultimate cell
+;;             |         | cell index to obtain, namely:
+;;             |         |   let actualIndex <- memory[{digits}]
+;;             |         |   let result      <- memory[actualIndex]
+;;             |         | Or, more compendious:
+;;             |         |   let result <- memory[memory[{digits}]]
+;;   ..................................................................
+;;   String    | chars   | A string literal of one or more characters,
+;;             | =====   | the first of which must constitute a Latin
+;;             |         | or underscore ("_"), followed by zero or
+;;             |         | more letters, underscores, or decimal
+;;             |         | digits.
+;;             |         |---------------------------------------------
+;;             |         | String literals are exclusively utilized for
+;;             |         | label identifiers.
+;;   ------------------------------------------------------------------
+;; 
 ;; == OVERVIEW ==
 ;; The five commands servicable to the programmer are listed in the
 ;; apercu below:
@@ -140,14 +190,17 @@
 ;;                  |--------------------------------------------------
 ;;                  | {target} must be an integer or string literal.
 ;;   ..................................................................
-;;   inp x          | Queries the standard input for an ASCII character
-;;       *          | and stores its character code in the cell {x}.
+;;   inp x          | Queries the standard input for an ASCII
+;;       *          | character, converts it to upper-case, and stores
+;;                  | its resulting character code in the cell {x}.
 ;;                  |--------------------------------------------------
 ;;                  | {x} must be an integer literal or cell reference.
 ;;   ..................................................................
 ;;   out x          | Prints the ASCII character whose code corresponds
 ;;       *          | to the value of the cell {x} to the standard
-;;                  | output.
+;;                  | output, contingently converting the character to
+;;                  | upper-case, if not already transpired, ere
+;;                  | issuing the display.
 ;;                  |--------------------------------------------------
 ;;                  | {x} must be an integer literal or cell reference.
 ;;   ------------------------------------------------------------------
