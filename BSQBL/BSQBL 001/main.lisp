@@ -9,13 +9,19 @@
 ;; 
 ;; Concept
 ;; =======
-;; BSQBL's entheus originiates in the esoteric programming language
+;; BSQBL's entheus originates in the esoteric programming language
 ;; brainfuck, the kenspeckle attribute of the same maintains its
 ;; commorancy in the simplistic design --- deploying a mere octuple of
 ;; instructions ---, while yet concomitantly subsumed into the
 ;; Turing-complete category. BSQBL desumes this humility in operational
-;; expanse, but deviates from brainfuck's invinite tape of bytes for an
+;; expanse, but deviates from brainfuck's infinite tape of bytes for an
 ;; equally unbounded queue of integers.
+;; 
+;; == BSQBL: BRAINFUCK + QUEUE ==
+;; The fact of the language's norning being an abbreviation of
+;; "Brainfuck Style Queue-Based Language" does not descend from an act
+;; of desultoriness: BSQBL conjoins the basic tenets of brainfuck with
+;; the queue as the autochthonous byte tape's replacement.
 ;; 
 ;; 
 ;; Architecture
