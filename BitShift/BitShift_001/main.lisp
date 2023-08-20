@@ -1,7 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
-;; This program implements a simple interpreter for the esoteric
-;; programming language "BitShift", invented by the Esolang user "Bas".
+;; This program implements an interpreter for the esoteric programming
+;; language "BitShift", invented by the Esolang user "Bas" and presented
+;; on November 19th, 2015, the concept of which is defined by encoding
+;; commands in the tally of alternating bits.
+;; 
 ;; 
 ;; Concept
 ;; =======
@@ -92,6 +95,7 @@
 ;; where each alternation, or group size, is juxtaposed with the
 ;; resulting effect.
 ;; 
+;;   ------------------------------------------------------------------
 ;;   Group size | Effect
 ;;   -----------+------------------------------------------------------
 ;;    1         | Shifts the value one bit to the left.
@@ -113,6 +117,7 @@
 ;;   ..................................................................
 ;;    7         | Prompts the user for an ASCII character and stores
 ;;              | its character code into the value.
+;;   ------------------------------------------------------------------
 ;; 
 ;; 
 ;; Implementation

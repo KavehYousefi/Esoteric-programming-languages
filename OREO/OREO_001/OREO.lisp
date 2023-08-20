@@ -1,7 +1,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
-;; This file implements the esoteric programming language "OREO",
-;; devised by the Esolang user "Kamish".
+;; This file implements an interpreter for the esoteric programming
+;; language "OREO", devised by the Esolang user "Kamish" and presented
+;; on Januar 1st, 2020, the notion of which embraces a ludibund
+;; application of OREO cookie constructions for the purpose of
+;; generating and printing text messages.
+;; 
 ;; 
 ;; Concept
 ;; =======

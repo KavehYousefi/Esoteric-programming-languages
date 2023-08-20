@@ -1,8 +1,95 @@
-;; Date: 2022-01-14
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; This program implements an interpreter for the esoteric programming
+;; language "JR", devised by the Esolang user "King Ethan" on April
+;; 25th, 2018, and designed as an extension of Jonathan Todd Skinner's
+;; "Deadfish" language, both in the aspects of its operations, which
+;; incorporate character output and console clearing, and its memory's
+;; architecture that barters the parvipotent scalar accumulator for an
+;; array of octuple componency.
+;; 
+;; 
+;; Instructions
+;; ============
+;; JR's nature establishes an augmentation of Deafish's quadruple
+;; competences, targeting the architecture and output conduit.
+;; 
+;; == OVERVIEW ==
+;; An apercu shall serve in the administration of a cursory mete of
+;; gnarity concerning the language's potentials:
+;; 
+;;   ------------------------------------------------------------------
+;;   Command | Effect
+;;   --------+---------------------------------------------------------
+;;   [       | Decrements the current cell by one.
+;;   ..................................................................
+;;   ]       | Increments the current cell by one.
+;;   ..................................................................
+;;   ;       | Squares the current cell value.
+;;   ..................................................................
+;;   .       | Prints the current cell in its verbatim numeric form to
+;;           | the standard output.
+;;   ..................................................................
+;;   ,       | Prints the character corresponding to the current cell
+;;           | value, when construed as an ASCII code, to the standard
+;;           | output.
+;;   ..................................................................
+;;   @       | Resets the current cell to zero (0).
+;;   ..................................................................
+;;   !       | Prints the source of the program, that is, provides a
+;;           | quine.
+;;   ..................................................................
+;;   ~       | Clears the console.
+;;   ..................................................................
+;;   <       | Moves the cell pointer one step to the left.
+;;   ..................................................................
+;;   >       | Moves the cell pointer one step to the right.
+;;   ------------------------------------------------------------------
+;; 
+;; == JR AND DEADFISH ==
+;; The faculty for equiparation with Deadfish commorant to JR shall now
+;; be limned in a tabular exposition:
+;; 
+;;   -------------
+;;   JR | Deadfish
+;;   ---+---------
+;;   [  | d
+;;   .............
+;;   ]  | i
+;;   .............
+;;   ;  | s
+;;   .............
+;;   .  | o
+;;   .............
+;;   ,  | (None)
+;;   .............
+;;   @  | (None)
+;;   .............
+;;   !  | (None)
+;;   .............
+;;   ~  | (None)
+;;   .............
+;;   <  | (None)
+;;   .............
+;;   >  | (None)
+;;   -------------
+;;   
+;; 
+;; --------------------------------------------------------------------
+;; 
+;; Author: Kaveh Yousefi
+;; Date:   2022-01-14
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/JR"
-;;   -> "https://esolangs.org/wiki/Deadfish"
+;;   [esolang2020JR]
+;;   The Esolang contributors, "JR", June 7th, 2020
+;;   URL: "https://esolangs.org/wiki/JR"
+;;   
+;;   [esolang2023Deadfish]
+;;   The Esolang contributors, "Deadfish", August 13th, 2023
+;;   URL: "https://esolangs.org/wiki/Deadfish"
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
@@ -26,13 +113,14 @@
 
 (deftype output-format ()
   "The ``output-format'' type defines the options for the printing
-   commands applicable during the conversion of Deadfish source program
-   to the more potent JR language.
+   commands applicable during the conversion of a Deadfish source
+   program to the more potent JR target language.
    ---
    Deadfish restricts its output to the numeric value of its
    accumulator, while JR grants the programmer the choice betwixt the
    former variant and a character output, the latter of which construes
-   the current cell value with its ASCII code."
+   the current cell value with as an ASCII code that shall be answered
+   by its symbolic equivalent."
   '(member :numeric :character))
 
 ;;; -------------------------------------------------------
@@ -128,7 +216,7 @@
 
 ;;; -------------------------------------------------------
 
-(defun make-standard-console (&key (destination T)
+(defun make-standard-console (&key (destination          T)
                                    (clearing-scroll-size 10))
   "Creates and returns a ``Standard-Console'' operating on the
    DESTINATION as its data sink, and utilizing the CLEARING-SCROLL-SIZE

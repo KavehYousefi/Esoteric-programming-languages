@@ -1,9 +1,31 @@
-;; Date: 2021-12-08
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; This program implements an interpreter for the esoteric programming
+;; language "QKAS", invented by the user "Prince" and presented on June
+;; 10th, 2015, the competence of which is restricted to the printing of
+;; messages only, employing for this telos' pursuit a scheme that naits
+;; the position of a letter on the QWERTY keyboard, encoded in a
+;; corresponding tally of "+" or "-" characters, while other content may
+;; be inserted directly into the program.
+;; 
+;; --------------------------------------------------------------------
+;; 
+;; Author: Kaveh Yousefi
+;; Date:   2021-12-08
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/QKAS"
-;;   -> "https://web.archive.org/web/20160322075508/http://hteam.co/qkas/"
-;;       o The H-Team's QKAS website.
+;;   [esolang2020QKAS]
+;;   The Esolang contributors, "QKAS", April 13th, 2020
+;;   URL: "https://esolangs.org/wiki/QKAS"
+;;   
+;;   [hteam2016QKAS]
+;;   hteam, "QKAS QWERTY Keyboard Addition/Subtraction.", 2016
+;;   URL: "https://web.archive.org/web/20160322075508/
+;;         http://hteam.co/qkas/"
+;;   Notes:
+;;     - The H-Team's QKAS website.
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
@@ -11,8 +33,8 @@
 ;; -- Implementation of interpreter.                               -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declaim (type simple-string +LOWERCASE-CHARACTERS+))
-(declaim (type simple-string +UPPERCASE-CHARACTERS+))
+(declaim (type (simple-string 26) +LOWERCASE-CHARACTERS+))
+(declaim (type (simple-string 26) +UPPERCASE-CHARACTERS+))
 
 ;;; -------------------------------------------------------
 
@@ -45,7 +67,7 @@
 ;;; -------------------------------------------------------
 
 (defun interpret-QKAS (code)
-  "Interprets the piece of QKAS code and returns no value."
+  "Interprets the piece of QKAS source CODE and returns no value."
   (declare (type string code))
   (when (plusp (length code))
     (let ((position  0)
