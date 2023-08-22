@@ -2,8 +2,9 @@
 ;; 
 ;; This program implements a compiler and an interpreter for the
 ;; esoteric programming language "LayerASM", designed by the Esolang
-;; user "Ashtons", and intended to permit operations on the
-;; conspicuously low level of machine code.
+;; user "Ashtons" and presented on November 9th, 2020, intended to
+;; permit operations on the conspicuously low level of machine code.
+;; 
 ;; 
 ;; Concepts
 ;; ========
@@ -45,10 +46,13 @@
 ;; 
 ;; In the context of LayerASM, a bytecode instruction targeted at
 ;; prompting the user for an input would assume the direct octet value
+;; 
 ;;   00101100
+;; 
 ;; whereas its assembly language variant corresponds to the more lucid
 ;; and expressive, yet, because of a further compilation step's
 ;; necessitation to accomplish the aforementioned form, less efficient
+;; 
 ;;   do i
 ;; 
 ;; == LAYERASM IS IN ITS ULTIMATE FORM BYTECODE ==
@@ -97,23 +101,33 @@
 ;; 16 columns and 16 rows, tallying a total of 256 units per such grid,
 ;; with any cell adhering in its datum to the data type of its layer.
 ;; The four layers enumerate in this form:
-;;   
+;; 
+;;   -----------------------------------------------------------------
 ;;   Layer ID | Data type             | Bytes per cell | Size in bytes
 ;;   ---------+-----------------------+----------------+--------------
-;;    0       | ASCII character       | 1              | 256
-;;    1       | 8-bit signed integer  | 1              | 256
-;;    2       | 16-bit signed integer | 2              | 512
-;;    3       | 32-bit float          | 4              | 1024
+;;   0        | ASCII character       | 1              | 256
+;;   .................................................................
+;;   1        | 8-bit signed integer  | 1              | 256
+;;   .................................................................
+;;   2        | 16-bit signed integer | 2              | 512
+;;   .................................................................
+;;   3        | 32-bit float          | 4              | 1024
+;;   -----------------------------------------------------------------
 ;; 
 ;; A function of its byte allocation and purpose, a data type and its
 ;; range shall be produced in the next figure:
-;;   
+;; 
+;;   ------------------------------------------------------------------
 ;;   Layer ID | Data type             | Minimum value  | Maximum value
-;;   ---------+-----------------------+----------------+--------------
-;;    0       | ASCII character       |  0             | +255
-;;    1       | 8-bit signed integer  | -128           | +127
-;;    2       | 16-bit signed integer | -32768         | +32767
-;;    3       | 32-bit float          | -3.4028233E+38 | +3.4028233E+38
+;;   ---------+-----------------------+----------------+---------------
+;;   0        | ASCII character       |  0             | +255
+;;   ..................................................................
+;;   1        | 8-bit signed integer  | -128           | +127
+;;   ..................................................................
+;;   2        | 16-bit signed integer | -32768         | +32767
+;;   ..................................................................
+;;   3        | 32-bit float          | -3.4028233E+38 | +3.4028233E+38
+;;   ------------------------------------------------------------------
 ;; 
 ;; == LAYER 0: ASCII CHARACTERS ==
 ;; The first layer, located at the depth zero (0), accommodates its
@@ -194,13 +208,18 @@
 ;; 
 ;; The initial values correlate in the following fashion with the layer
 ;; data types:
-;;   
+;; 
+;;   ---------------------------------------------------------------
 ;;   Layer ID | Data type      | Default
 ;;   ---------+----------------+------------------------------------
-;;    0       | Character      | '\0' (the NULL character, code = 0)
-;;    1       | 8-bit integer  | 0
-;;    2       | 16-bit integer | 0
-;;    3       | 32-bit float   | 0.0
+;;   0        | Character      | '\0' (the NULL character, code = 0)
+;;   ...............................................................
+;;   1        | 8-bit integer  | 0
+;;   ...............................................................
+;;   2        | 16-bit integer | 0
+;;   ...............................................................
+;;   3        | 32-bit float   | 0.0
+;;   ---------------------------------------------------------------
 ;; 
 ;; 
 ;; Syntax
@@ -218,31 +237,33 @@
 ;; justifies a compact summary of the mnemonics, or symbolic constants,
 ;; representive of commonly encountered bit patterns, and preserved in
 ;; the below figure:
-;;   
+;; 
+;;   ---------------------------------------------------
 ;;   Mnemonic | Full name    | Role        | Bit pattern
 ;;   ---------+--------------+-------------+------------
-;;    cl      | change layer | instruction | 11001001
-;;    do      | do           | instruction | 00101000
-;;    jp      | jump         | instruction | 10001000
-;;    mv      | move         | instruction | 01000010
+;;   cl       | change layer | instruction | 11001001
+;;   do       | do           | instruction | 00101000
+;;   jp       | jump         | instruction | 10001000
+;;   mv       | move         | instruction | 01000010
 ;;   ...................................................
-;;    db      | double       | argument    | 010
-;;    de      | decrement    | argument    | 001
-;;    hl      | halve        | argument    | 011
-;;    i       | input        | argument    | 100
-;;    in      | increment    | argument    | 000
-;;    o       | output       | argument    | 101
+;;   db       | double       | argument    | 010
+;;   de       | decrement    | argument    | 001
+;;   hl       | halve        | argument    | 011
+;;   i        | input        | argument    | 100
+;;   in       | increment    | argument    | 000
+;;   o        | output       | argument    | 101
 ;;   ...................................................
-;;    dn      | down         | argument    | 01
-;;    lf      | left         | argument    | 11
-;;    rt      | right        | argument    | 10
-;;    up      | up           | argument    | 00
+;;   dn       | down         | argument    | 01
+;;   lf       | left         | argument    | 11
+;;   rt       | right        | argument    | 10
+;;   up       | up           | argument    | 00
 ;;   ...................................................
-;;    a       | always       | argument    | 000
-;;    gt      | greater than | argument    | 100
-;;    lt      | less than    | argument    | 011
-;;    nz      | not zero     | argument    | 010
-;;    z       | zero         | argument    | 001
+;;   a        | always       | argument    | 000
+;;   gt       | greater than | argument    | 100
+;;   lt       | less than    | argument    | 011
+;;   nz       | not zero     | argument    | 010
+;;   z        | zero         | argument    | 001
+;;   ---------------------------------------------------
 ;; 
 ;; == ASSEMBLY: INSTRUCTIONS ==
 ;; An instruction is delineated by a composite of an operation
@@ -295,34 +316,37 @@
 ;; The predicament applying to the manifold variegations's discernment
 ;; imposes the bailiwick of a particular account of syntactical
 ;; diorisms; concretely, three formats of literals are distinguished:
-;;   
-;;   Format        | Description                             | Examples
-;;   --------------+-----------------------------------------+---------
-;;    Direct form  | An optional sign ("+" or "-")  followed | 15
-;;                 | by a sequence of one or more decimal    | +15
-;;                 | digits.                                 | -15
-;;   ..................................................................
-;;    Decimal form | The dollar symbol "$" followed by an    | $15
-;;                 | optional sign ("+" or "-") and          | $+15
-;;                 | succeeded by a sequence  of one or more | $-15
-;;                 | decimal digits.                         | $0
-;;   ..................................................................
-;;    Radix form   | The dollar symbol "$" followed by a     | $b-1010
-;;                 | radix code, succeeded by an optional    | $d+55
-;;                 | sign ("+" or "-"), and terminated by a  | $o07
-;;                 | sequence of one or more digits in       | $x+AH
-;;                 | concord with the signified radix.       | $x9FB21
+;; 
+;;   -----------------------------------------------------------------
+;;   Format       | Description                             | Examples
+;;   -------------+-----------------------------------------+---------
+;;   Direct form  | An optional sign ("+" or "-")  followed | 15
+;;                | by a sequence of one or more decimal    | +15
+;;                | digits.                                 | -15
+;;   .................................................................
+;;   Decimal form | The dollar symbol "$" followed by an    | $15
+;;                | optional sign ("+" or "-") and          | $+15
+;;                | succeeded by a sequence  of one or more | $-15
+;;                | decimal digits.                         | $0
+;;   .................................................................
+;;   Radix form   | The dollar symbol "$" followed by a     | $b-1010
+;;                | radix code, succeeded by an optional    | $d+55
+;;                | sign ("+" or "-"), and terminated by a  | $o07
+;;                | sequence of one or more digits in       | $x+AH
+;;                | concord with the signified radix.       | $x9FB21
+;;   -----------------------------------------------------------------
 ;; 
 ;; Each number base (radix) dictates a certain set of admittable digits.
 ;; A listing of the available radix codes and the digits defined in
 ;; their context shall be the coming table's responsibility:
-;;   
+;; 
+;;   ---------------------------------------------------------------
 ;;   Radix code | Radix | Name        | Native digit | Decimal value
 ;;   -----------+-------+-------------+--------------+--------------
-;;    b         | 2     | binary      | 0            | 0
+;;   b          | 2     | binary      | 0            | 0
 ;;              |       |             | 1            | 1
-;;   -----------+-------+-------------+--------------+--------------
-;;    d         | 10    | decimal     | 0            | 0
+;;   ...............................................................
+;;   d          | 10    | decimal     | 0            | 0
 ;;              |       |             | 1            | 1
 ;;              |       |             | 2            | 2
 ;;              |       |             | 3            | 3
@@ -333,7 +357,7 @@
 ;;              |       |             | 8            | 8
 ;;              |       |             | 9            | 9
 ;;   ...............................................................
-;;    o         | 8     | octal       | 0            | 0
+;;   o          | 8     | octal       | 0            | 0
 ;;              |       |             | 1            | 1
 ;;              |       |             | 2            | 2
 ;;              |       |             | 3            | 3
@@ -342,7 +366,7 @@
 ;;              |       |             | 6            | 6
 ;;              |       |             | 7            | 7
 ;;   ...............................................................
-;;    x         | 16    | hexadecimal | 0            | 0
+;;   x          | 16    | hexadecimal | 0            | 0
 ;;              |       |             | 1            | 1
 ;;              |       |             | 2            | 2
 ;;              |       |             | 3            | 3
@@ -358,6 +382,7 @@
 ;;              |       |             | D            | 13
 ;;              |       |             | E            | 14
 ;;              |       |             | F            | 15
+;;   ---------------------------------------------------------------
 ;; 
 ;; The SHORT FORM, which attends exclusively to the decimal system
 ;; (base-10), and nemned the "direct form", simply expects one or more
@@ -384,7 +409,7 @@
 ;; introduction, expects one or more decimal digit, again administering
 ;; tolerance to leading zeroes.
 ;; 
-;; If the radix comprehends an objects of significance for one's
+;; If the radix comprehends an object of significance for one's
 ;; purposes, the RADIX FORM requires instantiation: Following the dollar
 ;; symbol "$" and an optional sign, the value must be preceded by one of
 ;; four "radix codes", single-character identifiers with the potential
@@ -1169,51 +1194,89 @@
 ;; 
 ;; Sources:
 ;;   [esolang2020layerasm]
-;;   -> "https://esolangs.org/wiki/LayerASM"
-;;       o Original specification of the LayerASM programming language.
+;;   The Esolang contributors, "LayerASM", November 9th, 2020
+;;   URL: "https://esolangs.org/wiki/LayerASM"
+;;   Notes:
+;;     - Original specification of the LayerASM programming language.
 ;;   
-;;   [stackoverflow2012hexassembly]
-;;   -> "https://stackoverflow.com/questions/11733731/how-to-represent-hex-value-such-as-ffffffbb-in-x86-assembly-programming"
-;;       o Disquisition of the literal number notations across different
-;;         assemblers.
+;;   [stackoverflow2012q11733731]
+;;   The Stackoverflow contributors,
+;;     "How to represent hex value such as FFFFFFBB in x86 assembly
+;;      programming?",
+;;     July 31st, 2012
+;;   URL: "https://stackoverflow.com/questions/11733731/
+;;         how-to-represent-hex-value-such-as-ffffffbb-in-x86-
+;;         assembly-programming"
+;;   Notes:
+;;     - Disquisition of the literal number notations across different
+;;       assemblers.
 ;;   
-;;   [stackoverflow2012ieee754max]
-;;   -> "https://stackoverflow.com/questions/10233444/max-float-represented-in-ieee-754"
-;;       o Maximum value of IEEE-754 single float: 3.4028235*10^{38}.
-;;       o In Common Lisp notation: 3.4028233E+38.
+;;   [stackoverflow2012q10233444]
+;;   The Stackoverflow contributors,
+;;     "max float represented in IEEE 754",
+;;     April 19th, 2012
+;;   URL: "https://stackoverflow.com/questions/10233444/
+;;         max-float-represented-in-ieee-754"
+;;   Notes:
+;;     - Maximum value of IEEE-754 single float: 3.4028235*10^{38}.
+;;     - In Common Lisp notation: 3.4028233E+38.
 ;;   
-;;   [stackoverflow2013csignedbyte]
-;;   -> "https://stackoverflow.com/a/18013782"
-;;       o Describes two's complement for representing signed integer
-;;         numbers.
+;;   [stackoverflow2013a18013782]
+;;   The Stackoverflow contributors,
+;;     "C and signed byte representation in memory",
+;;     August 2nd, 2013
+;;   URL: "https://stackoverflow.com/a/18013782"
+;;   Notes:
+;;     - Describes two's complement for representing signed integer
+;;       numbers.
 ;;   
-;;   [stackoverflow2014chunk]
-;;   -> "https://stackoverflow.com/questions/22008273/what-do-chunk-block-offset-buffer-and-sector-mean"
-;;       o Furnishes definitions for the terms "chunk", "block",
-;;         "offset", "buffer", and "sector".
+;;   [stackoverflow2014q22008273]
+;;   The Stackoverflow contributors,
+;;     'What do "chunk", "block", "offset", "buffer", and "sector"
+;;      mean?',
+;;     February 25th, 2014
+;;   URL: "https://stackoverflow.com/questions/22008273/
+;;         what-do-chunk-block-offset-buffer-and-sector-mean"
+;;   Notes:
+;;     - Furnishes definitions for the terms "chunk", "block", "offset",
+;;       "buffer", and "sector".
 ;;   
-;;   [stackoverflow2015ieee754range]
-;;   -> "https://stackoverflow.com/questions/32193791/single-precision-floating-point-format-range"
-;;       o Describes the range of the IEEE-754 single float type.
-;;       o Mentions that this type is symmetric for positive and
-;;         negative numbers.
+;;   [stackoverflow2015q32193791]
+;;   The Stackoverflow contributors,
+;;     "Single-precision floating-point format Range",
+;;     August 25th, 2015
+;;   URL: "https://stackoverflow.com/questions/32193791/
+;;         single-precision-floating-point-format-range"
+;;   Notes:
+;;     - Describes the range of the IEEE-754 single float type.
+;;     - Mentions that this type is symmetric for positive and negative
+;;       numbers.
 ;;   
 ;;   [venners1996underthehood]
-;;   -> "https://www.infoworld.com/article/2077233/bytecode-basics.html"
-;;       o Describes the role of bytecode in the context of the Java
-;;         virtual machine.
+;;   Bill Venners, "Under the Hood", September 1st, 1996
+;;   URL: "https://www.infoworld.com/article/2077233/
+;;         bytecode-basics.html"
+;;   Notes:
+;;     - Describes the role of bytecode in the context of the Java
+;;       virtual machine.
 ;;   
 ;;   [wikipedia2021bytecode]
-;;   -> "https://en.wikipedia.org/wiki/Bytecode"
-;;       o Definition of bytecode.
+;;   The Wikipedia contributors, "Bytecode", November 28th, 2021
+;;   URL: "https://en.wikipedia.org/wiki/Bytecode"
+;;   Notes:
+;;     - Definition of bytecode.
 ;;   
 ;;   [wikipedia2021machinecode]
-;;   -> "https://en.wikipedia.org/wiki/Machine_code"
-;;       o Definition of machine code.
+;;   The Wikipedia contributors, "Machine code", December 31st, 2021
+;;   URL: "https://en.wikipedia.org/wiki/Machine_code"
+;;   Notes:
+;;     - Definition of machine code.
 ;;   
 ;;   [wikipedia2021opcode]
-;;   -> "https://en.wikipedia.org/wiki/Opcode"
-;;       o Definition of opcode.
+;;   The Wikipedia contributors, "Opcode", October 5th, 2021
+;;   URL: "https://en.wikipedia.org/wiki/Opcode"
+;;   Notes:
+;;     - Definition of opcode.
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1670,7 +1733,7 @@
           (prog1
             (make-operand :constant (token-value current-token))
             (parser-eat parser :constant)))
-        (T
+        (otherwise
           (error "Expected a number or a constant as an operand token, ~
                   but encountered ~s."
             current-token))))))
@@ -1838,7 +1901,7 @@
 ;;; -------------------------------------------------------
 
 (defun get-bytecode-for (mnemonic)
-  "Returns the integer bytecode associated with the MNEMONIC if such
+  "Returns the octet bytecode associated with the MNEMONIC if such
    exists, throwing an error on failure to locate the same."
   (declare (type string mnemonic))
   (multiple-value-bind (bytecode contains-mnemonic)
@@ -2384,7 +2447,7 @@
 ;;; -------------------------------------------------------
 
 (defun layer-output (layer &key (destination T))
-  "Outputs the LAYER' current clel to the DESTINATION, and returns the
+  "Outputs the LAYER' current cell to the DESTINATION, and returns the
    LAYER."
   (declare (type Layer       layer))
   (declare (type destination destination))
@@ -2430,8 +2493,8 @@
 
 (defun extract-opcode (byte)
   "Extracts and returns from the BYTE, by indagating its two most
-   significant bits (MSBs), acting in this case as 'sentinel bits', the
-   represented opcode.
+   significant bits (MSBs), acting in this case as \"sentinel bits\",
+   the represented opcode.
    ---
    If no opcode can be associated with the inspected BYTE section, an
    error of an unspecified type is signaled."
