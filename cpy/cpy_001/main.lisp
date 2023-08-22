@@ -1,7 +1,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; This program implements an interpreter for the esoteric programming
-;; language "cpy", invented by the Esolang useer "ZippyMagician".
+;; language "cpy", invented by the Esolang useer "ZippyMagician" and
+;; presented on August 4th, 2021, devised with the purpose of copying
+;; and moving cell data in conjunction with line-based control flow
+;; mechanism.
+;; 
 ;; 
 ;; Concept
 ;; =======
@@ -218,14 +222,21 @@
 ;; already exhausts the contingency. The following table shall explicate
 ;; this set:
 ;; 
-;;   Datum          | Token type | Token value
-;;   ---------------+------------+---------------------------
-;;    digit[1..*]   | :number    | The parsed integer number.
-;;    "->"          | :operator  | :move
-;;    "<->"         | :operator  | :copy
-;;    "<-"          | :operator  | :jump
-;;    newline       | :newline   | #\Newline
-;;    end of source | :eof       | NIL
+;;   -------------------------------------------------------
+;;   Datum         | Token type | Token value
+;;   --------------+------------+---------------------------
+;;   digit[1..*]   | :number    | The parsed integer number.
+;;   .......................................................
+;;   "->"          | :operator  | :move
+;;   .......................................................
+;;   "<->"         | :operator  | :copy
+;;   .......................................................
+;;   "<-"          | :operator  | :jump
+;;   .......................................................
+;;   newline       | :newline   | #\Newline
+;;   .......................................................
+;;   end of source | :eof       | NIL
+;;   -------------------------------------------------------
 ;; 
 ;; == THE PARSER: A COMBINATOR OF TOKENS ==
 ;; As a constructive entity, the parser generates from the lexer's token
@@ -241,12 +252,17 @@
 ;; as empty lines in order to correctly map line indices for jumping
 ;; instructions, is constructed. The following correlations hold:
 ;; 
+;;   --------------------------------------
 ;;   cpy instruction | ``Instruction'' type
 ;;   ----------------+---------------------
-;;    ->             | :move
-;;    <->            | :copy
-;;    <-             | :jump
-;;    newline        | :nop
+;;   ->              | :move
+;;   ......................................
+;;   <->             | :copy
+;;   ......................................
+;;   <-              | :jump
+;;   ......................................
+;;   newline         | :nop
+;;   --------------------------------------
 ;; 
 ;; == THE INTERPRETER: THE INSTRUCTION VECTOR APPLIED ==
 ;; The instruction vector is finally transmitted to the interpreter, the
@@ -262,7 +278,7 @@
 ;;       the source code. In ordinary operations, each applied
 ;;       instruction simply increases this index, thus relating to the
 ;;       next command. Merely the jump operation "<-" may, under its
-;;       condition's satisfactions, redirect the pointer to a particular
+;;       condition's satisfaction, redirect the pointer to a particular
 ;;       line index.
 ;;   (3) The memory, implemented as a sparse structure of the hash table
 ;;       kind, with each key assuming the role of a cell index and the
@@ -276,7 +292,9 @@
 ;; Date:   2022-01-27
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Cpy"
+;;   [esolang2021cpy]
+;;   The Esolang contributors, "cpy", August 5th, 2021
+;;   URL: "https://esolangs.org/wiki/Cpy"
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
