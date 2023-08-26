@@ -432,7 +432,7 @@
 ;;; -------------------------------------------------------
 
 (defun transform-into-viewport (x y viewport-width viewport-height)
-  "Applies a transformation to the X- and Y- coordinates which
+  "Applies a transformation to the X- and Y-coordinates which
    capacitates their mapping into a viewport specified by the
    VIEWPORT-WIDTH and VIEWPORT-HEIGHT, and returns two values:
      (1) The transformed x-coordinate.
@@ -453,8 +453,8 @@
                    viewport-width viewport-height
                    &key (destination T))
   "Prints a donut specified by the DONUT-RADIUS and DONUT-THICKNESS in a
-   rectangle viewport delimited horizontally by the VIEWPORT-WIDTH and
-   vertically by its VIEWPORT-HEIGHT to the DESTINATION, returning for a
+   rectangular viewport delimited horizontally by the VIEWPORT-WIDTH and
+   vertically by the VIEWPORT-HEIGHT to the DESTINATION, returning for a
    non-``NIL'' DESTINATION the ``NIL'' value, otherwise responding with
    a fresh string comprehending the result."
   (declare (type real        donut-radius))
