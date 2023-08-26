@@ -1388,7 +1388,7 @@
 (interpret-Moving-donut
   (build-character-matrix
     "####"
-    "#.]#" 
+    "#.]#"
     "##.#"
     " #[#"
     " #,#"
@@ -1400,22 +1400,21 @@
 ;; Exploit redirections to print the message
 ;; "movingdonutisaveryinterestinglanguage"
 (interpret-Moving-donut
-"#############
-Omovingdonut#
-#    ######i#
-#    #yrevas#
-#     i######
-#     n#
-#     t#
-#     e#
-#     r#
-#     e#
-#     s#
-#     t#
-#     i#
-##    n#
-#ugnalg#
-#a######
-#g#
+"##############
+#Omovingdonut#
+#     ######i#
+#     #yrevas#
+#      i######
+#      n#
+#      t#
+#      e#
+#      r#
+#      e#
+#      s#
+#      t#
+#      i#
+##     n#
+#augnalg#
+#g######
 #e#
 ###")
