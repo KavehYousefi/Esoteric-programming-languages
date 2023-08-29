@@ -136,25 +136,6 @@
 ;; -- Implementation of type predicates.                           -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun list-of-p (candidate &optional (element-type T))
-  "Determines whether the CANDIDATE represents a list composed of zero
-   or more elements, whose members conform to the ELEMENT-TYPE, which
-   defaults to the comprehensive ``T'', returning on confirmation a
-   ``boolean'' value of ``T'', otherwise ``NIL''."
-  (declare (type T candidate))
-  (declare (type T element-type))
-  (the boolean
-    (not (null
-      (and
-        (listp candidate)
-        (every
-          #'(lambda (element)
-              (declare (type T element-type))
-              (typep element element-type))
-          (the list candidate)))))))
-
-;;; -------------------------------------------------------
-
 (defun hash-table-of-p (candidate &optional (key-type T) (value-type T))
   "Determines whether the CANDIDATE represents a hash table of zero or
    more entries, whose keys conform to the KEY-TYPE and whose values to
@@ -195,20 +176,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Declaration of types.                                        -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(deftype list-of (&optional (element-type T))
-  "The ``list-of'' type defines a list compact of zero or more elements,
-   each member of which conforms to the ELEMENT-TYPE, defaulting to the
-   comprehensive ``T''."
-  (let ((predicate (gensym)))
-    (declare (type symbol predicate))
-    (setf  (symbol-function predicate)
-      #'(lambda (candidate)
-          (declare (type T candidate))
-          (list-of-p candidate element-type)))
-    `(satisfies ,predicate)))
-
-;;; -------------------------------------------------------
 
 (deftype hash-table-of (&optional (key-type T) (value-type T))
   "The ``hash-table-of'' type defines a hash table whose keys conform to
