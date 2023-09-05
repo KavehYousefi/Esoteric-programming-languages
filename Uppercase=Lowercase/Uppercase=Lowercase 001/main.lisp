@@ -89,7 +89,7 @@
 ;;   input            := "inp" , separator , cellOperand ;
 ;;   output           := "out" , separator , cellOperand ;
 ;;   
-;;   numericOperand   := integer , cellOperand ;
+;;   numericOperand   := integer   | cellOperand ;
 ;;   cellOperand      := cellIndex | cellReference ;
 ;;   cellReference    := "*" , digit , { digit } ;
 ;;   cellIndex        := digit , { digit } ;
