@@ -339,7 +339,7 @@
    location in the CODE with the corresponding back jump position, and
    vice versa."
   (declare (type string code))
-  (let ((jump-table (make-hash-table :test #'eql))
+  (let ((jump-table          (make-hash-table :test #'eql))
         (forward-jump-points NIL))
     (declare (type jump-table       jump-table))
     (declare (type (list-of fixnum) forward-jump-points))
