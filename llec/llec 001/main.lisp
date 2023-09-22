@@ -654,6 +654,19 @@
 (defmacro define-predicated-type
     (name (candidate-variable &rest parameters)
      &body body)
+  "Defines a derived type, founded upon the ``satisfies'' predicate,
+   whose agnomination derives from the NAME, and whose parameter list
+   issues from the PARAMETERS, consigning the object intended for a
+   subjecting to such docimasy by the name of the CANDIDATE-VARIABLE to
+   an automatically established anonymous function, the implementation
+   of which results from the BODY forms, with the desinent form's
+   primary return value expected to produce a generalized Boolean,
+   resolving a non-``NIL'' value for the derived type's satisfaction,
+   otherwise to ``NIL''.
+   ---
+   If the first BODY form constitutes a string, the same is construed as
+   a documentation string for the pursued derived type and
+   reappropriated accordingly."
   (let ((predicate-variable (gensym)))
     (declare (type symbol predicate-variable))
     `(deftype ,name (,@parameters)
@@ -746,6 +759,9 @@
 ;;; -------------------------------------------------------
 
 (define-predicated-type record (candidate)
+  "The ``record'' type defines an object representing a record as a
+   symbol endowed with a non-``NIL'' value for the entry with the
+   indicator ``record-p'' in its property list."
   (and
     (symbolp candidate)
     (get candidate :record-p)))
@@ -753,6 +769,10 @@
 ;;; -------------------------------------------------------
 
 (define-predicated-type record-of-type (candidate record-type)
+  "The ``record-of'' type defines a record of a particular RECORD-TYPE,
+   realized as a symbol inside of whose property list an entry with the
+   indicator ``record-p'' exists, and whose ``record-type'' entry equals
+   the specified RECORD-TYPE."
   (and
     (symbolp candidate)
     (get candidate :record-p)
@@ -761,6 +781,12 @@
 ;;; -------------------------------------------------------
 
 (deftype slot-specification ()
+  "The ``slot-specification'' type defines a record slot template as a
+   tuple compact of one, two, or three elements, the mandatory first
+   item of which designates the slot name, the second an optional type,
+   defaulting to the comprehensive ``T'', and the equally optional third
+   its default value for newly created record instance, also defaulting
+   to ``T''."
   '(or
      (tuple-of symbol T T)
      (tuple-of symbol T)
@@ -1188,6 +1214,11 @@
        (defmacro ,with-macro-name
            ((subject &optional (subject-name ',name))
             &body body)
+         "Evaluates the SUBJECT record, binds its slots to eponymous
+          local symbol macros, optionally prefixed with the
+          SUBJECT-NAME, the same defaults to the record's identifier,
+          evaluates the BODY forms, and returns the desinent form's
+          results."
          `(let ((,subject-name ,subject))
             (declare (type ,(quote ,name) ,subject-name))
             (declare (ignorable           ,subject-name))
@@ -1241,7 +1272,7 @@
 ;;; -------------------------------------------------------
 
 (defmacro define-function (name parameters &body body)
-  "Defines a ``defun''-based function, nevend by the NAME, the inputs
+  "Defines a ``defun''-based function, nevened by the NAME, the inputs
    of which are derived by the PARAMETERS, each such a two-element list
    of name and type, the function forms being specified by the BODY,
    the desinent form's results of which are being returned."
@@ -1791,8 +1822,9 @@
    ``NIL''."
   (the boolean
     (with-interpreter (interpreter my)
-      (>= my-ip
-          (length my-program)))))
+      (not (null
+        (>= my-ip
+            (length my-program)))))))
 
 ;;; -------------------------------------------------------
 
