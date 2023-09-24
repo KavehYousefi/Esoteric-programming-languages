@@ -1241,11 +1241,12 @@
    BODY forms as its implementation, returning the desinent form'
    results, which are expected to produce as the primary value a
    ``Parse-Result'' instance."
-  `(make-parser
-     #'(lambda (,state-variable)
-         (declare (type Parse-State ,state-variable))
-         (declare (ignorable        ,state-variable))
-         ,@body)))
+  `(the Parser
+     (make-parser
+       #'(lambda (,state-variable)
+           (declare (type Parse-State ,state-variable))
+           (declare (ignorable        ,state-variable))
+           ,@body))))
 
 ;;; -------------------------------------------------------
 
