@@ -34,6 +34,7 @@
 ;;               - the space (" ")
 ;;               - the horizontal tab ("\t")
 ;;               - the newline ("\n")
+;;   
 ;;   (§4) Every program (sentence) must be terminated by exactly one
 ;;        period ("."), contingently preceded by zero or more
 ;;        whitespaces.
@@ -304,11 +305,11 @@
 ;;   iStart         := "I" , variableInside ;
 ;;   iInside        := "i" , variableInside ;
 ;;   
-;;   jeiStart       : "Jei" , variableInside ;
-;;   jeiInside      : "jei" , variableInside ;
+;;   jeiStart       := "Jei" , variableInside ;
+;;   jeiInside      := "jei" , variableInside ;
 ;;   
-;;   shaStart       : "Sha" , variableInside ;
-;;   shaInside      : "sha" , variableInside ;
+;;   shaStart       := "Sha" , variableInside ;
+;;   shaInside      := "sha" , variableInside ;
 ;;   
 ;;   hoStart        := variableStart  , "ho" ;
 ;;   hoInside       := variableInside , "ho" ;
