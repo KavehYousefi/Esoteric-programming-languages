@@ -279,7 +279,7 @@
 ;;; -------------------------------------------------------
 
 (defparameter *register* 0
-  "The register, a unsigned byte scalar storage which affords the
+  "The register, an unsigned byte scalar storage which affords the
    program's singular memory component.")
 
 
