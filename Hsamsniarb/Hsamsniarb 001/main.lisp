@@ -304,8 +304,8 @@
 (defun decrement-register ()
   "Decrements the register value by one and returns no value.
    ---
-   If the new value would violate the lower march of 255, the register
-   is reinstated in its initial state of zero (0)."
+   If the new value would violate the lower march of zero (0), the
+   register is reinstated in its initial state of zero (0)."
   (setf *register*
     (if (<= *register* 0)
       0
