@@ -679,7 +679,7 @@
 ;;     goto label
 ;;   end if
 ;; 
-(interpret-Inputer "'!'#? ")
+(interpret-Inputer "'!'#?")
 
 ;;; -------------------------------------------------------
 
