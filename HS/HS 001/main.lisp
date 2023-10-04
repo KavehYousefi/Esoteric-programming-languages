@@ -1265,7 +1265,7 @@
 ;;; -------------------------------------------------------
 
 (defun interpreter-interpret (interpreter)
-  "Evaluates the abstract syntax tree (AST) evaluated in the
+  "Traverses the abstract syntax tree (AST) evaluated in the
    INTERPRETER's context and returns no value."
   (declare (type Interpreter interpreter))
   (interpreter-visit-node interpreter
@@ -1396,7 +1396,6 @@
 ;;   loop times var1
 ;;     print var2
 ;;   end loop
-;;   
 (interpret-HS
   "
   ###################### ######### :
