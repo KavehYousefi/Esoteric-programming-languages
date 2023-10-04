@@ -3459,6 +3459,22 @@
 
 ;;; -------------------------------------------------------
 
+;; Infinite counter which tallies from one (1) up to infinity.
+(interpret-Counting
+  "when cnt > 0
+     out cnt")
+
+;;; -------------------------------------------------------
+
+;; Infinite counter which counts up starting from two (2) with a step
+;; size of two (2).
+(interpret-Counting
+  "when cnt % 3 == 2
+     acc += 2
+     out acc")
+
+;;; -------------------------------------------------------
+
 ;; Line-based infinite cat program.
 (interpret-Counting
   "when 1
