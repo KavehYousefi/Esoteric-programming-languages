@@ -3579,7 +3579,7 @@
     out (99 - cnt - 1) + \" bottle of beer on the wall.\"
     out \"\"
   
-  % One bottles.
+  % One bottle.
   when (99 - cnt) == 1
     out (99 - cnt) + \" bottle of beer on the wall,\"
     out (99 - cnt) + \" bottle of beer.\"
