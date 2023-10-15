@@ -373,15 +373,16 @@
 (defun process-program (program)
   "Processes the Ａｅｓｔｈｅｔｉｃｓ PROGRAM and returns no value."
   (declare (type Aesthetics-Program program))
-  (symbol-macrolet ((print-quine
-                      (progn
-                        (format T "~&~a"
-                          (aesthetics-program-source program))
-                        (values)))
-                     (increment-accumulator
-                      (progn
-                        (incf (aesthetics-program-accumulator program))
-                        (values))))
+  (symbol-macrolet
+      ((print-quine
+        (progn
+          (format T "~&~a"
+          (aesthetics-program-source program))
+          (values)))
+       (increment-accumulator
+        (progn
+          (incf (aesthetics-program-accumulator program))
+          (values))))
     (declare (type null print-quine))
     (declare (type null increment-accumulator))
     (dolist (instruction (aesthetics-program-instructions program))
