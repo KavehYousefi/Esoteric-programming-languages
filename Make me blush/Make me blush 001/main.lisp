@@ -1502,6 +1502,8 @@
 ;;; -------------------------------------------------------
 
 (defun interpret-program (interpreter)
+  "Interprets the \"Make me blush\" program governed by the
+   INTERPRETER's castaldy and returns no value."
   (declare (type Interpreter interpreter))
   (loop until (program-exhausted-p interpreter) do
     (process-command interpreter
