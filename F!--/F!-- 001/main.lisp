@@ -1,19 +1,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
-;; This program implements an interpeter for the esoteric programming
+;; This program implements an interpreter for the esoteric programming
 ;; language "F!--", invented by the Esolang user "None1" and presented
 ;; on August 1st, 2023, the entheus of which resides in the same
-;; author's more potent language "F!", itself a derivative of Jonathan
-;; Todd Skinner's "Deadfish", while "F!--" waives the output facility,
-;; retaining merely the accumulator modification competences.
+;; author's language "F!", itself a derivative of Jonathan Todd
+;; Skinner's "Deadfish", while "F!--" replicates the latter's faculties
+;; in a guise conflating with the former's donat.
 ;; 
 ;; 
 ;; Concept
 ;; =======
-;; F!--, in its very foundation, constitutes an even more curtailed
-;; variant of the extant language "F!", its genesis indebted to the same
-;; author, "None1", and conspicuous in its banishment of the
-;; stock-father's output facility from the already meager competences.
+;; The F!-- language's provenance bifurcates into an amalgam of its
+;; F! companion and the precedent Deadfish specimen, desuming from the
+;; former the syntactical peculiarities, while the latter contributes
+;; the operational foundry.
 ;; 
 ;; 
 ;; Architecture
@@ -41,9 +41,11 @@
 ;; 
 ;; Instructions
 ;; ============
-;; F!--'s instruction set intrines facilities for the singular byte
-;; accumulator's incrementation, deduction, and squaring, but abstains
-;; from any input/output facilities or control flow mechanisms.
+;; F!--'s instruction set intrines arithmetic facilities for the
+;; singular byte accumulator's incrementation, deduction, and squaring,
+;; and complements the membership to a tetrad by adminiculum of a single
+;; output instrument capacitated to reproduce the salvatory's state in
+;; its verbatim numeric format.
 ;; 
 ;; Tokens not subsumable into the recognized command roster are
 ;; encountered with a mete equipollent in its distribution of leniency
@@ -67,6 +69,9 @@
 ;;   C!      | Squares the accumulator value. If the new value exceeds
 ;;           | the upper march of 255, the state is reset to the
 ;;           | minimum of zero (0).
+;;   ..................................................................
+;;   K!      | Prints to the standard output the accumulator's value in
+;;           | its numeric form.
 ;;   ------------------------------------------------------------------
 ;; 
 ;; 
@@ -109,7 +114,7 @@
 ;;       subject by consanguinity.
 ;;   
 ;;   [esolang2023F!--]
-;;   The Esolang contributors, "F!--", August 1st, 2023
+;;   The Esolang contributors, "F!--", October 15th, 2023
 ;;   URL: "https://esolangs.org/wiki/F!--"
 ;;   
 ;;   [stackoverflow2012q41091118]
@@ -164,6 +169,7 @@
     :increment
     :decrement
     :square
+    :print
     :nop
     :eof))
 
@@ -183,15 +189,14 @@
 (declaim (type  boolean                        source-exhausted-p))
 (declaim (type  character                      current-character))
 
-(declaim (ftype (function (string)    command) get-command-for))
-(declaim (ftype (function (character) boolean) whitespace-character-p))
-(declaim (ftype (function (character) boolean) word-character-p))
-(declaim (ftype (function ()          *)       skip-whitespaces))
-(declaim (ftype (function ()          string)  read-word))
-(declaim (ftype (function ()          command) get-next-command))
-(declaim (ftype (function (string)    *)       set-source))
-(declaim (ftype (function (&optional string boolean) *)
-                interpret-F!--))
+(declaim (ftype (function (string)    command)  get-command-for))
+(declaim (ftype (function (character) boolean)  whitespace-character-p))
+(declaim (ftype (function (character) boolean)  word-character-p))
+(declaim (ftype (function ()          *)        skip-whitespaces))
+(declaim (ftype (function ()          string)   read-word))
+(declaim (ftype (function ()          command)  get-next-command))
+(declaim (ftype (function (string)    *)        set-source))
+(declaim (ftype (function (&optional string) *) interpret-F!--))
 
 
 
@@ -207,6 +212,7 @@
     (or (and (string= word "F!") :increment)
         (and (string= word "U!") :decrement)
         (and (string= word "C!") :square)
+        (and (string= word "K!") :print)
         :nop)))
 
 
@@ -320,20 +326,14 @@
 ;; -- Implementation of interpreter.                               -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun interpret-F!-- (&optional
-                        (initial-program "" initial-program-supplied-p)
-                        (print-state-p   T))
-  "Executes the F!-- interpreter, contingently evaluting the
+(defun interpret-F!-- (&optional (initial-program ""
+                                  initial-program-supplied-p))
+  "Executes the F!-- interpreter, contingently evaluating the
    INITIAL-PROGRAM as its inchoate source, and repeates the process
    until a completely empty line is committed, finally returning no
-   value.
-   ---
-   If the PRINT-STATE-P flag assumes the Boolean value ``T'', each query
-   cycle, as well as the interpreter's termination, is preceded by the
-   program state's output."
+   value."
   (declare (type string  initial-program))
   (declare (type T       initial-program-supplied-p))
-  (declare (type boolean print-state-p))
   
   (prog ((source          initial-program)
          (location        0)
@@ -352,8 +352,6 @@
         (go query-for-input))
     
     query-for-input
-      (when print-state-p
-        (format T "~&Accumulator = ~d" accumulator))
       (format T "~&>> ")
       (finish-output)
       (set-source (read-line))
@@ -367,6 +365,7 @@
         (:increment (go F!))
         (:decrement (go U!))
         (:square    (go C!))
+        (:print     (go K!))
         (:nop       (go read-next-command))
         (:eof       (go query-for-input))
         (otherwise  (go anomaly)))
@@ -383,12 +382,15 @@
       (setf accumulator (mod (* accumulator accumulator) 256))
       (go   read-next-command)
     
+    K!
+      (format T "~&~d~%" accumulator)
+      (go read-next-command)
+    
     anomaly
       (error "Unrecognized command: ~s." current-command)
     
     away
-      (when print-state-p
-        (format T "~&Accumulator = ~d" accumulator)))
+      NIL)
   
   (values))
 
@@ -402,4 +404,10 @@
 ;; Demonstrate the wrapping behavior of the accumulator by reducing its
 ;; value twice from the default of zero, thus accomplishing the result
 ;; 254.
-(interpret-F!-- "U! U!")
+(interpret-F!-- "U! U! K!")
+
+;;; -------------------------------------------------------
+
+;; Reproduce the "XKCD random number", the integer 4, and print the
+;; same.
+(interpret-F!-- "F! F! F! F! K!")
