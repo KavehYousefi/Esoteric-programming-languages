@@ -147,15 +147,180 @@
 ;;                     | appropriation of the brainfuck equivalent "]".
 ;;   ------------------------------------------------------------------
 ;; 
+;; 
+;; Implementation
+;; ==============
+;; This simple implementation is realized in Common Lisp, employing the
+;; parser combinator concept for the assemblage of a sequence of
+;; commands from single characters.
+;; 
+;; == PARSERS AND COMBINATORS ARE FUNCTIONS ==
+;; In eath diction, the parser combinator approach constructs a complete
+;; parser entity from a sequence of interoperating smaller parsers,
+;; their coefficiency enabled through combinators.
+;; 
+;; Both parsers and combinators are, in their pristine diorism,
+;; represented by functions, accepting a source to parse and returning
+;; in the case of a successful application a composition apprehending at
+;; least
+;; 
+;;   - The remaining portion of the source, curtailed by the consumed
+;;     items.
+;;     If, for instance, the source represents a string, the first
+;;     characters matching the parsing predicate will be removed; for
+;;     tokens in lieu of this direct input, the residue following the
+;;     accepted token objects are delivered.
+;;   - An object designating the parser's or combinator's contribution
+;;     to the encompassing whole, that is, usually an AST node.
+;; 
+;; A failure in the parser's or combinator's operations usually
+;; concludes either with a communicative flag or an error signaling.
+;; 
+;; Conforming to an augmentation in formality, the following signature
+;; may be proffered for parsers and combinators:
+;; 
+;;   function (source : any) -> (newSource : any, output : any)
+;; 
+;; == PARSERS AND COMBINATORS ARE INTERWOVEN IN SERIES ==
+;; Considering the successful case, the modified parser or combinator
+;; source is utilized as an input to the subsequent parser/combinator,
+;; chaining these into a series of processors that, in concluding in an
+;; ultimately empty source, build the output structure, for instance,
+;; the abstract syntax tree.
+;; 
+;; == PARSERS EQUAL COMBINATORS ==
+;; The discrepancy betwixt parsers and combinators constitutes a rather
+;; puisne question of terminology for most objectives, as both partake
+;; of a functional commonality. Parsers are usually "stand-alone"
+;; components, responsible for the actual modification of the source,
+;; whereas combinators ligate zero or more parsers, or other
+;; combinators, in order to accompass a result.
+;; 
+;; If we have, as an example, a parser "characterOf", defined as
+;; 
+;;   function characterOf (expectedCharacter : character)
+;;     let characterParser <- function (source : string)
+;;       if source[0] = expectedCharacter then
+;;         return (source.substring (1, source.length),
+;;                 makeNode(NODE_TYPE_CHARACTER, source[0])
+;;       else
+;;         return null
+;;       end if
+;;     end function
+;;     
+;;     return characterParser
+;;   end function
+;; 
+;; the requisitum involved in parsing more than one character coerces us
+;; to discover a chaining of mandatorily matching "characterOf"
+;; invocations. To this end, we define the following combinator:
+;; 
+;;   function allMatch (parsers : parserFunction[0..*])
+;;     let allCombinator <- function (source : string)
+;;       let newSource <- source
+;;       let nodes     <- empty node list
+;;       for every parser currentParser in parsers do
+;;         let parserResult <- currentParser(source)
+;;         
+;;         if parserResult is null then
+;;           return null
+;;         else
+;;           newSource <- parserResult[0]
+;;           append parserResult[1] to nodes
+;;         end if
+;;       end for
+;;       
+;;       return (newSource, nodes)
+;;     end function
+;;     
+;;     return allCombinator
+;;   end function
+;; 
+;; An exemplary invocation of the combinator "allMatch" with several
+;; instances of the "characterOf" parser could involve:
+;; 
+;;   parse (allMatch (characterOf ('h'),
+;;                    characterOf ('e'),
+;;                    characterOf ('l'),
+;;                    characterOf ('l'),
+;;                    characterOf ('o')),
+;;          "hello")
+;; 
+;; == A PARSER COMBINATOR IN AN OBJECT-ORIENTED CONTEXT ==
+;; The principal and onomastic substrate derives from Jeffrey Massung's
+;; "parse" package for Common Lisp, which please see under
+;; [massung2020parse]. A diverging aspect is apportioned its commorancy
+;; in the object-oriented variation, substituting the functional notions
+;; in order to emphasize the coefficacy partaken of by the several
+;; components.
+;; 
 ;; --------------------------------------------------------------------
 ;; 
 ;; Author: Kaveh Yousefi
 ;; Date:   2023-10-14
 ;; 
 ;; Sources:
+;;   [christensen2013lispcabinet035]
+;;   G. Christensen, "Lisp Cabinet 0.3.5", 2013
+;;   URL: "https://sourceforge.net/projects/lispcabinet/"
+;;   Notes:
+;;     - Download page of the "Lisp Cabinet" project.
+;;   
+;;   [devanla2021minimalparsecomb]
+;;   Guru Devanla, "Minimal Parser Combinator in Python",
+;;                 26th October 2021
+;;   URL: "https://gdevanla.github.io/posts/
+;;         write-a-parser-combinator-in-python.html"
+;;   Notes:
+;;     - Describes parser combinators.
+;;     - Demonstrates an implementation in Python.
+;;   
+;;   [elouafi2018gentleintroparscomb]
+;;   Yassine Elouafi, "A gentle introduction to parser combinators",
+;;                    2018
+;;   URL: "https://dev.to/yelouafi/
+;;         a-gentle-introduction-to-parser-combinators-21a0"
+;;   Notes:
+;;     - Describes parser combinators.
+;;     - Demonstrates an implementation in JavaScript.
+;;   
+;;   [elouafi2021introparsercomb]
+;;   Yassine Elouafi, "introduction-to-parser-combinators.md",
+;;                    June 28, 2021 
+;;   URL: "https://gist.github.com/yelouafi/
+;;         556e5159e869952335e01f6b473c4ec1"
+;;   Notes:
+;;     - Describes parser combinators.
+;;     - Demonstrates an implementation in JavaScript.
+;;   
 ;;   [esolang2023Makemeblush]
 ;;   The Esolang contributors, "Make me blush", September 24th, 2023
 ;;   URL: "https://esolangs.org/wiki/Make_me_blush"
+;;   
+;;   [goodrich214datastructure6th]
+;;   Michael T. Goodrich, Roberto Tamassia, Michael H. Goldwasser,
+;;     "Data Structures & Algorithms in Java", sixth edition, 2014,
+;;     pages 122--127
+;;   Notes:
+;;     - Describes the concept and an implementation of the singly
+;;       linked list in the Java programming language.
+;;     - The pages 276 through 280 describe the concept and an
+;;       implementation of the doubly linked list in the Java
+;;       programming language, significant for the introduction and
+;;       deployment of the positional list principles.
+;;   
+;;   [massung2020parse]
+;;   Jeffrey Massung, "The PARSE Package", 2020
+;;   URL: "https://github.com/massung/parse"
+;;   Notes:
+;;     - GitHub repository of the "parse" package, a Common Lisp library
+;;       for token parsing which employs parser combinators.
+;;   
+;;   [mulligan2023unlocking]
+;;   Rory Mulligan, "Unlocking the Power of Parser Combinators: A
+;;                   Beginner's Guide", February 9, 2023
+;;   URL: "https://www.sitepen.com/blog/
+;;         unlocking-the-power-of-parser-combinators-a-beginners-guide"
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
