@@ -177,6 +177,25 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Declaration of global bindings.                              -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(declaim (type  boolean                        source-exhausted-p))
+(declaim (type  character                      current-character))
+
+(declaim (ftype (function (string)    command) get-command-for))
+(declaim (ftype (function (character) boolean) whitespace-character-p))
+(declaim (ftype (function (character) boolean) word-character-p))
+(declaim (ftype (function ()          *)       skip-whitespaces))
+(declaim (ftype (function ()          string)  read-word))
+(declaim (ftype (function ()          command) get-next-command))
+(declaim (ftype (function (string)    *)       set-source))
+(declaim (ftype (function (&optional string boolean) *)
+                interpret-F!--))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Definition of command table.                                 -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -219,16 +238,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of lexer.                                     -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(declaim (type boolean                source-exhausted-p))
-(declaim (type (or null character)    current-character))
-
-(declaim (ftype (function (string) command) get-command-for))
-(declaim (ftype (function ()       *)       skip-whitespaces))
-(declaim (ftype (function ()       string)  read-word))
-(declaim (ftype (function ()       command) get-next-command))
-
-;;; -------------------------------------------------------
 
 (define-symbol-macro source-exhausted-p
   (locally
