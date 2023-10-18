@@ -6,7 +6,7 @@
 ;; emanates from a twissel of provenances, both defined in relation to
 ;; its descendancy from Urban Mueller's "brainfuck" --- imprimis, its
 ;; notational discrepancies, founded upon a more ludibund exposition, as
-;; constrasted with the stringent mateotechny exemplified in the
+;; constrasted with the stringent chreotechnics exemplified in the
 ;; stock-father; the second invention appertains to a functional
 ;; augmentation, provided in the form of a switch, capacitated to issue
 ;; input and output either in a numeric or classical character-based
@@ -16,7 +16,7 @@
 ;; Concept
 ;; =======
 ;; The "Make me blush" programming language contributes a derivative of
-;; brainfuck, divergent, however, in its instruction's diction, as well
+;; brainfuck, divergent, however, in its instructions' diction, as well
 ;; as, a fortiori, in an input/output mode switch endowed with the
 ;; competence to influence the reception of input and commission of
 ;; output either in a verbatim number or conventional character form.
@@ -268,7 +268,7 @@
 ;;   
 ;;   [devanla2021minimalparsecomb]
 ;;   Guru Devanla, "Minimal Parser Combinator in Python",
-;;                 26th October 2021
+;;     October 26th, 2021
 ;;   URL: "https://gdevanla.github.io/posts/
 ;;         write-a-parser-combinator-in-python.html"
 ;;   Notes:
@@ -277,7 +277,7 @@
 ;;   
 ;;   [elouafi2018gentleintroparscomb]
 ;;   Yassine Elouafi, "A gentle introduction to parser combinators",
-;;                    2018
+;;     October 5th, 2018
 ;;   URL: "https://dev.to/yelouafi/
 ;;         a-gentle-introduction-to-parser-combinators-21a0"
 ;;   Notes:
@@ -286,7 +286,7 @@
 ;;   
 ;;   [elouafi2021introparsercomb]
 ;;   Yassine Elouafi, "introduction-to-parser-combinators.md",
-;;                    June 28, 2021 
+;;     June 28th, 2021 
 ;;   URL: "https://gist.github.com/yelouafi/
 ;;         556e5159e869952335e01f6b473c4ec1"
 ;;   Notes:
@@ -310,15 +310,16 @@
 ;;       deployment of the positional list principles.
 ;;   
 ;;   [massung2020parse]
-;;   Jeffrey Massung, "The PARSE Package", 2020
+;;   Jeffrey Massung, "The PARSE Package", July 27th, 2020
 ;;   URL: "https://github.com/massung/parse"
 ;;   Notes:
 ;;     - GitHub repository of the "parse" package, a Common Lisp library
 ;;       for token parsing which employs parser combinators.
 ;;   
 ;;   [mulligan2023unlocking]
-;;   Rory Mulligan, "Unlocking the Power of Parser Combinators: A
-;;                   Beginner's Guide", February 9, 2023
+;;   Rory Mulligan,
+;;     "Unlocking the Power of Parser Combinators: A Beginner's Guide",
+;;     February 9, 2023
 ;;   URL: "https://www.sitepen.com/blog/
 ;;         unlocking-the-power-of-parser-combinators-a-beginners-guide"
 ;; 

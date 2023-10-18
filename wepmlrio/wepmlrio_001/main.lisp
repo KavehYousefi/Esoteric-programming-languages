@@ -369,7 +369,7 @@
 ;; Sources:
 ;;   [devanla2021minimalparsecomb]
 ;;   Guru Devanla, "Minimal Parser Combinator in Python",
-;;                 26th October 2021
+;;     October 26th, 2021
 ;;   URL: "https://gdevanla.github.io/posts/
 ;;         write-a-parser-combinator-in-python.html"
 ;;   Notes:
@@ -378,7 +378,7 @@
 ;;   
 ;;   [elouafi2018gentleintroparscomb]
 ;;   Yassine Elouafi, "A gentle introduction to parser combinators",
-;;                    2018
+;;     October 5th, 2018
 ;;   URL: "https://dev.to/yelouafi/
 ;;         a-gentle-introduction-to-parser-combinators-21a0"
 ;;   Notes:
@@ -387,7 +387,7 @@
 ;;   
 ;;   [elouafi2021introparsercomb]
 ;;   Yassine Elouafi, "introduction-to-parser-combinators.md",
-;;                    June 28, 2021 
+;;     June 28th, 2021 
 ;;   URL: "https://gist.github.com/yelouafi/
 ;;         556e5159e869952335e01f6b473c4ec1"
 ;;   Notes:
@@ -412,8 +412,9 @@
 ;;       for token parsing which employs parser combinators.
 ;;   
 ;;   [mulligan2023unlocking]
-;;   Rory Mulligan, "Unlocking the Power of Parser Combinators: A
-;;                   Beginner's Guide", February 9, 2023
+;;   Rory Mulligan,
+;;     "Unlocking the Power of Parser Combinators: A Beginner's Guide",
+;;     February 9, 2023
 ;;   URL: "https://www.sitepen.com/blog/
 ;;         unlocking-the-power-of-parser-combinators-a-beginners-guide"
 ;; 
@@ -635,7 +636,7 @@
 (defun parse-bind (antecedent parser-generator)
   "Returns a new parser which implements a monadic binding by applying
    the ANTECEDENT parser to its input state, upon its matching
-   requesting a consquent parser from the PARSER-GENERATOR function,
+   requesting a consequent parser from the PARSER-GENERATOR function,
    which is subsequently applied to the ANTECEDENT's resulting parse
    state, and, if the consequent parser also matches, embracing in its
    result the output thus produced."
@@ -715,7 +716,7 @@
 
 (defun parse-choices (&rest choices)
   "Returns a new parser which succeeds if any of its CHOICES match, on
-   confirmation embracing in its result the first eligibile choice's
+   confirmation embracing in its result the first eligible choice's
    output."
   (declare (type (list-of parser-function) choices))
   (the parser-function
@@ -874,7 +875,9 @@
    Common Lisp program capable of replicating its effects, otherwise
    responding with an error of an unspecified type."
   (declare (type string code))
-  (let ((result (parse-program (parse-statements) (make-parse-state code 0))))
+  (let ((result (parse-program
+                  (parse-statements)
+                  (make-parse-state code 0))))
     (declare (type Parse-Result result))
     (the s-expression
       (if (parse-result-succeeded-p result)
