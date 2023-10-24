@@ -250,7 +250,7 @@
   "The ``brainfuck-command-table'' type defines a mapping of brainfuck
    command tokens to representative command objects, implemented as an
    association list, or alist, which maps the command characters to
-   ``command'' objects."
+   ``brainfuck-command'' objects."
   '(association-list-of character brainfuck-command))
 
 ;;; -------------------------------------------------------
@@ -288,7 +288,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Definition brainfuck command table.                          -- ;;
+;; -- Definition of brainfuck command table.                       -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (declaim (type brainfuck-command-table +BRAINFUCK-IDENTIFIERS+))
