@@ -3,7 +3,7 @@
 ;; This program implements an interpreter for the esoteric programming
 ;; language "!!", invented by the Esolang user "Cinnamony" and presented
 ;; on June 16th, 2023, the kenspeckle proprium of which wones in its
-;; employment of Latin majuscles during the furnishment of several
+;; employment of Latin majuscules during the furnishment of several
 ;; popular programming tasks' solutions.
 ;; 
 ;; 
@@ -12,7 +12,7 @@
 ;; The !! programming language' subscription to the joke language
 ;; subspecies of the esoteric realm propines its haecceity with a
 ;; ludibund ilk, the dioristic proprium commorant inwith its expression
-;; of popular programming tasks entirely in Latin majuscles.
+;; of popular programming tasks entirely in Latin majuscules.
 ;; 
 ;; 
 ;; Instructions
@@ -172,14 +172,15 @@
   "Prints the lyrics of the song \"99 Bottles of Beer\" to the standard
    output and returns no value."
   (loop for number-of-bottles of-type (integer 0 99) from 99 downto 1 do
-    (format T "~&~d bottle~:p of beer on the wall," number-of-bottles)
-    (format T "~&~d bottle~:p of beer."             number-of-bottles)
-    (format T "~&Take one down, pass it around,")
+    (format T "~&~d BOTTLE~:@(~:p~) OF BEER ON THE WALL,"
+      number-of-bottles)
+    (format T "~&~d BOTTLE~:@(~:p~) OF BEER." number-of-bottles)
+    (format T "~&TAKE ONE DOWN, PASS IT AROUND,")
     ;; Switch case format argument:
     ;;   (case (1- number-of-bottles)
     ;;     (0 (format T "No ..."))
     ;;     (T (format T "~d ...")))
-    (format T "~&~[No~:;~:*~d~] bottle~:p of beer."
+    (format T "~&~[NO~:;~:*~d~] BOTTLE~:P OF BEER."
       (1- number-of-bottles))
     (format T "~2%"))
   (values))
@@ -189,7 +190,7 @@
 (defun execute-cat-program ()
   "Executes a one-time line-based cat program, the same reverberates its
    output in a majuscular form, and returns no value."
-  (format T "~&Cat program: ")
+  (format T "~&CAT PROGRAM: ")
   (finish-output)
   (format T "&~:@(~a~)"
     (read-line))
@@ -313,7 +314,7 @@
 (defun execute-acronym-program ()
   "Queries the user for a line of input, generates and prints the
    corresponding acronym, and returns no value."
-  (format T "~&Let us generate an acronym: ")
+  (format T "~&LET US GENERATE AN ACRONYM: ")
   (finish-output)
   (let ((input (read-line)))
     (declare (type string input))
@@ -349,16 +350,6 @@
   (declare (type string token))
   (the (or null (cons string function))
     (assoc token +IDENTIFIERS+ :test #'string=)))
-
-;;; -------------------------------------------------------
-
-(defun command-identifier-p (token)
-  "Determines whether the TOKEN represents a command name, returning on
-   confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
-  (declare (type string token))
-  (the boolean
-    (not (null
-      (get-command-entry token)))))
 
 ;;; -------------------------------------------------------
 
