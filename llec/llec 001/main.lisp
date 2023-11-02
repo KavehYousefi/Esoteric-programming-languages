@@ -1388,7 +1388,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-record Command
-  "The ``Command'' record type serves in the representaiton of a llec
+  "The ``Command'' record type serves in the representation of a llec
    instruction, compact of its type and one or two operands."
   ((type           command-type      (error "Missing command type."))
    (first-operand  (or null Operand) NIL)
@@ -1413,8 +1413,8 @@
 ;;; -------------------------------------------------------
 
 (defun ascertain-label-operand (operand)
-  "Determines whether the OPERAND represents label identifier conformant
-   specimen, that is, either an integer literal or a name, on
+  "Determines whether the OPERAND represents a label identifier
+   conformant specimen, that is, either an integer literal or a name, on
    confirmation returning the probed OPERAND itself, otherwise signaling
    an error of an unspecified type."
   (declare (type Operand operand))
@@ -1942,7 +1942,7 @@
    ``interpreter-dispatch-command'', with the first parameter norned by
    the INTERPRETER-VARIABLE, the second provided automatically, and the
    third tantamount to the COMMAND-VARIABLE, empighting the BODY forms
-   for its operations, concluding no no return value."
+   for its operations, concluding with no return value."
   (let ((command-type-variable (gensym)))
     (declare (type symbol command-type-variable))
     `(defmethod interpreter-dispatch-command
