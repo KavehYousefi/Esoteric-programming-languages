@@ -3,9 +3,9 @@
 ;; This program implements an interpreter for the esoteric programming
 ;; language "NASAL", invented by the Esolang user "ChuckEsoteric08" and
 ;; presented on May 19th, 2023, the foundry of which derives from the
-;; manipulation of a stack holding an arbitrary tally of unbounded
-;; signed integer numbers, admitting as the sole control flow construct
-;; a "while" loop.
+;; manipulation of a stack holding an arbitrary tally of nasal
+;; characters from the set "m", "ɱ", "ɳ", "ɲ", "ŋ" and "ɴ", admitting
+;; as the sole control flow construct a "while" loop.
 ;; 
 ;; 
 ;; Concept
@@ -13,48 +13,48 @@
 ;; The NASAL programming language applies itself to its programs'
 ;; expressions via nasal consonents as warklooms for the designation of
 ;; one-character instruction names, the same operate on a memory compact
-;; of an single stack of unbounded signed integers.
+;; of a single stack admitting merely the sextuple character repertoire
+;; "m", "ɱ", "ɳ", "ɲ", "ŋ", and "ɴ".
 ;; 
 ;; 
 ;; Architecture
 ;; ============
 ;; NASAL's architectural design is founded upon the stack as its aefauld
-;; component, the same may store an arbitrary tally of signed integer
-;; objects.
+;; component, the same may store the sextuple character group "m", "ɱ",
+;; "ɳ", "ɲ", "ŋ", and "ɴ".
 ;; 
 ;; 
 ;; Data Types
 ;; ==========
-;; The type system of NASAL is exhausted by a singleton species: signed
-;; integers of any magnitude.
+;; The type system of NASAL is exhausted by a singleton species: the
+;; six characters "m", "ɱ", "ɳ", "ɲ", "ŋ", and "ɴ".
 ;; 
 ;; 
 ;; Syntax
 ;; ======
 ;; NASAL program's, when assuming a syntactical vista, are comprised of
 ;; single-letter instructions whose agnominations are desumed from
-;; grammatical nasals, as well as, in a few instances, signed or
-;; unsigned integer literals acting in the agency of arguments. Any
-;; other content, even whitespaces, does not enjoy the language's
-;; tolerance and will serve as an error's etiology.
+;; grammatical nasals, which concomitantly, in certain contexts, act in
+;; the agency of arguments. Any other content, even whitespaces, does
+;; not enjoy the language's tolerance and will serve as an error's
+;; etiology.
 ;; 
 ;; == INSTRUCTIONS ==
 ;; All instructions are norned through singleton nasal constants, in a
-;; daimen tally of occasions reliant upon integer literals as their
-;; operands.
+;; daimen tally of occasions reliant upon operands whose elements are
+;; desumed from the same repertoire "m", "ɱ", "ɳ", "ɲ", "ŋ", and "ɴ".
 ;; 
 ;; Any non-instruction and non-argument content is prohibited, which
 ;; amplects a sensible banishment of whitespaces.
 ;; 
 ;; == ARGUMENTS ==
 ;; The push operation and "while" loop header depend upon an aefauld
-;; argument, accoutred via a signed or unsigned integer literal, for
-;; their completion.
+;; argument, accoutred via one of the nasals "m", "ɱ", "ɳ", "ɲ", "ŋ",
+;; and "ɴ" for their completion.
 ;; 
 ;; == WHITESPACES ==
-;; Whitespaces, as all tokens not amenable to a role as instruction
-;; identifiers or integer literal constituents, are inflicted with an
-;; interdiction.
+;; Whitespaces, as all tokens not amenable to a role as instruction or
+;; argument identifiers, are inflicted with a strict interdiction.
 ;; 
 ;; == COMMENTS ==
 ;; No provision for comments is offered in the current language
@@ -64,23 +64,20 @@
 ;; The following Extended Backus-Naur Form (ENBF) formulation shall
 ;; vouchsafe a more stringent ambience to the syntaxis' treatise:
 ;; 
-;;   program      := commandList ;
-;;   commandList  := { command } ;
-;;   command      := push
-;;                |  pop
-;;                |  moveToBottom
-;;                |  moveToTop
-;;                |  whileLoop
-;;                ; 
-;;   push         := "m" , integer ;
-;;   pop          := "ɱ" ;
-;;   moveToBottom := "ŋ" ;
-;;   moveToTop    := "ɴ" ;
-;;   whileLoop    := "ɳ" , integer , comandList , "ɲ" ;
-;;   integer      := [ "+" | "-" ] , digit { digit } ;
-;;   digit        := "0" | "1" | "2" | "3" | "4"
-;;                |  "5" | "6" | "7" | "8" | "9"
-;;                ;
+;;   program        := commandList ;
+;;   commandList    := { command } ;
+;;   command        := push
+;;                  |  pop
+;;                  |  moveToBottom
+;;                  |  moveToTop
+;;                  |  whileLoop
+;;                  ; 
+;;   push           := "m" , nasalCharacter ;
+;;   pop            := "ɱ" ;
+;;   moveToBottom   := "ŋ" ;
+;;   moveToTop      := "ɴ" ;
+;;   whileLoop      := "ɳ" , nasalCharacter , comandList , "ɲ" ;
+;;   nasalCharacter := "m" | "ɱ" | "ɳ" | "ɲ" | "ŋ" | "ɴ" ;
 ;; 
 ;; 
 ;; Instructions
@@ -102,7 +99,7 @@
 ;;   --------+---------------------------------------------------------
 ;;   mVALUE  | Pushes the {VALUE} unto the stack.
 ;;    *****  |---------------------------------------------------------
-;;           | {VALUE} must be a signed or unsigned integer literal.
+;;           | {VALUE} must be a valid character.
 ;;   ..................................................................
 ;;   ɱ       | Pops the top stack element and discards it.
 ;;           |---------------------------------------------------------
@@ -123,7 +120,7 @@
 ;;    *****  | perpetuates until the stack's top element equals the
 ;;           | {VALUE}.
 ;;           |---------------------------------------------------------
-;;           | {VALUE} must be a signed or unsigned integer literal.
+;;           | {VALUE} must be a valid character.
 ;;           |---------------------------------------------------------
 ;;           | During the continuation criterion's probing, the top
 ;;           | stack element is peeked, but not removed. If the stack
@@ -239,10 +236,16 @@
 
 ;;; -------------------------------------------------------
 
+(deftype nasal-character ()
+  "The ``nasal-character'' type defines the set of valid characters"
+  '(member #\m #\ɱ #\ɳ #\ɲ #\ŋ #\ɴ))
+
+;;; -------------------------------------------------------
+
 (deftype stack ()
-  "The ``stack'' type defines a stack composed of zero or more signed
-   integer objects, realized as a list."
-  '(list-of integer))
+  "The ``stack'' type defines a stack composed of zero or more nasals,
+   represented by ``nasal-character''s, realized as a list."
+  '(list-of nasal-character))
 
 
 
@@ -267,22 +270,6 @@
   (the boolean
     (not (null
       (eq (token-type token) expected-type)))))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of character operations.                      -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun sign-character-p (candidate)
-  "Determines whether the CANDIDATE represents a mathematical signum
-   character, that is, either plus (\"+\") or minus (\"-\"), returning
-   on confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
-  (declare (type character candidate))
-  (the boolean
-    (not (null
-      (or (char= candidate #\+)
-          (char= candidate #\-))))))
 
 
 
@@ -352,27 +339,6 @@
 
 ;;; -------------------------------------------------------
 
-(defun lexer-read-number (lexer)
-  "Proceeding from the current position into the LEXER's source, reads a
-   signed or unsigned integer number and returns a ``Token''
-   representation thereof."
-  (declare (type Lexer lexer))
-  (with-slots (character) lexer
-    (declare (type (or null character) character))
-    (the Token
-      (make-token :number
-        (parse-integer
-          (with-output-to-string (digits)
-            (declare (type string-stream digits))
-            (when (and character (sign-character-p character))
-              (write-char character digits)
-              (lexer-advance lexer))
-            (loop while (and character (digit-char-p character)) do
-              (write-char character digits)
-              (lexer-advance lexer))))))))
-
-;;; -------------------------------------------------------
-
 (defun lexer-read-symbol (lexer token-type)
   "Consumed the LEXER's current character and returns a new token
    composed of the TOKEN-TYPE and the read character as its value."
@@ -400,10 +366,6 @@
     (cond
       ((null character)
         (make-token :eof NIL))
-      
-      ((or (digit-char-p     character)
-           (sign-character-p character))
-        (lexer-read-number lexer))
       
       ((char= character #\m)
         (lexer-read-symbol lexer :push))
@@ -442,8 +404,8 @@
 (defstruct (Push-Instruction
   (:include Instruction))
   "The ``Push-Instruction'' class models the \"m\" command, the same
-   pushes a literal integer unto the stack."
-  (value (error "Missing value.") :type integer))
+   pushes a nasal character unto the stack."
+  (value (error "Missing value.") :type nasal-character))
 
 ;;; -------------------------------------------------------
 
@@ -457,10 +419,10 @@
 (defstruct (While-Instruction
   (:include Instruction))
   "The ``While-Instruction'' class models the \"ɳ\" command, the same
-   defines the header of a while loop, juxtaposing a literal integer
+   defines the header of a while loop, juxtaposing a nasal character
    with the top stack element for its continuation criterion's
    establishment."
-  (guard (error "Missing guard.") :type integer))
+  (guard (error "Missing guard.") :type nasal-character))
 
 ;;; -------------------------------------------------------
 
@@ -549,6 +511,22 @@
 
 ;;; -------------------------------------------------------
 
+(defun parse-nasal-argument (parser)
+  "Parses a nasal character utilizing the PARSER and returns its value."
+  (the nasal-character
+    (with-slots (current-token) parser
+      (declare (type Token current-token))
+      (case (token-type current-token)
+        ((:push :pop :while :end-while :move-to-bottom :move-to-top)
+          (token-value
+            (parser-eat parser
+              (token-type current-token))))
+        (otherwise
+          (error "Expected a nasal character token, but encountered ~s."
+            current-token))))))
+
+;;; -------------------------------------------------------
+
 (defun parser-parse-push (parser)
   "Parses a stack push instruction utilizing the PARSER and returns a
    ``Push-Instruction'' representation thereof."
@@ -557,9 +535,7 @@
     (declare (type Token current-token))
     (parser-eat parser :push)
     (the Push-Instruction
-      (make-push-instruction
-        :value
-          (token-value (parser-eat parser :number))))))
+      (make-push-instruction :value (parse-nasal-argument parser)))))
 
 ;;; -------------------------------------------------------
 
@@ -571,9 +547,7 @@
     (declare (type Token current-token))
     (parser-eat parser :while)
     (the While-Instruction
-      (make-while-instruction
-        :guard
-          (token-value (parser-eat parser :number))))))
+      (make-while-instruction :guard (parse-nasal-argument parser)))))
 
 ;;; -------------------------------------------------------
 
@@ -711,7 +685,7 @@
     :initform      NIL
     :type          stack
     :documentation "The program memory, realized as a stack of zero or
-                    more signed integer items.")
+                    more nasal characters.")
    (print-debug-information-p
     :initarg       :print-debug-information-p
     :initform      T
@@ -824,7 +798,7 @@
   (declare (type Interpreter interpreter))
   (with-slots (stack) interpreter
     (declare (type stack stack))
-    (the integer
+    (the nasal-character
       (or (first stack)
           (signal-empty-stack-error "peek into")))))
 
@@ -846,8 +820,8 @@
 (defun interpreter-push-unto-stack (interpreter new-value)
   "Pushes the NEW-VALUE unto the INTERPRETER's stack and returns no
    value."
-  (declare (type Interpreter interpreter))
-  (declare (type integer     new-value))
+  (declare (type Interpreter     interpreter))
+  (declare (type nasal-character new-value))
   (with-slots (stack) interpreter
     (declare (type stack stack))
     (push new-value stack))
@@ -864,7 +838,7 @@
     (declare (type stack stack))
     (if stack
       (let ((top-element (pop stack)))
-        (declare (type integer top-element))
+        (declare (type nasal-character top-element))
         (setf stack
           (append stack
             (list top-element))))
@@ -882,7 +856,7 @@
     (declare (type stack stack))
     (if stack
       (let ((bottom-element (first (last stack))))
-        (declare (type integer bottom-element))
+        (declare (type nasal-character bottom-element))
         (setf stack (nbutlast stack))
         (push bottom-element stack))
       (signal-empty-stack-error "rearrange")))
@@ -911,7 +885,7 @@
     (declare (type stack   stack))
     (declare (ignorable    stack))
     (when print-debug-information-p
-      (format T "~&[top> ~{~d~^, ~} <bottom]" stack)
+      (format T "~&[top> ~{~a~^, ~} <bottom]" stack)
       (finish-output)))
   (values))
 
@@ -969,9 +943,9 @@
     (declare (ignorable       ip))
     (let ((guard     (while-instruction-guard instruction))
           (stack-top (interpreter-peek-stack  interpreter)))
-      (declare (type integer guard))
-      (declare (type integer stack-top))
-      (if (= guard stack-top)
+      (declare (type nasal-character guard))
+      (declare (type nasal-character stack-top))
+      (if (char= guard stack-top)
         (interpreter-jump-to interpreter
           (1+ (gethash ip jump-table)))
         (interpreter-advance interpreter))))
@@ -1064,13 +1038,13 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Push the numbers 0, 1, and 2, in this exact order, unto the program
-;; stack, and pop the same inside of a while loop until the zero (0)
-;; value's occasion terminates the iteration.
-(interpret-NASAL "m0m1m2ɳ0ɱɲ")
+;; Push the characters "m", "ɴ", "ŋ" and "m", in this exact order, unto
+;; the program stack, and pop the same inside of a while loop until the
+;; "m" member's occasion terminates the iteration.
+(interpret-NASAL "mmmɴmŋɳmɱɲ")
 
 ;;; -------------------------------------------------------
 
-;; Repeatedly rearrange the stack elements until that with the value
-;; zero (0) is located at the top.
-(interpret-NASAL "m0m1m2m3ɳ0ŋɴŋɲ" :execution-delay 0.1)
+;; Repeatedly rearrange the stack elements "ŋ", "ɴ", "ɲ" and "m" until
+;; "m" is located at the top.
+(interpret-NASAL "mmmɲmɴmŋɳmŋɴŋɲ" :execution-delay 0.1)
