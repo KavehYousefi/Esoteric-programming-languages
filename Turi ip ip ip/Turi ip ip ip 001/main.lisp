@@ -255,7 +255,7 @@
 ;; 
 ;; Architecture
 ;; ============
-;; "Turi ip ip ip"'s architectural aspects constitutes a twissel
+;; "Turi ip ip ip"'s architectural aspect constitutes a twissel
 ;; composition, that moiety imparted with superior mickleness and
 ;; paravaunt effect administered by a bilaterally bournless catena of
 ;; linearly arranged stacks of real-valued elements, and a parhedral
