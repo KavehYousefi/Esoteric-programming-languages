@@ -430,8 +430,8 @@
 
 (defun on-identifier-p (lexer)
   "Determines whether the LEXER's position cursor currently resides
-   inside of an identifier, that is, returning on confirmation a
-   ``boolean'' value of ``T'', otherwise ``NIL''."
+   inside of an identifier, returning on confirmation a ``boolean''
+   value of ``T'', otherwise ``NIL''."
   (declare (type Lexer lexer))
   (the boolean
     (and (lexer-character lexer)
@@ -470,9 +470,9 @@
 ;;; -------------------------------------------------------
 
 (defun get-identifier-token (word)
-  "Determines whether the WORD represent an UpDown language keyword,
-   returning on confirmation an appropriate accommodated token for such,
-   otherwise responding with a generic ``:identifier'' variant."
+  "Determines whether the WORD represents an UpDown language keyword,
+   returning on confirmation an accommodated token for such, otherwise
+   responding with a generic ``:identifier'' variant."
   (declare (type string word))
   (flet ((word-equals-p (expected-content)
           "Determines whether the probed WORD equals the
@@ -928,7 +928,7 @@
 ;;; -------------------------------------------------------
 
 (defun set-variable-value (variables name new-value)
-  "Stores the NEW-VALUE in the variable designated by teh NAME in the
+  "Stores the NEW-VALUE in the variable designated by the NAME in the
    variable table and returns no value.
    ---
    An error of the type ``No-Such-Variable-Error'' is signaled if the
