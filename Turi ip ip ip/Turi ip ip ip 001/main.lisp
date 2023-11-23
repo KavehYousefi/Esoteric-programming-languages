@@ -905,21 +905,6 @@
    real-valued elements."
   '(list-of real))
 
-;;; -------------------------------------------------------
-
-#|
-(deftype binary-operator ()
-  "The ``binary-operator'' type enumerates the recognized variants of
-   binary operators."
-  '(member
-    :add
-    :subtract
-    :multiply
-    :divide
-    :modulo
-    :power))
-|#
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
