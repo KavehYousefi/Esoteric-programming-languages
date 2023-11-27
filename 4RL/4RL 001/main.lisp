@@ -94,7 +94,7 @@
 ;;   ..................................................................
 ;;   l       | If the current cell value equals zero (0), moves the
 ;;           | instruction pointer (IP) forward to the position
-;;           | immediately succeeding the matcing "L" command.
+;;           | immediately succeeding the matching "L" command.
 ;;           | Otherwise proceeds as usual.
 ;;           |---------------------------------------------------------
 ;;           | This operation corresponds to brainfuck's "[".
