@@ -1081,7 +1081,7 @@
 (defstruct (Tape
   (:constructor make-empty-tape ()))
   "The ``Tape'' class represents a bilaterally infinite extent of cells,
-   compact of binary symbols in character form, with movable a cursor,
+   compact of binary symbols in character form, with a movable cursor,
    known as the \"head\", at any instant selecting the active
    component."
   (cells         (make-hash-table :test #'eql) :type cell-map)
