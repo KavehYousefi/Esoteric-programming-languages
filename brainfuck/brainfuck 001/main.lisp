@@ -1031,6 +1031,21 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of character operations.                      -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun instruction-character-p (candidate)
+  "Determines whether the CANDIDATE represents a brainfuck command
+   identifier, returning on confirmation a ``boolean'' value of ``T'',
+   otherwise ``NIL''."
+  (declare (type character candidate))
+  (the boolean
+    (not (null
+      (find candidate "><+-.,[]" :test #'char=)))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of input buffer.                              -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1050,11 +1065,38 @@
   "Advances the INPUT-BUFFER's position cursor to the next character in
    its source, if possible, and returns no value."
   (declare (type Input-Buffer input-buffer))
-  (incf (input-buffer-position input-buffer))
+  (setf (input-buffer-position input-buffer)
+    (min (1+ (input-buffer-position input-buffer))
+         (length (input-buffer-source input-buffer))))
   (setf (input-buffer-character input-buffer)
-    (when (array-in-bounds-p (input-buffer-source input-buffer)
+    (when (array-in-bounds-p
+            (input-buffer-source   input-buffer)
             (input-buffer-position input-buffer))
-      (char (input-buffer-source input-buffer)
+      (char
+        (input-buffer-source input-buffer)
+        (input-buffer-position input-buffer))))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defun input-buffer-skip-comment (input-buffer)
+  "Proceeding from the current position into the INPUT-BUFFER, skips a
+   sequence of zero or more accolent comment characters, and returns no
+   value."
+  (declare (type Input-Buffer input-buffer))
+  (setf (input-buffer-position input-buffer)
+    (or
+      (position-if
+        #'instruction-character-p
+        (input-buffer-source input-buffer)
+        :start (input-buffer-position input-buffer))
+      (length (input-buffer-source input-buffer))))
+  (setf (input-buffer-character input-buffer)
+    (when (array-in-bounds-p
+            (input-buffer-source   input-buffer)
+            (input-buffer-position input-buffer))
+      (char
+        (input-buffer-source input-buffer)
         (input-buffer-position input-buffer))))
   (values))
 
@@ -1064,6 +1106,7 @@
   "Determines whether the INPUT-BUFFER is exhausted, returning on
    confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
   (declare (type Input-Buffer input-buffer))
+  (input-buffer-skip-comment input-buffer)
   (the boolean
     (not (null
       (>= (input-buffer-position input-buffer)
@@ -1075,6 +1118,7 @@
   "Returns the next token, in the form an ``Expression'' from the
    INPUT-BUFFER."
   (declare (type Input-Buffer input-buffer))
+  (input-buffer-skip-comment input-buffer)
   (the Expression
     (case (input-buffer-character input-buffer)
       ((NIL)
@@ -1112,7 +1156,7 @@
           (make-expression :jump-back #\])
           (input-buffer-advance input-buffer)))
       (otherwise
-        (input-buffer-advance        input-buffer)
+        (input-buffer-skip-comment   input-buffer)
         (input-buffer-get-next-token input-buffer)))))
 
 
@@ -1801,10 +1845,10 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Repeating cat program which terminates on a "null character" input.
-(interpret-brainfuck ", [ . , ]")
+;; Print "Hello, World!".
+(interpret-brainfuck "+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]<<<<.+++.------.<<-.>>>>+.")
 
 ;;; -------------------------------------------------------
 
-;; Print "Hello, World!".
-(interpret-brainfuck "+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]<<<<.+++.------.<<-.>>>>+.")
+;; Repeating cat program which terminates on a "null character" input.
+(interpret-brainfuck ", [ . , ]")
