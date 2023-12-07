@@ -2608,7 +2608,7 @@
 (interpret-Turi-ip-ip-ip
   "[Push 0 for both repeatingly printing the input line inwith the     ]
    [inner 'eugh eugh' loop, and ascertaining that, for an empty input, ]
-   [the outher 'eugh eugh' does not query an empty stack.              ]
+   [the outer 'eugh eugh' does not query an empty stack.               ]
    turi ip
    
    [Query for the first input line.]
