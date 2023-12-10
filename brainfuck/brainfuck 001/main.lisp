@@ -1626,7 +1626,7 @@
       (expression-value
         (stack-peek
           (parser-stack parser)))
-      (error "The parser stack could not be reduced a singular ~
+      (error "The parser stack could not be reduced to a singular ~
               \":program\" expression: ~s"
         (parser-stack parser)))))
 
@@ -1637,11 +1637,12 @@
    thus produced abstract syntax tree (AST)."
   (declare (type Parser parser))
   
-  ;; Repeated shift and reduce until the input buffer is exhausted.
+  ;; Repeatedly shift and reduce until the input buffer is exhausted.
   (loop
     until (parser-halted-p parser) do
       (parser-shift  parser)
       (parser-reduce parser)
+    ;; Shift and reduce the input buffer's desinent ":eof" expression.
     finally
       (parser-shift  parser)
       (parser-reduce parser))
@@ -1663,7 +1664,7 @@
 
 (defstruct (Interpreter
   (:constructor make-interpreter (tree)))
-  "The ``Interpreter'' class constitutes that wike's recepient which
+  "The ``Interpreter'' class constitutes that wike's recipient which
    compels its imbution of actual effect to a brainfuck program provided
    as an abstract syntax tree (AST)."
   (tree         (error "Missing AST.")        :type Program-Node)
@@ -1832,7 +1833,7 @@
       (let ((tree (parse-program parser)))
         (declare (type Program-Node tree))
         
-        ;; Interpreter the abstract syntax tree (AST).
+        ;; Interpret the abstract syntax tree (AST).
         (let ((interpreter (make-interpreter tree)))
           (declare (type Interpreter interpreter))
           (interpret-program interpreter)))))
