@@ -5,7 +5,7 @@
 ;; presented on August 30th, 2022, its haecceity's preponderance issuing
 ;; from the Urban Mueller's "brainfuck" programming language's dation,
 ;; ostending a discrepancy, besides the single-character instructions'
-;; reformulation in symbols resembling dots and bars, by the expression
+;; reformulation in symbols resembling dots and lines, by the expression
 ;; of its comments, the same, as counterdistinguished from the
 ;; stock-father's liberality at any location, requires their demarcation
 ;; via the "¡" entity.
@@ -21,6 +21,10 @@
 ;; The language kenspeckle proprium is expressed in its own
 ;; agnomination, concomitantly an enumeration of most of its deployed
 ;; instruction identifiers.
+;; 
+;; A fact imbued with interest is commorant in the chosen symbol
+;; repertoire, exclusively producing members whose constituents
+;; incorporate dots and lines in their molding.
 ;; 
 ;; == THE MEMORY: A BILATERALLY INFINITE EXPANSE OF UNSIGNED BYTES ==
 ;; The propagation of brainfuck's influence perpetuates in .:iI1l!¡'s
@@ -46,7 +50,7 @@
 ;; Whitespaces are encountered with leniency in their spatial and
 ;; quantitative measurement.
 ;; 
-;; == COMMENT ==
+;; == COMMENTS ==
 ;; In regards of its effective construe the most conspicable item of
 ;; disparateness from its cleronomy, .:iI1l!¡ mandates its comments'
 ;; introduction or amplectation by the "¡" symbol.
@@ -60,8 +64,9 @@
 ;; A formal expression of the language's donet shall be the following
 ;; Extended Backus-Naur Form's (EBNF) cynosure:
 ;; 
-;;   program        := { command | limitedComment | whitespaces } ;
-;;                  ,  [ tailComment ] ;
+;;   program        := { command | limitedComment | whitespaces }
+;;                  ,  [ tailComment ]
+;;                  ;
 ;;   command        := "." | ":" | "i" | "I" | "|" | "!" | "l" | "1" ;
 ;;   limitedComment := "¡" , { character - "¡" } , "¡" ;
 ;;   tailComment    := "¡" , { character - "¡" } ;
@@ -374,7 +379,7 @@
       
       finally
         (when start-points
-          (error "Unterminated forward jump point~p at position ~:p ~
+          (error "Unterminated forward jump point~p at position~:p ~
                   ~{~d~^, ~}."
             (length start-points)
             start-points)))
@@ -408,7 +413,7 @@
 ;;; -------------------------------------------------------
 
 (defun memory-cell-at (memory index)
-  "Returns the value of the MEMORY cell located amenable to the INDEX."
+  "Returns the value of the MEMORY cell amenable to the INDEX."
   (declare (type memory  memory))
   (declare (type integer index))
   (the octet
@@ -508,7 +513,7 @@
 
 (defun convert-brainfuck-to-|.:iI1l!¡| (brainfuck-code
                                         &key (destination NIL))
-  "Convert the BRAINFUCK-CODE to an equivalent .:iI1l!¡ program, writes
+  "Converts the BRAINFUCK-CODE to an equivalent .:iI1l!¡ program, writes
    the result to the DESTINATION, and returns for a non-``NIL''
    DESTINATION the ``NIL'' value, otherwise responding with a fresh
    string comprehending the program."
