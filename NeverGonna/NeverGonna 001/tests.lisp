@@ -128,21 +128,21 @@
      
      inside we both know number_of_bottles > 2 then
        i just wanna tell you number_of_bottles + ' bottles of beer on the wall,'
-       i just wanna tell you number_of_bottles + ' bottles beer.'
+       i just wanna tell you number_of_bottles + ' bottles of beer.'
        i just wanna tell you 'Take one down, pass it around,'
-       i just wanna tell you number_of_bottles - 1 + ' bottles beer on the wall.'
+       i just wanna tell you number_of_bottles - 1 + ' bottles of beer on the wall.'
        i just wanna tell you ''
      
      never gonna turn around number_of_bottles == 2 then
        i just wanna tell you number_of_bottles + ' bottles of beer on the wall,'
-       i just wanna tell you number_of_bottles + ' bottles beer.'
+       i just wanna tell you number_of_bottles + ' bottles of beer.'
        i just wanna tell you 'Take one down, pass it around,'
-       i just wanna tell you number_of_bottles - 1 + ' bottle beer on the wall.'
+       i just wanna tell you number_of_bottles - 1 + ' bottle of beer on the wall.'
        i just wanna tell you ''
      
      never gonna let you down
        i just wanna tell you number_of_bottles + ' bottle of beer on the wall,'
-       i just wanna tell you number_of_bottles + ' bottle beer.'
+       i just wanna tell you number_of_bottles + ' bottle of beer.'
        i just wanna tell you 'Take one down, pass it around,'
        i just wanna tell you 'No bottles of beer on the wall.'
        i just wanna tell you ''
