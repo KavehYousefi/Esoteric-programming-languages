@@ -55,9 +55,9 @@
 ;; quotations for its marches' emphasis, or a variable identifier.
 ;; 
 ;; == COMMENTS ==
-;; A line's destitution of a parasceuastic dextrally aligned chevron
-;; (">") immediately disqualifies it from accompassing any causatum, and
-;; thus renders such a horizontal expanse a commentary unit.
+;; A line's destitution of a parasceuastic "greater than" (">") symbol
+;; immediately disqualifies it from accompassing any causatum, and thus
+;; renders such a horizontal expanse a commentary unit.
 ;; 
 ;; == GRAMMAR ==
 ;; A formulation of the language's donet in accordance with the Extended
@@ -283,6 +283,12 @@
 ;;                        | invocation no variable has been
 ;;                        | highlighted.
 ;;   ------------------------------------------------------------------
+;; 
+;; 
+;; Implementation
+;; ==============
+;; This project has been implemented in the programming language Common
+;; Lisp.
 ;; 
 ;; --------------------------------------------------------------------
 ;; 
@@ -1539,8 +1545,7 @@
    > print linebreak
    > print character
    > print linebreak
-   > goto 1
-   ")
+   > goto 2")
 
 ;;; -------------------------------------------------------
 
