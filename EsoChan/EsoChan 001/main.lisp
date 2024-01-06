@@ -1587,7 +1587,7 @@
   > print linebreak
   > ask
   
-  Input of 0? => Jump to desinent line, which prints and terminats.
+  Input of 0? => Jump to desinent line, which prints and terminates.
   > ifnot 49
   > goto 9
   
