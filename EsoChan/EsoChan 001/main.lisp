@@ -1087,7 +1087,7 @@
 ;;; -------------------------------------------------------
 
 (defun highlighted-variable-value (registry)
-  "Returns the valuee stored in the variable REGISTRY's highlighted
+  "Returns the value stored in the variable REGISTRY's highlighted
    variable, or signals an error of the type
    ``No-Highlighted-Variable-Error'' if none such exists."
   (declare (type Variable-Registry registry))
@@ -1204,7 +1204,7 @@
 
 (defun get-current-command (interpreter)
   "Returns the currently processed command in the INTERPRETER's program,
-   or signals an error of an unspecified type if the same is already
+   or signals an error of an unspecified type if the same has already
    been completed."
   (declare (type Interpreter interpreter))
   (with-slots (program ip) interpreter
