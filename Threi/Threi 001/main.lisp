@@ -408,31 +408,40 @@
 ;; -- Implementation of text program generator.                    -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun generate-byte-printing-code (bits &key (destination NIL))
+(defun generate-byte-printing-code (bits last-character-p destination)
   "Generates the Threi program fragment capacitated to replicate the
-   as well as output octuple BITS and writes the same to the
-   DESTINATION, returning for a non-``NIL'' DESTINATION the ``NIL''
-   value, otherwise responding with a fresh string comprehending the
-   result."
+   BITS of a character ASCII code, taking into account the flag
+   LAST-CHARACTER-P upon its determination of whether a cell pointer
+   translation ought to be appended, writes the same to the DESTINATION,
+   and returns no value."
   (declare (type octet       bits))
+  (declare (type boolean     last-character-p))
   (declare (type destination destination))
-  (the (or null string)
-    (if destination
-      (loop
-        for bit-position
-          of-type (integer -1 7)
-          from    7
-          downto  0
-        for current-bit
-          of-type bit
-          =       (ldb (byte 1 bit-position) bits)
-        if (zerop current-bit) do
-          (format destination "o>")
-        else do
-          (format destination "ho>"))
-      (with-output-to-string (output)
-        (declare (type string-stream output))
-        (generate-byte-printing-code bits :destination output)))))
+  (loop
+    for bit-position
+      of-type (integer -1 7)
+      from    7
+      downto  0
+    for current-bit
+      of-type bit
+      =       (ldb (byte 1 bit-position) bits)
+    for last-bit-p
+      of-type boolean
+      =       (zerop bit-position)
+    for shall-translate-cell-pointer
+      of-type boolean
+      =       (not (null
+                (or (not last-bit-p)
+                    (and last-bit-p
+                         (not last-character-p)))))
+    if (zerop current-bit) do
+      (format destination "o")
+    else do
+      (format destination "ho")
+    end
+    when shall-translate-cell-pointer do
+      (format destination ">"))
+  (values))
 
 ;;; -------------------------------------------------------
 
@@ -451,14 +460,25 @@
   (the (or null string)
     (if destination
       (loop
-        for character         of-type character across message
-        and first-character-p of-type boolean =        T then NIL
+        for character
+          of-type character
+          across message
+        for character-number
+          of-type fixnum
+          from    1
+        for first-character-p
+          of-type boolean
+          =       (not (null (<= character-number 1)))
+        for last-character-p
+          of-type boolean
+          =       (not (null (>= character-number (length message))))
         do
           (unless first-character-p
             (format destination "~a" character-separator))
           (generate-byte-printing-code
             (char-code character)
-            :destination destination))
+            last-character-p
+            destination))
       (with-output-to-string (output)
         (declare (type string-stream output))
         (generate-text-program message
@@ -486,7 +506,7 @@
    o>ho>ho>ho>o>o>ho>o>
    o>ho>ho>o>ho>ho>o>o>
    o>ho>ho>o>o>ho>o>o>
-   o>o>ho>o>o>o>o>ho>")
+   o>o>ho>o>o>o>o>ho")
 
 ;;; -------------------------------------------------------
 
