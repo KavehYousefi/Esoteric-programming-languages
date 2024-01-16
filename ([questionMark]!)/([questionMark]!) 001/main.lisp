@@ -477,7 +477,7 @@
 
 (defun parse-increment-command (parser)
   "Parses an increment command (\"?\") in the PARSER's context and
-   returns an ``Increment-Command'' encapsulation thereofl"
+   returns an ``Increment-Command'' encapsulation thereof."
   (declare (type Parser parser))
   (with-parser (parser)
     (eat-token :eroteme)
@@ -488,7 +488,7 @@
 
 (defun parse-output-command (parser)
   "Parses an output command (\"!\") in the PARSER's context and returns
-   a ``Print-Command'' encapsulation thereofl"
+   an ``Output-Command'' encapsulation thereof."
   (declare (type Parser parser))
   (with-parser (parser)
     (eat-token :ecphoneme)
@@ -499,7 +499,7 @@
 
 (defun parse-reset-command (parser)
   "Parses an reset command (\"(!)\") in the PARSER's context and returns
-   a ``Reset-Command'' encapsulation thereofl"
+   a ``Reset-Command'' encapsulation thereof."
   (declare (type Parser parser))
   (with-parser (parser)
     (eat-token :ecphoneme)
