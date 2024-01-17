@@ -16,15 +16,15 @@
 ;; guise by its introduction of several new control flow mechanisms.
 ;; 
 ;; == ASSEMBLERFUCK++: BRAINFUCK AS AN ASSEMBLY LANGUAGE ==
-;; AssemblerFuck++'s applies to brainfuck a design conceived as an
-;; asssembly language's simulacrum, with each instruction commorant on
+;; AssemblerFuck++ applies to brainfuck a design conceived as an
+;; assembly language's simulacrum, with each instruction commorant on
 ;; a line of its own, the identifier of the same being a prevenient
 ;; token ere the one or two operands' involvement.
 ;; 
 ;; 
 ;; Instructions
 ;; ============
-;; AssemblerFuck++'s instruction set enumerates a septuble cardinality,
+;; AssemblerFuck++'s instruction set enumerates a septuple cardinality,
 ;; emanating therefrom are all competences acquainted to brainfuck's
 ;; prowess, and several control structures which, in juxtaposition to
 ;; the entheus, experience an augmentation or perfect novelty.
@@ -102,7 +102,7 @@
 ;;     statements   |--------------------------------------------------
 ;;     **********   | The {guard} must be a non-negative integer
 ;;   END            | literal.
-;;                  | -------------------------------------------------
+;;                  |--------------------------------------------------
 ;;                  | The {statements} must be a sequence of zero or
 ;;                  | more statements.
 ;;   ..................................................................
