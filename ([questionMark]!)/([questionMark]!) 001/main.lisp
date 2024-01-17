@@ -45,10 +45,15 @@
 ;; syntaxis' treatise with improved formality:
 ;; 
 ;;   program          := { command , whitespaces } ;
-;;   command          := incrementCommand | loopCommand | resetCommand ;
+;;   command          := incrementCommand
+;;                    |  outputCommand
+;;                    |  loopCommand
+;;                    |  resetCommand
+;;                    ;
 ;;   loopCommand      := "(" , loopBody , ")" ;
 ;;   loopBody         := { incrementCommand | loopCommand } ;
 ;;   incrementCommand := "?" ;
+;;   outputCommand    := "!" ;
 ;;   resetCommand     := "(!)" ;
 ;;   whitespaces      := { whitespace } ;
 ;;   whitespace       := " " | "\t" | "\n" ;
