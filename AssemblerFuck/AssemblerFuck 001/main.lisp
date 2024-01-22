@@ -659,8 +659,8 @@
 (defun eat-token (parser expected-token-type)
   "Determines whether the PARSER's current token conforms to the
    EXPECTED-TOKEN-TYPE, on confirmation returning the same, while
-   concomitantly querying and storing the same underlying lexer;
-   otherwise an error of an unspecified type is signaled."
+   concomitantly querying and storing the successor from its underlying
+   lexer; otherwise an error of an unspecified type is signaled."
   (declare (type Parser  parser))
   (declare (type keyword expected-token-type))
   (symbol-macrolet
@@ -680,7 +680,7 @@
 
 (defun eat-current-token (parser)
   "Returns the PARSER's current token, while concomitantly querying and
-   storing the same underlying lexer."
+   storing the successor from the underlying lexer."
   (declare (type Parser parser))
   (symbol-macrolet
       ((lexer         (the Lexer (parser-lexer         parser)))
