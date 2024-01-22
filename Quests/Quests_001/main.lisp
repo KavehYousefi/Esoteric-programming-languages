@@ -3,6 +3,7 @@
 ;; This program implements an interpreter for the esoteric programming
 ;; language "Quests", invented by the Esolang user "ChuckEsoteric08".
 ;; 
+;; 
 ;; Concept
 ;; =======
 ;; The esoteric programming language Quests establishes a diorism by its
@@ -42,13 +43,18 @@
 ;; offers a faint simulacrum of the deque principle, maugre its
 ;; desistence from the supererogation. A mere quadruple of operations
 ;; already establishes the complete interface:
-;;   
+;; 
+;;   ----------------------------------------------------------
 ;;   Operation | Effect
 ;;   ----------+-----------------------------------------------
 ;;   PUSH      | Inserts a new element at the top.
+;;   ..........................................................
 ;;   POP1      | Removes and returns the element at the top.
+;;   ..........................................................
 ;;   POP2      | Removes and returns the element at the bottom.
+;;   ..........................................................
 ;;   SWAP      | Exchanges the top and bottom elements.
+;;   ----------------------------------------------------------
 ;; 
 ;; No particular maximum capacity inheres in the Questa, nor any type
 ;; restrictions affiliated to the elements.
@@ -83,12 +89,18 @@
 ;;       Quests implements and furnishes for their application all of
 ;;       the four mandated Questa operations, as thee following
 ;;       associations in their establishment stand witness to:
+;;       
+;;         ---------------------------------
 ;;         Questa operation | Quests command
 ;;         -----------------+---------------
 ;;         PUSH             | p(x)
+;;         .................................
 ;;         POP1             | <(0)
+;;         .................................
 ;;         POP2             | <(1)
+;;         .................................
 ;;         SWAP             | sw()
+;;         ---------------------------------
 ;; 
 ;; 
 ;; Architecture
@@ -177,14 +189,23 @@
 ;; == GRAMMAR ==
 ;; An expression of the language in the Extended Backus-Naur Form (EBNF)
 ;; shall be procured:
-;;   
+;; 
 ;;   program       := [ command , { whitespaces , command } ] ;
-;;   command       := push | pop | increment | decrement | swap ;
+;;   command       := push
+;;                 |  pop
+;;                 |  output
+;;                 |  increment
+;;                 |  decrement
+;;                 |  swap
+;;                 ;
 ;;   expression    := integer | string | command ;
-;;   push          := "p"   , "( , expression , ")" ;
-;;   pop           := "<"   , "(", expression , ")" ;
-;;   increment     := "inc" , "(", expression , ")" ;
-;;   decrement     := "dec" , "(", expression , "," , expression , ")" ;
+;;   push          := "p"   , "(" , expression , ")" ;
+;;   pop           := "<"   , "(" , expression , ")" ;
+;;   output        := ">"   , "(" , expression , ")" ;
+;;   increment     := "inc" , "(" , expression , ")" ;
+;;   decrement     := "dec" , "(" , expression
+;;                 ,          "," , expression , ")"
+;;                 ;
 ;;   swap          := "sw"  , "(" , ")" ;
 ;;   
 ;;   string        := textCharacter , { textCharacter } ;
@@ -194,7 +215,8 @@
 ;;   textCharacter := letter | digit | "_" | "-" ;
 ;;   letter        := "a" | ... | "z" | "A" | ... | "Z" ;
 ;;   digit         := "0" | "1" | "2" | "3" | "4"
-;;                 |  "5" | "6" | "7" | "8" | "9" ;
+;;                 |  "5" | "6" | "7" | "8" | "9"
+;;                 ;
 ;; 
 ;; 
 ;; Instructions
@@ -207,13 +229,14 @@
 ;; The following apercu shall avail in the provision of an incipient
 ;; intelligence anenst the language's faculties, as well as counterpose
 ;; the same with the Questa interface.
-;;   
+;; 
+;;   ------------------------------------------------------------------
 ;;   Command  | Effect
 ;;   ---------+--------------------------------------------------------
 ;;   p(x)     | Pushes the value {x} unto the top of the Questa.
 ;;            | This function represents the Questa PUSH operation.
-;;   .........|........................................................
-;;   <(0)     | If {x} equals zero (0), pops and returns the Questa's
+;;   ..................................................................
+;;   <(x)     | If {x} equals zero (0), pops and returns the Questa's
 ;;            | top element.
 ;;            | If {x} equals one (1), removes and returns the Questa's
 ;;            | bottom element.
@@ -221,7 +244,12 @@
 ;;            | Questa POP1 operation.
 ;;            | This function represents, for the case of {x} != 0, the
 ;;            | Questa POP2 operation.
-;;   .........|........................................................
+;;   ..................................................................
+;;   >(x)     | If {x} equals zero (0), pops the Questa's top element
+;;            | and prints the same to the standard output.
+;;            | If {x} equals one (1), pops the Questa's bottom
+;;            | element and prints the same to the standard output.
+;;   ..................................................................
 ;;   inc(x)   | If {x} equals zero (0), increments the Questa's top
 ;;            | element by one.
 ;;            | If {x} equals one (1), increments the Questa's bottom
@@ -244,12 +272,13 @@
 ;;   ..................................................................
 ;;   sw()     | Swaps the Questa's top and bottom elements.
 ;;            | This function represents the Questa SWAP operation.
+;;   ------------------------------------------------------------------
 ;; 
 ;; == "DEC": DECREMENT OR GOTO ==
 ;; The slightly convoluted operations of the "dec" command, which in its
 ;; nature coalesces both an arithmetic deduction and a navigational
 ;; moeity, shall be accompanied with the following pseudocode:
-;;   
+;; 
 ;;   if (x = 0) and (questa.first = 0) then
 ;;     go to command at index y
 ;;   else if (x = 0) and (questa.first != 0) then
@@ -279,7 +308,7 @@
 ;; types, in particular, may be more elaborated than conceived by
 ;; deduction. Natheless, the following assumptions have been exercised
 ;; as tenable:
-;;   
+;; 
 ;;   - Numeric data types are restricted to integers, signed and
 ;;     unbounded regarding their magnitude.
 ;;   - Strings may be composed of any non-whitespace character, but must
@@ -294,7 +323,7 @@
 ;; bottom element. As the underlying Questa may include strings, the
 ;; respondency to such a request suffers from a deficit in its
 ;; specification. Three options may be extended with tenability:
-;;   
+;; 
 ;;   (a) An error of unspecified type shall be signaled.
 ;;   (b) No causatum shall issue.
 ;;   (c) An increment/decrement based on lexicographical rules shall
@@ -313,7 +342,7 @@
 ;; ==============
 ;; The general implementation appropriates a tripartite model for the
 ;; government of the programming language interpretation, consisting of
-;;   
+;; 
 ;;   (1) Lexical analyzation, which generates from the source code
 ;;       an ordered series of tokens.
 ;;   (2) Parsing, in the course of which an assemblage is exercised to
@@ -387,9 +416,15 @@
 ;; Date:   2022-05-31
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Quests"
-;;   -> "https://esolangs.org/wiki/Questa"
-;;       o Treatise on the esoteric data structure "Questa".
+;;   [esolang2024Quests]
+;;   The Esolang contributors, "Quests", January 21st, 2024
+;;   URL: "https://esolangs.org/wiki/Quests"
+;;   
+;;   [esolang2023Questa]
+;;   The Esolang contributors, "Questa", September 4th, 2023
+;;   URL: "https://esolangs.org/wiki/Questa"
+;;   Notes:
+;;     - Treatise on the esoteric data structure "Questa".
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -457,6 +492,7 @@
   '(member
     :push
     :pop
+    :output
     :increment
     :decrement
     :swap))
@@ -488,8 +524,8 @@
   (:constructor make-token (type value)))
   "The ``Token'' class serves in the encapsulation of a significant
    portion distilled from an analyzed Quests program."
-  (type  (error "Missing token type.") :type keyword)
-  (value NIL                           :type T))
+  (type  (error "Missing token type.") :type keyword :read-only T)
+  (value NIL                           :type T       :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -500,12 +536,13 @@
   (declare (type Token             token))
   (declare (type (list-of keyword) valid-types))
   (the boolean
-    (not (null (member (token-type token) valid-types :test #'eq)))))
+    (not (null
+      (member (token-type token) valid-types :test #'eq)))))
 
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of class "Lexer".                             -- ;;
+;; -- Implementation of character operations.                      -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun whitespace-character-p (character)
@@ -537,7 +574,11 @@
   (the boolean
     (not (null (find character "+-" :test #'char=)))))
 
-;;; -------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of class "Lexer".                             -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defclass Lexer ()
   ((source
@@ -546,12 +587,10 @@
     :type          string
     :documentation "The Quests program to analyze.")
    (position
-    :initarg       :position
     :initform      0
     :type          fixnum
     :documentation "The current position into the SOURCE.")
    (character
-    :initarg       :character
     :initform      NIL
     :type          (or null character)
     :documentation "The character at the current POSITION in the
@@ -697,6 +736,11 @@
             (make-token :identifier (string character))
             (lexer-advance lexer)))
         
+        ((char= character #\>)
+          (prog1
+            (make-token :identifier (string character))
+            (lexer-advance lexer)))
+        
         ((char= character #\()
           (prog1
             (make-token :left-parenthesis character)
@@ -725,8 +769,12 @@
 (defstruct (Operand
   (:constructor make-operand (type &optional (value NIL))))
   "The ``Operand'' class represents an argument to an instruction."
-  (type  (error "Missing operand type.") :type operand-type)
-  (value NIL                             :type T))
+  (type  (error "Missing operand type.")
+         :type      operand-type
+         :read-only T)
+  (value NIL
+         :type      T
+         :read-only T))
 
 
 
@@ -738,11 +786,14 @@
   (:constructor make-instruction (type operands operand-p)))
   "The ``Instruction'' class represents a command and its arguments."
   (type      (error "Missing instruction type.")
-             :type instruction-type)
+             :type      instruction-type
+             :read-only T)
   (operands  NIL
-             :type (list-of Operand))
+             :type      (list-of Operand)
+             :read-only T)
   (operand-p NIL
-             :type boolean))
+             :type      boolean
+             :read-only T))
 
 
 
@@ -773,6 +824,7 @@
         (values)))
   (add-instruction-signature :push      '(T))
   (add-instruction-signature :pop       '(bit))
+  (add-instruction-signature :output    '(bit))
   (add-instruction-signature :increment '(bit))
   (add-instruction-signature :decrement '(bit integer))
   (add-instruction-signature :swap      '())
@@ -863,7 +915,8 @@
 
 ;;; -------------------------------------------------------
 
-(defparameter +COMMAND-TYPES+ (make-hash-table :test #'equal)
+(defparameter +COMMAND-TYPES+
+  (make-hash-table :test #'equal)
   "Associates the valid command names with instruction types in order
    to establish a nexus betwixt the command invocations in a piece of
    Quests source code and the ``Instruction'' representations thereof.")
@@ -879,6 +932,7 @@
         (values)))
   (add-command-type "p"   :push)
   (add-command-type "<"   :pop)
+  (add-command-type ">"   :output)
   (add-command-type "inc" :increment)
   (add-command-type "dec" :decrement)
   (add-command-type "sw"  :swap)
@@ -901,7 +955,8 @@
    confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
   (declare (type Token token))
   (the boolean
-    (not (null (token-type-p token :identifier)))))
+    (not (null
+      (token-type-p token :identifier)))))
 
 ;;; -------------------------------------------------------
 
@@ -930,6 +985,11 @@
     "The ``Parser'' class constitutes the responsible unit for
      generating an instruction vector from a sequence of tokens obtained
      from a lexer."))
+
+;;; -------------------------------------------------------
+
+(declaim (ftype (function (Parser) (list-of Operand))
+                parser-parse-parameter-list))
 
 ;;; -------------------------------------------------------
 
@@ -1080,15 +1140,13 @@
 
 (defclass Questa ()
   ((elements
-    :initarg       :elements
     :initform      (cons 'head NIL)
-    :type          list
+    :type          (list-of T)
     :documentation "The list of elements. Necessarily never empty, as
                     the TAIL pointer must reference its desinent cons,
                     the first and initial element constitutes a 'dummy'
                     cell with the value ('head . NIL).")
    (tail
-    :initarg       :tail
     :initform      NIL
     :type          (or null tail-pointer)
     :documentation "A pointer to the last cons of the ELEMENTS, employed
@@ -1169,7 +1227,7 @@
 (defmethod initialize-instance :after ((questa Questa) &key)
   (declare (type Questa questa))
   (with-slots (elements tail) questa
-    (declare (type list         elements))
+    (declare (type (list-of T)  elements))
     (declare (type tail-pointer tail))
     (setf tail elements))
   (the Questa questa))
@@ -1197,7 +1255,7 @@
   (declare (type Questa questa))
   (declare (type T      new-element))
   (with-slots (elements tail) questa
-    (declare (type list         elements))
+    (declare (type (list-of T)  elements))
     (declare (type tail-pointer tail))
     (cond
       ((questa-is-empty questa)
@@ -1217,7 +1275,7 @@
    This function represents the Questa operation 'POP1'."
   (declare (type Questa questa))
   (with-slots (elements tail) questa
-    (declare (type list         elements))
+    (declare (type (list-of T)  elements))
     (declare (type tail-pointer tail))
     (the T
       (if (questa-is-empty questa)
@@ -1246,7 +1304,7 @@
    rear, otherwise signals an ``Empty-Questa-Error''."
   (declare (type Questa questa))
   (with-slots (elements tail) questa
-    (declare (type list         elements))
+    (declare (type (list-of T)  elements))
     (declare (type tail-pointer tail))
     (the T
       (if (questa-is-empty questa)
@@ -1282,7 +1340,7 @@
    This operation is not part of the standard Questa interface."
   (declare (type Questa questa))
   (with-slots (elements) questa
-    (declare (type list elements))
+    (declare (type (list-of T) elements))
     (the T
       (if (questa-is-empty questa)
         (signal-empty-questa-error questa
@@ -1320,7 +1378,7 @@
     (if (questa-is-empty questa)
       (signal-empty-questa-error questa "Cannot set the top element.")
       (with-slots (elements) questa
-        (declare (type list elements))
+        (declare (type (list-of T) elements))
         (prog1
           (second elements)
           (setf (car (rest elements)) new-top))))))
@@ -1355,7 +1413,7 @@
    This operation is not part of the standard Questa interface."
   (declare (type Questa questa))
   (with-slots (elements tail) questa
-    (declare (type list         elements))
+    (declare (type (list-of T)  elements))
     (declare (type tail-pointer tail))
     (setf (cdr elements) NIL)
     (setf tail          elements))
@@ -1369,7 +1427,7 @@
    This operation is not part of the standard Questa interface."
   (declare (type Questa questa))
   (with-slots (elements) questa
-    (declare (type list elements))
+    (declare (type (list-of T) elements))
     (the (integer 0 *)
       (1- (length elements)))))
 
@@ -1382,7 +1440,7 @@
    This operation is not part of the standard Questa interface."
   (declare (type Questa questa))
   (with-slots (elements tail) questa
-    (declare (type list         elements))
+    (declare (type (list-of T)  elements))
     (declare (type tail-pointer tail))
     (the boolean
       (not (null (eq elements tail))))))
@@ -1394,7 +1452,7 @@
    ---
    This operation is not part of the standard Questa interface."
   (declare (type Questa questa))
-  (the list
+  (the (list-of T)
     (copy-list
       (rest (slot-value questa 'elements)))))
 
@@ -1501,8 +1559,8 @@
   "Processes the INSTRUCTION Using the INTERPRETER and returns a result
    appropriate for the INSTRUCTION type.
    ---
-   The modification of INTERPRETER's instruction pointer is depends upon
-   the INSTRUCTION being an operand or not, with the former case
+   The modification of the INTERPRETER's instruction pointer depends
+   upon the INSTRUCTION being an operand or not, with the former case
    abstaining from such progression, while the latter veridically helms
    the pointer."
   (declare (type Interpreter interpreter))
@@ -1546,6 +1604,25 @@
                       (questa-pop2 questa))
                     (otherwise
                       (error "Invalid argument to pop: p(~s)." end)))))
+              (unless (instruction-operand-p instruction)
+                (interpreter-advance-ip interpreter))))
+          
+          (:output
+            (prog1
+              (let ((operands (evaluate-operands)))
+                (declare (type (list-of T) operands))
+                (validate-instruction :output operands)
+                (let ((end (first operands)))
+                  (declare (type bit end))
+                  (format T "~a"
+                    (case end
+                      (0
+                        (questa-pop1 questa))
+                      (1
+                        (questa-pop2 questa))
+                      (otherwise
+                        (error "Invalid argument to output: p(~s)."
+                          end))))))
               (unless (instruction-operand-p instruction)
                 (interpreter-advance-ip interpreter))))
           
@@ -1701,6 +1778,11 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Print "HelloWorld".
+(interpret-Quests "p(HelloWorld) >(0)")
+
+;;; -------------------------------------------------------
+
 ;; Returns "HelloWorld".
 (interpret-Quests "p(HelloWorld) <(0)")
 
@@ -1716,7 +1798,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Returns 0.
+;; Prints 0.
 ;; 
 ;; Uses the goto facility, incorporated as an ancillary into the "dec"
 ;; command, to bypass the pushing of "World" unto the Questa, thus, when
@@ -1732,18 +1814,18 @@
 ;; checks the top element for equality to zero, and jumps to the last
 ;; line (index = 4), thus not pushing "World" to the top. The
 ;; instruction
-;;   <(0)
-;; hence pops the integer 0, not "World".
+;;   >(0)
+;; hence pops and prints the integer 0, not "World".
 (interpret-Quests
   "p(Hello)
    p(0)
    dec(0,4)
    p(World)
-   <(0)")
+   >(0)")
 
 ;;; -------------------------------------------------------
 
-;; Returns "Hello".
+;; Prints "Hello".
 ;; 
 ;; Pushes two elements unto the Questa, 0 and "Hello", comprising the
 ;; following Questa content:
@@ -1761,13 +1843,13 @@
    p(Hello)
    dec(1,4)
    p(World)
-   <(0)")
+   >(0)")
 
 ;;; -------------------------------------------------------
 
-;; Returns "first".
+;; Prints "first".
 (interpret-Quests
   "p(first)
    p(second)
    sw()
-   <(0)")
+   >(0)")
