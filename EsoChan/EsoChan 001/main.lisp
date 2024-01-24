@@ -241,13 +241,13 @@
 ;;                        | to the output.
 ;;   ..................................................................
 ;;   goto lineNumber      | Relocates the instruction pointer (IP) to
-;;        **********      | the line designated by the zero-based
+;;        **********      | the line designated by the one-based
 ;;                        | {lineNumber}.
 ;;                        |--------------------------------------------
-;;                        | The {lineNumber} must either be a
-;;                        | non-negative integer number or a variable
-;;                        | name whose numeric value is construed as
-;;                        | the destination line number.
+;;                        | The {lineNumber} must either be a positive
+;;                        | integer number or a variable name whose
+;;                        | numeric value is construed as the
+;;                        | destination line number.
 ;;                        |--------------------------------------------
 ;;                        | An error of the type
 ;;                        | "NoHighlightedVariableError" is signaled if
@@ -1183,7 +1183,8 @@
   (declare (type integer     destination-line))
   (with-slots (jump-target) interpreter
     (declare (type (or null integer) jump-target))
-    (setf jump-target destination-line))
+    (setf jump-target
+      (1- destination-line)))
   (values))
 
 ;;; -------------------------------------------------------
@@ -1545,7 +1546,7 @@
    > print linebreak
    > print character
    > print linebreak
-   > goto 2")
+   > goto 3")
 
 ;;; -------------------------------------------------------
 
@@ -1589,11 +1590,11 @@
   
   Input of 0? => Jump to desinent line, which prints and terminates.
   > ifnot 49
-  > goto 9
+  > goto 10
   
   Input of 1? => Print input, and repeat infinitely.
   > print character
-  > goto 7
+  > goto 8
   
   > print character
   ")
