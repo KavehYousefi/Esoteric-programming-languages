@@ -97,7 +97,17 @@
 ;;; -------------------------------------------------------
 
 (defclass Text-Console (Console)
-  ((total-width
+  ((viewport-width
+    :initarg       :viewport-width
+    :initform      0
+    :type          fixnum
+    :documentation "The number of columns comprising the output area.")
+   (viewport-height
+    :initarg       :viewport-height
+    :initform      0
+    :type          fixnum
+    :documentation "The number of rows comprising the output area.")
+   (total-width
     :initform      0
     :type          fixnum
     :documentation "The complete width of the console.")
@@ -105,14 +115,6 @@
     :initform      0
     :type          fixnum
     :documentation "The complete height of the console.")
-   (viewport-width
-    :initarg       :viewport-width
-    :initform      0
-    :documentation "The number of columns comprising the output area.")
-   (viewport-height
-    :initarg       :viewport-height
-    :initform      0
-    :documentation "The number of rows comprising the output area.")
    (title
     :initform      "Tuvars"
     :type          string
