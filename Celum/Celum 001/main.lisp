@@ -3184,12 +3184,12 @@
 ;; relationships' enunciation by the "ASDF" system. This simple example,
 ;; however, has been adjudged as rather inflicted with a digressive
 ;; cumbrance in an advenient structuring's adhibition, rather than its
-;; enjoying — a more serious enterprise certainly would be assayed in an
-;; athwart airt.
+;; enjoying --- a more serious enterprise certainly would be assayed in
+;; an athwart airt.
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   No. | File                 | Purpose
-;;   ------------------------------------------------------------------
+;;   ----+----------------------+--------------------------------------
 ;;    1  | types.lisp           | Defines the custom types deployed in
 ;;       |                      | the program and utilized by the
 ;;       |                      | subsequent project files, including,
@@ -3386,7 +3386,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Import project files.                                        -- ;;
+;; -- Import of project files.                                     -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (load-project-file "types.lisp")
