@@ -100,7 +100,7 @@
 
 (defun program-completed-p (interpreter)
   "Determines whether the INTERPRETER's program has completed its
-   execution, which is the case if the instruction pointer (IP)'s
+   execution, which is the case if the instruction pointer's (IP)
    location violates the admitted bournes, returning on confirmation a
    ``boolean'' value of ``T'', otherwise ``NIL''."
   (declare (type Interpreter interpreter))

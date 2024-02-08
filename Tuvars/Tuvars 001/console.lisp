@@ -86,9 +86,17 @@
 ;; -- Implementation of class "Text-Console".                      -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(declaim (type fixnum +DEFAULT-VIEWPORT-WIDTH+))
+(declaim (type fixnum +DEFAULT-VIEWPORT-HEIGHT+))
 (declaim (type fixnum +DEFAULT-SCREEN-HEIGHT+))
 
 ;;; -------------------------------------------------------
+
+(defparameter +DEFAULT-VIEWPORT-WIDTH+ 30
+  "The default number of columns comprising the console output area.")
+
+(defparameter +DEFAULT-VIEWPORT-HEIGHT+ 15
+  "The default number of lines comprising the console output area.")
 
 (defparameter +DEFAULT-SCREEN-HEIGHT+ 35
   "The default tally of lines comprising the physical or virtual
@@ -99,12 +107,12 @@
 (defclass Text-Console (Console)
   ((viewport-width
     :initarg       :viewport-width
-    :initform      0
+    :initform      +DEFAULT-VIEWPORT-WIDTH+
     :type          fixnum
     :documentation "The number of columns comprising the output area.")
    (viewport-height
     :initarg       :viewport-height
-    :initform      0
+    :initform      +DEFAULT-VIEWPORT-HEIGHT+
     :type          fixnum
     :documentation "The number of rows comprising the output area.")
    (total-width
@@ -132,8 +140,11 @@
     :initform      NIL
     :type          (list-of string)
     :documentation "A rearrangement of the COMPLETE-CONTENT as a line
-                    of string, adjusted to the VIEWPORT-HEIGHT as the
-                    maximum tally of admitted elements.")
+                    of strings, its horizontal dispansion in concord
+                    with the VIEWPORT-WIDTH as a maximum length, and, in
+                    its vertical aspect, adjusted to the VIEWPORT-HEIGHT
+                    in its imposition of a maximum tally of admitted
+                    rows.")
    (screen-height
     :initarg       :screen-height
     :initform      +DEFAULT-SCREEN-HEIGHT+
@@ -151,10 +162,10 @@
      based upon a textual interface, its intercourse proceeding by means
      of the system's standard input and output conduits.
      ---
-     The following diagram shall furnish a visual supputation's dation
+     The following diagram shall adhibit a visual supputation's dation
      considering the roles of the various configurations and, in
-     particular, relationship betwixt the total sizes and the viewport
-     measure:
+     particular, expose the relationships betwixt the total dimensions
+     and the viewport measurement:
      
                  totalWidth
           |~~~~~~~~~~~~~~~~~~~~~~~|
@@ -192,7 +203,8 @@
 (defun make-text-console (viewport-width viewport-height
                           &key (screen-height +DEFAULT-SCREEN-HEIGHT+))
   "Creates and returns a new ``Text-Console'' whose dimensions are
-   derived from the VIEWPORT-WIDTH and VIEWPORT-HEIGHT."
+   derived from the VIEWPORT-WIDTH and VIEWPORT-HEIGHT, and which
+   employs the optional SCREEN-HEIGHT standard for its measurements."
   (declare (type fixnum viewport-width))
   (declare (type fixnum viewport-height))
   (declare (type fixnum screen-height))
@@ -208,7 +220,9 @@
   "Creates and returns a ``Text-Console'' utilizing the default
    configurations."
   (the Text-Console
-    (make-text-console 30 4)))
+    (make-text-console
+      +DEFAULT-VIEWPORT-WIDTH+
+      +DEFAULT-VIEWPORT-HEIGHT+)))
 
 ;;; -------------------------------------------------------
 
