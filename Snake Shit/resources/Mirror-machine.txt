@@ -1,0 +1,24 @@
+$>_&@a_&@b_%av
+             ~>_*_#\n_=0_@a_v   // If a not 0, print a, set to 0
+             v______________<
+             %b
+             @t
+             ~>_-1_@t_~vv      // If b is not 1, print b.
+             v_________<_
+             %b         _
+             *          _
+             #\n        _
+             v__________<
+             %b
+             v______________<  
+             ~>_*_#\n_-1_@b_^  // While b is not 0, print b, decrement b
+   v_@b&_@a&_<                 // Input a, b
+   v_________________<
+   %b                _
+   ~>_-1_@b_%a_-1_@a_^         // Decrement a by b
+   %a                          // Print a - b
+   *
+   #\n
+   #A
+   #B
+   #C
