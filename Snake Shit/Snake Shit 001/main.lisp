@@ -1864,18 +1864,7 @@
 ;;; -------------------------------------------------------
 
 (defparameter +RESOURCES-DIRECTORY+
-  (make-pathname
-    :device "C"
-    :directory
-      '(:absolute
-        "Users"
-        "Kaveh"
-        "Documents"
-        "PrograMing"
-        "CommonLisp"
-        "Esolangs"
-        "Snake Shit"
-        "resources"))
+  (make-pathname)
   "Specifies the directory when the project's resources, in particular
    its exemplary programs, may be retrieved.
    ---
