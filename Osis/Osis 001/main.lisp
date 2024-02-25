@@ -172,7 +172,8 @@
 ;; bifurcation of its code into a twissel of general comparments: the
 ;; formula, the circumference of its instruction, and an optional list
 ;; of base cases that serve in the first sequence element's immediate
-;; specification.
+;; specification, produced in the obverse order of their intended
+;; assignment.
 ;; 
 ;; A visual adduction limns for us such:
 ;; 
@@ -180,9 +181,39 @@
 ;; 
 ;; which, ensuing from a more detailed exposition, ostends:
 ;; 
-;;   formula baseCase(0) baseCase(1) ... baseCase(m)
+;;   formula baseCase(m) ... baseCase(m-1) baseCase(1) baseCase(0)
 ;; 
 ;; where m >= 0.
+;; 
+;; Please note that the base cases, always whose inception always
+;; conflates with the first sequence element, a(0), are expected to
+;; follow a kenspeckle arrangement in the widdershins direction, with
+;; the desinent base case item, baseCase(m), empight immediately after
+;; the the code section, followed by the penultimate sequence element to
+;; initialize, and, finally, concluding with the actual first sequence
+;; term, baseCase(0).
+;; 
+;; In concord with this peculiarism, in order to attend to the
+;; specification of the sequence elements
+;; 
+;;   a(0) = 10
+;;   a(1) = -5
+;;   a(2) =  4
+;; 
+;; the respective base cases ought to state:
+;; 
+;;   4  -5  10
+;; 
+;; A more expressive illustration for this base case tally of m = 3
+;; shall be imparted alow:
+;; 
+;;   -----------------------------------------------------------
+;;   Base case value  |      4      |     -5      |     10
+;;   -----------------+-------------+-------------+-------------
+;;   Base case name   | baseCase(2) | baseCase(1) | baseCase(0)
+;;   -----------------+-------------+-------------+-------------
+;;   Sequence element |        a(2) |        a(1) |        a(0)
+;;   -----------------------------------------------------------
 ;; 
 ;; == THE FORMULA: INSTRUCTIONS TO COMPUTE THE CURRENT SEQUENCE TERM ==
 ;; The formula section, laying its amplectation around a list of zero or
@@ -298,7 +329,7 @@
 ;; 
 ;;   program       := padding , formula , spaces , baseCases , padding ;
 ;;   formula       := { command } ;
-;;   command       :=  unaryOp | binaryOp | sequenceRef | digit ;
+;;   command       := unaryOp | binaryOp | sequenceRef | digit ;
 ;;   unaryOp       := "_" | '"' | "|" | "$" | "!" | "," ;
 ;;   binaryOp      := "+" | "-" | "*" | "/" | "%" | "^" ;
 ;;   sequenceRef   := ";" | "{" | "}" | "(" | ":" | "`" ;
@@ -2173,6 +2204,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Generate the Fibonacci sequence.
+(interpret-Osis "{}+ 1 0"
+  :cycle-handler +DEFAULT-CYCLE-HANDLER+)
+
+;;; -------------------------------------------------------
 
 ;; Generate the factorials n! for 0 <= n <= +infinity.
 (interpret-Osis "`{* 1"
