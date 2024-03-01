@@ -45,15 +45,15 @@
 
 ;; Print "kiwi".
 ;; 
-;; The thief starts in the cellar, designated by the floor number - 1;
+;; The thief starts in the cellar, designated by the floor number -1;
 ;; the elevator moves by two floors, while the stair room merely by one.
 (interpret-Thief-Police-and-the-Building
   "
   A thief on -1/F
-
+  
   Set SoE -> 2F/s
   Set SoS -> 1F/s
-
+  
   top:  3-th floor
   btm: -1-th floor
       q w e r t y u i o p
@@ -61,7 +61,7 @@
       z x c v b n m , . !
   G/F 0 1 2 3 4 5 6 7 8 9
       _ _ _ _ _ _ _ _ _ _
-
+  
   He gets into the elevator and gets up
   He stays in the elevator for 2s
   He gets out
