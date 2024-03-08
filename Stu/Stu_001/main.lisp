@@ -927,7 +927,7 @@
 ;;   The Esolang contributors, "Stu", 2021
 ;;   URL: "https://esolangs.org/wiki/Stu"
 ;;   
-;;   [goodrich214datastructure6th]
+;;   [goodrich2014datastructure6th]
 ;;   Michael T. Goodrich, Roberto Tamassia, Michael H. Goldwasser,
 ;;     "Data Structures & Algorithms in Java", sixth edition, 2014,
 ;;     pages 122--127
@@ -1313,9 +1313,9 @@
      ---
      A paragon of efficiency and simplicity's coefficacy, the singly
      linked node comprehends merely two pieces of information: the
-     element to the be stored, which constitutes in our case a ``Token'',
-     and a reference to the succeeding node, or ``NIL'' if none such
-     exists."))
+     element to the be stored, which constitutes in our case a
+     ``Token'', and a reference to the succeeding node, or ``NIL'' if
+     none such exists."))
 
 ;;; -------------------------------------------------------
 
@@ -1424,13 +1424,14 @@
   (declare (type Token-Queue queue))
   (declare (type destination stream))
   (with-slots (head tail) queue
-    (declare (type SLNode head))
-    (declare (type SLNode tail))
+    (declare (type (or null SLNode) head))
+    (declare (type (or null SLNode) tail))
     (format stream "(Token-Queue")
     (loop
-      for node of-type (or null SLNode)
-        =    head
-        then (slnode-next node)
+      for node
+        of-type (or null SLNode)
+        =       head
+        then    (slnode-next node)
       while node
       do
         (format stream " ~s"
