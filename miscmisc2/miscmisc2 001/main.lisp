@@ -172,6 +172,29 @@
 ;;   
 ;;   (5) Repeat with step -> (2).
 ;; 
+;; == INPUT AND OUTPUT ARE IMPLEMENTATION-DEPENDENT ==
+;; The modes and intrinsics of the input and output conduits introduce
+;; an implementation-dependent aspect in the language.
+;; 
+;; The following minimum requirements apply to these athwart fluences:
+;; 
+;;   (a) The input provider must upon each request return a signed or
+;;       unsigned integer number of any magnitude. The value zero (0)
+;;       appropriates a dioristic agency in that is delivery conflates
+;;       with the construe as an end-of-file (EOF) sentinel, that is,
+;;       the communication of its provenance's exhaustion.
+;;   
+;;   (b) The output receptor must upon each request consume a signed or
+;;       unsigned integer number of any magnitude. The purpose resident
+;;       at its ultimity does not wist of further impositions.
+;; 
+;; The miscmisc2 standard redes, without alternatives' exclusion, this
+;; solution assessed with a beneficial mete of sanity these defaults:
+;; 
+;;   (a) The input is accommodated via a queue of signed integers.
+;;   (b) The output employs either a stack of signed integers or a
+;;       text string.
+;; 
 ;; 
 ;; Instructions
 ;; ============
