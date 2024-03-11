@@ -347,7 +347,7 @@
     (declare (type (stack-of fixnum) start-points))
     (loop
       for token    of-type character across code
-      for position of-type fixnum    from   0 by 1
+      and position of-type fixnum    from   0 by 1
       if (char= token #\[) do
         (push position start-points)
       else if (char= token #\]) do
