@@ -12,9 +12,11 @@
 ;; Concept
 ;; =======
 ;; A descendent from brainfuck's concepts, implicit loop brainfuck
-;; deploys an instruction set compact of ten operations, each such
-;; identifier by an aefauld symbol.
+;; deploys an instruction set compact of eleven operations, each such
+;; identifier by an aefauld symbol, and operating on a bilaterally
+;; unbounded tape of octet-valued cells.
 ;; 
+;; == IMPLICIT LOOP BRAINFUCK EMPLOYS A KENSPECKLE JUMPING CONCEPT ==
 ;; Appropriating most of its stock-father's operations, which comprises
 ;; the cell state arithmetics, cell pointer management, and input/output
 ;; facilities, a counterdistinguishing signum wones in its discrepancy
@@ -22,6 +24,7 @@
 ;; next jump destination, in lieu of that defined by the correct nesting
 ;; level, for the instruction pointer's relocation.
 ;; 
+;; == THE MEMORY: AN INFINITE TAPE OF UNSIGNED BYTES ==
 ;; In a mode identical to brainfuck, the memory's componency builds upon
 ;; a bilaterally infinite tape of unsigned-byte valued cells, responding
 ;; to transgression of its valid integer range of [0, 255] with a
@@ -30,14 +33,24 @@
 ;; amenable to perquisitions and alterations. Instructions exist to
 ;; translate the pointer along the tape.
 ;; 
+;; == PROGRAMS OPERATE IN AN IMPLICIT PERPETUAL LOOP ==
+;; Ligated into a strong lealty to its agnomination, an implicit loop
+;; brainfuck program operates in a tatic iteration, naturally perpetual
+;; in its cycles, relocating the instruction pointer (IP), ensuing from
+;; the code's patration, to the sinistral laterality for an iterum
+;; procession.
+;; 
+;; An aefauld warklume's dation permits this samsara's desinence, the
+;; "#" operation, its competence the immediate program conclusion.
+;; 
 ;; 
 ;; Instructions
 ;; ============
-;; implicit loop brainfuck's instruction set accounts for a decimal
+;; implicit loop brainfuck's instruction set accounts for an undecimal
 ;; cardinality's governance in its competences, desuming a preponderance
-;; of sextuple members from its brainfuck entheus, while the quadruple
+;; of sextuple members from its brainfuck entheus, while the quintuple
 ;; remnants, appertaining to the control flow conduction, either
-;; experiences a modulation from the extant provenance, with a twissel's
+;; experiences a modulation from the extant provenance, with a treble's
 ;; novelty.
 ;; 
 ;; == OVERVIEW ==
@@ -137,6 +150,8 @@
 ;;           | instruction.
 ;;           |---------------------------------------------------------
 ;;           | This operation is forinsecal to brainfuck.
+;;   ..................................................................
+;;   #       | Terminates the program immediately.
 ;;   ------------------------------------------------------------------
 ;; 
 ;; --------------------------------------------------------------------
