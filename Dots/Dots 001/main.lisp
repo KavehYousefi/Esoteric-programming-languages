@@ -75,7 +75,7 @@
 ;;                  ,  ":" , stringLiteral
 ;;                  ,  ";"
 ;;                  ;
-;;   stringLiteral  := { character - reservedSymbol } ;
+;;   stringLiteral  := { character - ";" } ;
 ;;   identifier     := identifierChar , { identifierChar } ;
 ;;   identifierChar := character - ( whitespace | reservedSymbol ) ;
 ;;   reservedSymbol := "." | ":" | ";" ;
