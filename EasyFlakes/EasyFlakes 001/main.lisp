@@ -464,7 +464,6 @@
 
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of interpreter.                               -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -529,9 +528,8 @@
             (otherwise
               (error "Unrecognized command: ~s." command)))
           (values)))
-      (loop
-        for command of-type command in program do
-          (process-command command))))
+      (loop for command of-type command in program do
+        (process-command command))))
   (values))
 
 ;;; -------------------------------------------------------
