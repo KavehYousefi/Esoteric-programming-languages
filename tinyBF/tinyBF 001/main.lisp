@@ -1,11 +1,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; This program implements an interpreter for the esoteric programming
-;; language "tinyBF", invented by the Esolang user "Bataais" and
-;; presented on November 10th, 2014, its haecceity founded upon a
-;; more compendious variation on Urban Mueller's "brainfuck", the
-;; curtailed syntaxis begotten by a "direction" switch which assigns to
-;; many instruction tokens two discrepant causata.
+;; language "tinyBF", invented by Michael Gianfreda on November 6th,
+;; 2014 and presented by the Esolang user "Bataais" on November 10th,
+;; 2014, its haecceity founded upon a more compendious variation on
+;; Urban Mueller's "brainfuck", the curtailed syntaxis begotten by a
+;; "direction" switch which assigns to many instruction tokens two
+;; discrepant causata.
 ;; 
 ;; 
 ;; Concept
