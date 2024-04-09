@@ -2309,6 +2309,8 @@
 
 ;;; -------------------------------------------------------
 
+;; Query the user for an integer number, halve, round, and print the
+;; value.
 (interpret-JustWords
   "PrintPleaseSupplyANumberToHalve
    PrintInputDivideTwo")
