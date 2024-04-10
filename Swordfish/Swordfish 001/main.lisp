@@ -753,7 +753,7 @@
     (declare (type non-negative-integer width))
     (declare (type non-negative-integer height))
     (the character
-      (gethash location cells #\0))))
+      (gethash location cells #\,))))
 
 ;;; -------------------------------------------------------
 
