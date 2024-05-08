@@ -266,18 +266,6 @@
 ;;     - Describes parser combinators.
 ;;     - Demonstrates an implementation in JavaScript.
 ;;   
-;;   [englishclub2024floors]
-;;   The EnglishClub contributors, "Floors of a House", 2024
-;;   URL: "https://www.englishclub.com/vocabulary/floors-house.php"
-;;   Notes:
-;;     - Visualizes the conceptual design of a house's floors.
-;;     - Emphasizes the discrepancies in American and British English.
-;;       o In particular, the floor at land level is stevened the
-;;         "ground floor" in British English, while concomitantly the
-;;         American English terminology assigns "first floor" to it.
-;;       o The "Thief, Police and the Building" programming language
-;;         complies with the British nomenclature.
-;;   
 ;;   [esolang2023``]
 ;;   The Esolang contributors, "``", June 27th, 2023
 ;;   URL: "https://esolangs.org/wiki/%60%60"
@@ -1423,7 +1411,7 @@
     :initform      0
     :accessor      register-b
     :type          integer
-    :documentation "The integral value stored in the register \"a\".")
+    :documentation "The integral value stored in the register \"b\".")
    (cells
     :initform      (make-hash-table :test #'eql)
     :type          cell-vector
