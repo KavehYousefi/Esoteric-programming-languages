@@ -68,6 +68,13 @@
 ;; occupy a line of its own, comprehending an ordered list of zero or
 ;; more instructions.
 ;; 
+;; == PROGRAMS START WITH THE FIRST OBJECT ==
+;; The OkayakO program's progression ensues from the first stated
+;; object's activation, whence ensues a catena of invocations required
+;; to be actuated by the program via the "`" operation's employment.
+;; This instrument's lacuna constitutes the cheason for the code's
+;; immediate termination following this entry object's exercise.
+;; 
 ;; 
 ;; Syntax
 ;; ======
