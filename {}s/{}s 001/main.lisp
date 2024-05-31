@@ -4,7 +4,7 @@
 ;; language "{}s", invented by the Esolang user "AmNow" and presented on
 ;; June 23rd, 2021, the proprium of which appertains to a rather
 ;; dioristic selection of characters in the manipulation of its
-;; variables, norned via integers numbers and capacitated to store the
+;; variables, norned via integer numbers and capacitated to store the
 ;; selfsame realm's specimens.
 ;; 
 ;; 
