@@ -31,6 +31,15 @@
 ;; request this service at a discrepant occasion will signal an error
 ;; of an unspecified type.
 ;; 
+;; 
+;; Implementation
+;; ==============
+;; This simple implementation in Common Lisp proceeds in the source
+;; code's evaluation by its expungement of whitespaces ere the thus
+;; distilled produce engages in a juxtaposition with a minimal
+;; program's formulation, either yielding an affirmation anent their
+;; congruency, or a divergence that incites an error.
+;; 
 ;; --------------------------------------------------------------------
 ;; 
 ;; Author: Kaveh Yousefi
