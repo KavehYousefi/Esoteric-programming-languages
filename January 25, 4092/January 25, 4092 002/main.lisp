@@ -160,7 +160,7 @@
 
 (defmethod print-object ((calendar Calendar) (stream T))
   (declare (type Calendar                        calendar))
-  (declare (type (or null (eql T) string stream) stream))
+  (declare (type (or null (eql T) stream string) stream))
   (format stream "~d-~2,'0d-~2,'0d"
     (calendar-year  calendar)
     (calendar-month calendar)
@@ -359,31 +359,32 @@
   (let ((position 0))
     (declare (type fixnum position))
     (setf position (skip-whitespaces source position))
-    (loop while (< position (length source)) collect
-      (prog1
-        (cond
-          ((alphanumericp (char source position))
-            (multiple-value-bind (next-word new-position)
-                (read-identifier source position)
-              (declare (type string next-word))
-              (declare (type fixnum new-position))
-              (setf position new-position)
-              next-word))
-          ((punctuation-character-p (char source position))
-            (prog1
-              (string (char source position))
-              (incf position)))
-          ((operator-character-p (char source position))
-            (multiple-value-bind (next-word new-position)
-                (read-operator source position)
-              (declare (type string next-word))
-              (declare (type fixnum new-position))
-              (setf position new-position)
-              next-word))
-          (T
-            (error "Invalid character \"~c\" at position ~d."
-              (char source position) position)))
-        (setf position (skip-whitespaces source position))))))
+    (the (list-of string *)
+      (loop while (< position (length source)) collect
+        (prog1
+          (cond
+            ((alphanumericp (char source position))
+              (multiple-value-bind (next-word new-position)
+                  (read-identifier source position)
+                (declare (type string next-word))
+                (declare (type fixnum new-position))
+                (setf position new-position)
+                next-word))
+            ((punctuation-character-p (char source position))
+              (prog1
+                (string (char source position))
+                (incf position)))
+            ((operator-character-p (char source position))
+              (multiple-value-bind (next-word new-position)
+                  (read-operator source position)
+                (declare (type string next-word))
+                (declare (type fixnum new-position))
+                (setf position new-position)
+                next-word))
+            (T
+              (error "Invalid character \"~c\" at position ~d."
+                (char source position) position)))
+          (setf position (skip-whitespaces source position)))))))
 
 
 
@@ -409,7 +410,7 @@
 ;;; -------------------------------------------------------
 
 (defun validate-program (source)
-  "Determines whether the SOURC, represents an admissible
+  "Determines whether the SOURCE represents an admissible
    \"January 25, 4092\" program, returning on confirmation no value;
    otherwise signals an error of the type ``Invalid-Program-Error''."
   (declare (type string source))
