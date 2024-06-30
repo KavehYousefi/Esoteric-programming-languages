@@ -170,7 +170,9 @@
 ;; Date:   2022-09-22
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/PUPPY"
+;;   [esolang2017PUPPY]
+;;   The Esolang contributors, "PUPPY", April 9th, 2017
+;;   URL: "https://esolangs.org/wiki/PUPPY"
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
