@@ -136,7 +136,7 @@
 
 (defmethod print-object ((calendar Calendar) (stream T))
   (declare (type Calendar                        calendar))
-  (declare (type (or null (eql T) string stream) stream))
+  (declare (type (or null (eql T) stream string) stream))
   (format stream "~d-~2,'0d-~2,'0d"
     (calendar-year  calendar)
     (calendar-month calendar)
