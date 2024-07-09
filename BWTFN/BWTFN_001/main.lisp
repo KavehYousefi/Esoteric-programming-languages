@@ -2,7 +2,10 @@
 ;; 
 ;; This program implements a simple interpreter for the esoteric
 ;; programming language "BWTFN", invented by the Esolang user
-;; "FlyHamsterPaul".
+;; "FlyHamsterPaul" and presented on July 17th, 2019, dedicated in its
+;; paucity of competences to the production, modification, and printing
+;; of string-valued variables.
+;; 
 ;; 
 ;; Concept
 ;; =======
@@ -172,7 +175,9 @@
 ;;   variableName := letter , { letter } ;
 ;;   asciiCode    := digit , [ digit , [ digit ] ] ;
 ;;   letter       := "A" | ... | "Z" | "a" | ... | "z" ;
-;;   digit        := "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+;;   digit        := "0" | "1" | "2" | "3" | "4"
+;;                |  "5" | "6" | "7" | "8" | "9"
+;;                ;
 ;; 
 ;; 
 ;; Instructions
@@ -191,6 +196,7 @@
 ;; The essence of all five instructions shall be elucidated in a concise
 ;; manner below:
 ;; 
+;;   ------------------------------------------------------------------
 ;;   Command | Description
 ;;   --------+---------------------------------------------------------
 ;;    add    | Syntax:
@@ -235,6 +241,7 @@
 ;;           |   If the "repetitions" are specified, the output is
 ;;           |   printed a "repetitions" tally of times, each iteration
 ;;           |   concluding with a linebreak.
+;;   ------------------------------------------------------------------
 ;; 
 ;; The following sections are dedicated to the commands' elucidations
 ;; with particular indagation into their vinculum to open and active
@@ -374,7 +381,9 @@
 ;; Date:   2021-12-09
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/BWTFN"
+;;   [esolang2020BWTFN]
+;;   The Esolang contributors, "BWTFN", June 21st, 2020
+;;   URL: "https://esolangs.org/wiki/BWTFN"
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
