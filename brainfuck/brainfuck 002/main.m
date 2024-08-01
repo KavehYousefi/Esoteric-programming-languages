@@ -534,8 +534,8 @@ typedef char OCTET;
 ////////////////////////////////////////////////////////////////////////
 
 int       main                 (int argc, const char* argv[]);
-NSString* loadBrainfuckProgram (NSString *programPath);
 void      interpretBrainfuck   (NSString *bfCode);
+NSString* loadBrainfuckProgram (NSString *programPath);
 
 
 
