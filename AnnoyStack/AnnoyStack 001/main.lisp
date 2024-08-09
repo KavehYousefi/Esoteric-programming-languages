@@ -219,7 +219,7 @@
   "Determines whether the CANDIDATE represents a whitespace, including
    in its diorism's circumference the space, horizontal tab, and newline
    entities, returning on confirmation a ``boolean'' value of ``T'',
-   otherewise ``NIL''."
+   otherwise ``NIL''."
   (declare (type character candidate))
   (the boolean
     (get-boolean-value-of
@@ -313,9 +313,9 @@
 ;; -- Implementation of vector operations.                         -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun make-dynamic-state-vector ()
-  "Creates and returns a dynamically extending vector of ``state''
-   elements, initially comprehending an aefauld zero-valued item."
+(defun make-dynamic-character-vector ()
+  "Creates and returns a dynamically extending vector of characters,
+   initially comprehending an aefauld zero-valued item."
   (the (vector character *)
     (make-array 1
       :element-type    'character
@@ -480,7 +480,11 @@
         (otherwise
           (error "No instruction identifier: ~s." next-word))))))
 
-;;; -------------------------------------------------------
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of parser.                                    -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun extract-instructions (source)
   "Extracts from the piece of AnnoyStack SOURCE code the incorporated
@@ -666,7 +670,7 @@
 
 (defclass Tape ()
   ((cells
-    :initform      (make-dynamic-state-vector)
+    :initform      (make-dynamic-character-vector)
     :type          '(vector character *)
     :documentation "A dynamically expanding vector of characters.")
    (head
@@ -717,9 +721,8 @@
   "Stores the NEW-VALUE in the TAPE and returns no value."
   (declare (type character new-value))
   (declare (type Tape      tape))
-  (setf
-    (aref (slot-value tape 'cells)
-      (slot-value tape 'head))
+  (setf (aref (slot-value tape 'cells)
+          (slot-value tape 'head))
     new-value)
   (values))
 
@@ -797,7 +800,7 @@
     :documentation "A stack of character."))
   (:documentation
     "The ``Interpreter'' class furnishes a context for the execution of
-     a parsed AnnoyStack program, administering actual operation value
+     a parsed AnnoyStack program, administering actual operative value
      to the static instruction list."))
 
 ;;; -------------------------------------------------------
