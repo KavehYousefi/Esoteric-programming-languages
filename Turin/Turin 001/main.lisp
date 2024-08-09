@@ -541,7 +541,7 @@
     "The ``Rule'' class provides an encapsulation of a Turin rule,
      compact of its activating state and symbol twissel, in conjunction
      with a sequence of zero or more commands to execute upon the
-     rule's actulation instigation."))
+     rule's activation instigation."))
 
 ;;; -------------------------------------------------------
 
