@@ -4,7 +4,7 @@
 ;; language "Loss, v. 1.11.11.1_", also stevened in its more
 ;; compendious form "Loss", invented by the Esolang user "Threesodas"
 ;; and presented on February 17th, 2023, the sole competence of which
-;; wones in the output of text in the form of identifier commencing
+;; wones in the output of text in the form of identifiers commencing
 ;; with the Latin majuscule "I", or the display of whitespaces.
 ;; 
 ;; 
