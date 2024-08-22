@@ -32,7 +32,7 @@
    of the ATTEMPTED-COMMAND, or responds with ``NIL'' if no such
    transition could be retrieved."
   (declare (type Program-State current-state))
-  (declare (type Command      attempted-command))
+  (declare (type Command       attempted-command))
   (the (or null Program-State)
     (cdr
       (assoc
@@ -44,7 +44,7 @@
 
 (defmethod print-object ((state Program-State) (stream T))
   (declare (type Program-State state))
-  (declare (type destination  stream))
+  (declare (type destination   stream))
   (format stream "(Program-State ~s :recognized-commands ~s)"
     (program-state-name state)
     (mapcar #'car
