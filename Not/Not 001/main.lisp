@@ -359,6 +359,7 @@
   "Marks the loop STATE's as looping by setting its start point to the
    NEW-START-POINT."
   (declare (type Loop-State state))
+  (declare (type fixnum     new-start-point))
   (psetf (loop-state-start-point state) new-start-point
          (loop-state-iterating-p state) T)
   (values))
@@ -392,10 +393,12 @@
   (let ((ip         0)
         (stack      (make-empty-stack))
         (loop-state (make-inactive-loop-state)))
-    (declare (type fixnum          ip))
-    (declare (type Stack           stack))
+    (declare (type fixnum     ip))
+    (declare (type Stack      stack))
     (declare (type Loop-State loop-state))
-    (symbol-macrolet ((current-token (the character (char code ip))))
+    (symbol-macrolet ((current-token
+                        (the character
+                          (char code ip))))
       (declare (type character current-token))
       (loop while (< ip (length code)) do
         (case current-token
