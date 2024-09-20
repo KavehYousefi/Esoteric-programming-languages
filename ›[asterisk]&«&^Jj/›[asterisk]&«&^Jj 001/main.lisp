@@ -738,7 +738,7 @@
   (declare (type Tape tape))
   (the boolean
     (get-boolean-value-of
-      (>= (tape-pointer      tape)
+      (>= (tape-pointer tape)
           (1- (get-register-vector-fill-pointer tape))))))
 
 ;;; -------------------------------------------------------
