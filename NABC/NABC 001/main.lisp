@@ -468,7 +468,7 @@
   (declare (type Program program))
   (loop
     for current-line
-      of-type (or null Code-Line)
+      of-type Code-Line
       across  (slot-value program 'lines)
     for line-index
       of-type fixnum
