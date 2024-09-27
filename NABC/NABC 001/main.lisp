@@ -357,14 +357,16 @@
 ;; -- Implementation of class "Code-Line".                         -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defstruct (Code-Line
-  (:constructor make-code-line (instructions)))
+(defstruct Code-Line
   "The ``Code-Line'' class' vindication proceeds from the castaldy of
    one or more NABC instructions whose shared commorancy accounts for a
    single line in the program."
-  (instructions (error "Missing instructions.")
-                :type      instruction-vector
-                :read-only T))
+  (instructions               (error "Missing instructions.")
+                              :type      instruction-vector
+                              :read-only T)
+  (concludes-with-separator-p (error "Missing conclusion flag.")
+                              :type      boolean
+                              :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -456,6 +458,34 @@
   (declare (type line-vector lines))
   (the Program
     (make-instance 'Program :lines lines)))
+
+;;; -------------------------------------------------------
+
+(defun validate-line-continuations (program)
+  "Determines whether the PROGRAM's code lines bear betwixt each twissel
+   a separator (\"d\"), returning on confirmation the PROGRAM itself;
+   otherwise signals an error of an unspecified type."
+  (declare (type Program program))
+  (loop
+    for current-line
+      of-type (or null Code-Line)
+      across  (slot-value program 'lines)
+    for line-index
+      of-type fixnum
+      from    0
+      by      1
+    for last-line-p
+      of-type boolean
+      =       (get-boolean-value-of
+                (>= line-index
+                    (1- (length (slot-value program 'lines)))))
+    when (and (not last-line-p)
+              (not (code-line-concludes-with-separator-p current-line)))
+      do
+        (error "Missing separator betwixt statement line at index ~d ~
+                and the subsequent row."
+          line-index))
+  (the Program program))
 
 ;;; -------------------------------------------------------
 
@@ -945,8 +975,7 @@
   (declare (type string source))
   (declare (type fixnum start))
   (the fixnum
-    (or ;(position-if-not #'identifier-character-p source :start start)
-        (position #\d source :start start)
+    (or (position #\d source :start start)
         (length source))))
 
 ;;; -------------------------------------------------------
@@ -1004,6 +1033,39 @@
 
 ;;; -------------------------------------------------------
 
+(defun trim-spaces (source)
+  "Removes a fresh string obtained by the expungement of spaces from
+   both of the SOURCE's lateralities."
+  (declare (type string source))
+  (the string
+    (string-trim '(#\Space #\Tab) source)))
+
+;;; -------------------------------------------------------
+
+(defun blank-string-p (source)
+  "Determines whether the SOURCE represents a blank line, such either
+   bears no content at all, or enumerates a composition of space
+   characters only, returning on confirmation a ``boolean'' value of
+   ``T'', otherwise ``NIL''."
+  (declare (type string source))
+  (the boolean
+    (get-boolean-value-of
+      (every #'space-character-p source))))
+
+;;; -------------------------------------------------------
+
+(defun string-ends-in-separator-p (source)
+  "Determines whether the SOURCE, expected to be trimmed at its both
+   lateralities, concludes with the \"d\" separator, returning on
+   confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
+  (declare (type string source))
+  (the boolean
+    (get-boolean-value-of
+      (and (plusp (length source))
+           (char= (char source (1- (length source))) #\d)))))
+
+;;; -------------------------------------------------------
+
 (defun read-code-line (source)
   "Extracts the NABC instructions from the SOURCE and returns a fresh
    ``Code-Line'' object encompassing these."
@@ -1024,16 +1086,22 @@
                   (skip-spaces source new-position))))))
       (the Code-Line
         (make-code-line
-          (make-instruction-vector
-            (loop
-              collect
-                (multiple-value-call #'collect-instruction
-                  (read-identifier source position))
-              if (< position (length source)) do
-                (setf position
-                  (expect-separator source position))
-              else do
-                (loop-finish))))))))
+          :instructions
+            (make-instruction-vector
+              (loop
+                collect
+                  (multiple-value-call #'collect-instruction
+                    (read-identifier source position))
+                if (< position (length source)) do
+                  (setf position
+                    (skip-spaces source
+                      (expect-separator source position)))
+                  (when (>= position (length source))
+                    (loop-finish))
+                else do
+                  (loop-finish)))
+          :concludes-with-separator-p
+            (string-ends-in-separator-p source))))))
 
 ;;; -------------------------------------------------------
 
@@ -1050,8 +1118,11 @@
             for input-line
               of-type (or null string)
               =       (read-line input-stream NIL NIL)
-            while   input-line
-            collect (read-code-line input-line)))))))
+            while input-line
+            unless (blank-string-p input-line)
+              collect
+                (read-code-line
+                  (trim-spaces input-line))))))))
 
 
 
@@ -1432,7 +1503,8 @@
   (declare (type string code))
   (interpret-program
     (make-interpreter
-      (parse-program code)))
+      (validate-line-continuations
+        (parse-program code))))
   (values))
 
 
@@ -1443,7 +1515,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Perpetually repeating cat program.
-(interpret-NABC "aaacdaaaa
+(interpret-NABC "aaacdaaaad
                  bbb")
 
 ;;; -------------------------------------------------------
@@ -1467,16 +1539,16 @@
 ;;   10       | out      | [top>]
 ;;   ----------------------------------------------------
 (interpret-NABC
-  "bbccccccccccccccccccccccccccccccccccccccccccccccccc
-   aaac
-   aaaaabbbbb
-   aaaaabbbbb
-   aaaabb
-   aaabbbbccc
-   bbbcccccccccc
-   aaaa
-   aaaaabbbbb
-   bbbccccccc
+  "bbcccccccccccccccccccccccccccccccccccccccccccccccccd
+   aaacd
+   aaaaabbbbbd
+   aaaaabbbbbd
+   aaaabbd
+   aaabbbbcccd
+   bbbccccccccccd
+   aaaad
+   aaaaabbbbbd
+   bbbcccccccd
    aaaa")
 
 ;;; -------------------------------------------------------
@@ -1498,12 +1570,12 @@
 ;;   8        | jmp 2    | [top> acc]    | 10 through 0
 ;;   -------------------------------------------------------
 (interpret-NABC
-  "abbcccccccccc
-   aaab
-   aaaaaaaaaccccccccc
-   bbcccccccccccccccccccccccccccccccccccccccccc
-   aaaa
-   bbc
-   aaaaabbbcc
-   aaab
-   bbbcc")
+  "abbccccccccccd
+   aaabd
+   aaaaaaaaacccccccccd
+   bbccccccccccccccccccccccccccccccccccccccccccd
+   aaaad
+   bbcd
+   aaaaabbbccd
+   aaabd
+   bbbccd")
