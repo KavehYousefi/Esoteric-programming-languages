@@ -1245,7 +1245,7 @@
 ;;; -------------------------------------------------------
 
 (defun singleton-stack-with-p (stack expected-expression-type)
-  "Determines whether the STACK comprehends exactly one elements, this
+  "Determines whether the STACK comprehends exactly one element, this
    being an expression whose type matches the EXPECTED-EXPRESSION-TYPE,
    returning on confirmation a ``boolean'' value of ``T'', otherwise
    ``NIL''."
