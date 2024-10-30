@@ -284,7 +284,7 @@ typedef char OCTET;
    * Creates and returns a "Memory" instance whose cells all assume the
    * initial state of zero (0).
    */
-  - (id)   initEmptyMemory;
+  - (id) initEmptyMemory;
   
   /**
    * Ascertains an entry's existence for the cell designated by the
@@ -298,7 +298,7 @@ typedef char OCTET;
   /**
    * Returns the byte value stored in the cell under the cell pointer.
    */
-  - (OCTET)  getCurrentCellValue;
+  - (OCTET) getCurrentCellValue;
   
   /**
    * Stores the "newValue" in the cell under the pointer, contingently
@@ -339,7 +339,7 @@ typedef char OCTET;
 ////////////////////////////////////////////////////////////////////////
 
 @implementation Memory
-  - (id) initEmptyMemory
+  - (id)    initEmptyMemory
   {
     cells       = [[NSMutableDictionary alloc] init];
     cellPointer = [NSNumber numberWithInt: 0];
@@ -348,7 +348,7 @@ typedef char OCTET;
   }
   
   
-  - (void) ensureCurrentCellExists
+  - (void)  ensureCurrentCellExists
   {
     if ([cells objectForKey: cellPointer] == nil)
     {
@@ -370,28 +370,28 @@ typedef char OCTET;
     return cellValue;
   }
   
-  - (void) setCurrentCellValue: (int) newValue
+  - (void)  setCurrentCellValue: (int) newValue
   {
     [cells setObject: [NSNumber numberWithInt: (newValue % 256)]
            forKey:    cellPointer];
   }
   
-  - (void) incrementCurrentCell
+  - (void)  incrementCurrentCell
   {
     [self setCurrentCellValue: [self getCurrentCellValue] + 1];
   }
   
-  - (void) decrementCurrentCell
+  - (void)  decrementCurrentCell
   {
     [self setCurrentCellValue: [self getCurrentCellValue] - 1];
   }
   
-  - (void) moveCellPointerLeft
+  - (void)  moveCellPointerLeft
   {
     cellPointer = [NSNumber numberWithInt: [cellPointer intValue] - 1];
   }
   
-  - (void) moveCellPointerRight
+  - (void)  moveCellPointerRight
   {
     cellPointer = [NSNumber numberWithInt: [cellPointer intValue] + 1];
   }
