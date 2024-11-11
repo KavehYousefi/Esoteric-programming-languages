@@ -418,11 +418,6 @@
 
 ;;; -------------------------------------------------------
 
-;; Printing countdown from inclusive ten (10) to inclusive one (1):
-(interpret-DeadIFsh "iiiiiiiiii[od]")
-
-;;; -------------------------------------------------------
-
 ;; Perpetually print the integral numbers from inclusive zero (0)
 ;; through inclusive 255 and repeat the process.
 (interpret-DeadIFsh "(oi[oi])")
