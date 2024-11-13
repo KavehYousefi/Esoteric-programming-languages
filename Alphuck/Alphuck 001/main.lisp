@@ -458,7 +458,7 @@
   "Determines whether the hash TABLE slot at the INDEX is vacant, which
    means that it contains the ``NIL'' value instead of an
    ``HTable-Entry'' instance, returning on confirmation a ``boolean''
-   value of ``T''."
+   value of ``T'', otherwise ``NIL''."
   (declare (type HTable table))
   (declare (type size   index))
   (the boolean
