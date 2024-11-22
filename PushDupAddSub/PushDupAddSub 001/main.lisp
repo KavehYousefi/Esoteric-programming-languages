@@ -67,25 +67,26 @@
 ;;   ..................................................................
 ;;   /        | Pops the top stack element, "a", and the new top
 ;;            | element "b", supputates both the quotient c = b / a and
-;;            | the remainder d = b modulo a, pushes the remainder d
-;;            | onto the stack, and subsequently the quotient c.
+;;            | the remainder d = b modulo a, pushes the quotient c
+;;            | onto the stack, followed by an insertion of the
+;;            | remainder d.
 ;;            |--------------------------------------------------------
 ;;            | In a pseudocode diction it holds:
 ;;            |   let a <- pop from stack
 ;;            |   let b <- pop from stack
 ;;            |   let c <- b /      a
 ;;            |   let d <- b modulo a
-;;            |   push d
 ;;            |   push c
+;;            |   push d
 ;;            |--------------------------------------------------------
 ;;            | Please heed the order of the result transfer, with the
-;;            | quotient ultimately being empight aboon the remainder,
+;;            | remainder ultimately being empight aboon the quotient,
 ;;            | that is, by a visual illustration:
 ;;            | 
 ;;            |           Stack content
 ;;            |           ==============
-;;            |   top>>>> | b / a      |
-;;            |           | b modulo a |
+;;            |   top>>>> | b modulo a |
+;;            |           | b /      a |
 ;;            |           | ...        |
 ;;            |   bottom> | ...        |
 ;;            |           +------------+
@@ -378,8 +379,8 @@
                     (floor dividend divisor)
                   (declare (type integer quotient))
                   (declare (type integer remainder))
-                  (push-on-stack remainder)
-                  (push-on-stack quotient))))
+                  (push-on-stack quotient)
+                  (push-on-stack remainder))))
             
             (:duplicate
               (push-on-stack top-of-stack))
@@ -427,7 +428,7 @@
 (interpret-PushDupAddSub
   "1
    1+1+1+1+
-   ::/-+")
+   ::/+-")
 
 ;;; -------------------------------------------------------
 
@@ -437,8 +438,8 @@
 ;; current counter state as its top element.
 (interpret-PushDupAddSub
   "1
-   1:1/-+
+   1:1/+-
    [
      +1+
-     1:1/-+
+     1:1/+-
    ]")
