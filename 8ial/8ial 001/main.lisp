@@ -109,7 +109,6 @@
 ;;                   |  "5" | "6" | "7" | "8" | "9"
 ;;                   ;
 ;;   letter          := "a" | ... | "z" | "A" | ... | "Z" ;
-;;   whitespace      := space | newline ;
 ;;   newlines        := newline , { newline } ;
 ;;   newline         := "\n" ;
 ;;   space           := " " | "\t" ;
@@ -680,6 +679,25 @@
      an anomalous situation whose etiology emerges from the attempt to
      peek into or pop from an empty stack."))
 
+;;; -------------------------------------------------------
+
+(define-condition 8ial-Condition (condition)
+  ()
+  (:documentation
+    "The ``8ial-Condition'' condition type furnishes a common foundry
+     for all conditions serving to communicate in a neural fashion a
+     significant event pertinent to an 8ial program's admission,
+     analyzation, or interpretation."))
+
+;;; -------------------------------------------------------
+
+(define-condition Halt-Condition (8ial-Condition)
+  ()
+  (:documentation
+    "The ``Halt-Condition'' condition type serves in the apprizal about
+     a behest to immediately terminate an 8ial program in the course of
+     its execution."))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -691,13 +709,13 @@
    the standard input for a line of string, and returns thilk.
    ---
    For the case of an end-of-file (EOF) encounter, this operation
-   produces a fresh string comprehending as its sole character the
-   decimal digit zero (0), that is: \"0\"."
+   signals a ``Halt-Condition''."
   (format T "~&>> ")
   (finish-output)
-  (the string
+  (the (or null string)
     (prog1
-      (read-line NIL NIL "0")
+      (or (read-line NIL NIL NIL)
+          (signal 'Halt-Condition))
       (clear-input))))
 
 ;;; -------------------------------------------------------
@@ -1692,10 +1710,13 @@
   "Executes the 8ial program consigned to the INTERPRETER's castaldy and
    returns no value."
   (declare (type Interpreter interpreter))
-  (loop until (program-is-completed-p interpreter) do
-    (process-instruction interpreter
-      (current-instruction interpreter))
-    (incf (interpreter-ip interpreter)))
+  (handler-case
+    (loop until (program-is-completed-p interpreter) do
+      (process-instruction interpreter
+        (current-instruction interpreter))
+      (incf (interpreter-ip interpreter)))
+    (Halt-Condition ()
+      NIL))
   (values))
 
 ;;; -------------------------------------------------------
@@ -1722,6 +1743,20 @@
    PSH $1
    OUT
    JIR repeat $2 0")
+
+;;; -------------------------------------------------------
+
+;; Repeating cat program which demonstrates the program termination upon
+;; the input conduit's exhaustion.
+(with-input-from-string (input "")
+  (declare (type string-stream input))
+  (let ((*standard-input* input))
+    (interpret-8ial
+      ";repeat
+       PUT $1
+       PSH $1
+       OUT
+       JIR repeat $1 0")))
 
 ;;; -------------------------------------------------------
 
