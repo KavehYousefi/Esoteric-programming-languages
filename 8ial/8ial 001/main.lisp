@@ -38,10 +38,10 @@
 ;; From a conspection's exercise on its syntaxis, the 8ial programming
 ;; language's conformation limns an ordered sequence of zero or more
 ;; lines, everichon among these, if not blank or a lone comment's
-;; woning, accommodate an aefauld instruction, thilk's identifier
+;; woning, accommodates an aefauld instruction, thilk's identifier
 ;; is succeeded by zero through three operands.
 ;; 
-;; == PROGRAMS: LINE OF INSTRUCTIONS ==
+;; == PROGRAMS: LINES OF INSTRUCTIONS ==
 ;; Every line not administered a blank composition or a commentary
 ;; dever only, bears a single instruction's causatum.
 ;; 
@@ -209,6 +209,20 @@
 ;; preterite chronology, to excise this option, retaining merely the
 ;; explicit comment species, introduced via an ecphoneme ("!"), as a
 ;; canonical proprium.
+;; 
+;; 
+;; Implementation
+;; ==============
+;; This interpreter's development has been realized in the programming
+;; language Common Lisp, the entirety's componency being distributed
+;; among several tiers, the incipiency among these obtaining its
+;; provision from a lexical analyzation and concomitant parsing applied
+;; to the sere lines, yielding as its product an encapsulation in an
+;; "Instruction" class object.
+;; 
+;; The generation and gathering of these instruction representations in
+;; a vector compound establishes the interpreter's requisitum for an
+;; ultimate execution.
 ;; 
 ;; --------------------------------------------------------------------
 ;; 
@@ -1242,7 +1256,7 @@
                     program."))
   (:documentation
     "The ``Label-Table'' class applies itself to the castaldy of labels
-     in a 8ial program, affiliating the unique label names with their
+     in an 8ial program, affiliating the unique label names with their
      zero-based indices in the program's instruction sequence."))
 
 ;;; -------------------------------------------------------
@@ -1364,7 +1378,7 @@
 
 (defun ensure-registry-entry (registries name)
   "Ascertains the existency of a registry amenable to the NAME in the
-   REGISTIRES bank by either returning its value, if already present, or
+   REGISTRIES bank by either returning its value, if already present, or
    inserting a new zero-valued entry upon its absence, ere this datum
    is produced."
   (declare (type Registry-Bank   registries))
@@ -1387,8 +1401,9 @@
   "Returns the integer value stored in the registry amenable to the NAME
    in the REGISTRIES bank.
    ---
-   A registry not yet explicitly set responds with the default value of
-   zero (0)."
+   A registry not yet explicitly set will be generated in a tacit mode
+   and affiliated with the default value of zero (0), prevenient to the
+   delivery of a response with the same datum."
   (declare (type Registry-Bank   registries))
   (declare (type registry-number name))
   (the integer
