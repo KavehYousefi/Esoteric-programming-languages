@@ -751,8 +751,8 @@
 ;; The complete interpretation is defined in terms of a graduated
 ;; processing, separable into three chief tiers:
 ;; 
-;;   (1) A lexer generates from the Var=Bar program string a sequence of
-;;       tokens.
+;;   (1) A lexer generates from the Counting program string a sequence
+;;       of tokens.
 ;;   (2) The parser queries these tokens and assembles an abstract
 ;;       syntax tree (AST), the nodes of which represent the language
 ;;       facilities.
