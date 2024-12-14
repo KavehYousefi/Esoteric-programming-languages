@@ -319,8 +319,9 @@
   
   (:method ((key T))
     (declare (type T key))
-    (compute-fvn-1a-hash
-      (sxhash key))))
+    (the uint64
+      (compute-fvn-1a-hash
+        (sxhash key)))))
 
 
 
@@ -574,7 +575,7 @@
    returns two values:
      (1) If the KEY could be detected, the value associated with the
          same, otherwise the DEFAULT object.
-     (2) If the KEY could be detected, the ``boolean'' value of ``T'',
+     (2) If the KEY could be detected, a ``boolean'' value of ``T'',
          otherwise ``NIL''."
   (declare (type HTable table))
   (declare (type T      key))
