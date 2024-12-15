@@ -172,7 +172,7 @@
 ;; 
 ;; == SPECIES OF OPERANDS ==
 ;; The requisite compernage to the operators, operands enjoy a
-;; capacitation to furcate into a quintuple variety:
+;; capacitation to furcate into a sextuple variety:
 ;; 
 ;;   (1) LITERAL INTEGERS
 ;;       Such objects partake in the guise of signed or unsigned decimal
@@ -199,7 +199,18 @@
 ;;       variable's content, thilk poses a paregal to the more
 ;;       compendious simple statement of the identifier.
 ;;   
-;;   (5) COMPOUND EXPRESSIONS
+;;   (5) INPUT
+;;       The necessity for advenient data acquisition is realized by the
+;;       request for input, this constituting the bailiwick of the
+;;       dedicated keyword
+;;         input
+;;       thilk queries the standard input conduit for a single line,
+;;       interprets the response either as a signed or unsigned integer
+;;       datum, or, upon its lack of covenableness, retains its
+;;       ipsissima verba string conformation, and returns the respective
+;;       produce.
+;;   
+;;   (6) COMPOUND EXPRESSIONS
 ;;       The designment of siccan constituents constitutes a unary,
 ;;       binary, or relational operation's ultimity, contingently
 ;;       nested in order to harness the language's potential for complex
