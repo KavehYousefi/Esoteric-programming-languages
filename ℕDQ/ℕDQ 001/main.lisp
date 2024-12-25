@@ -159,12 +159,26 @@
 ;; instruction objects, and the assemblage into a composite enumerating
 ;; these operative lines as a comprehensive vector's elements.
 ;; 
+;; == UNICODE SUPPORT IS IMPLEMENTATION-DEPENDENT ==
+;; Please note that the concrete character set deployed constitutes a
+;; dependency on the Common Lisp implementation; in corollary, Unicode
+;; support may or may not be a feature incorporated in the personal
+;; environment. The interpreter at hand has been developed and tested
+;; with "Steel Bank Common Lisp" (SBCL) version 1.1.4 as part of the
+;; "Lisp Cabinet 0.3.5" bundle [christensen2013lispcabinet035].
+;; 
 ;; --------------------------------------------------------------------
 ;; 
 ;; Author: Kaveh Yousefi
 ;; Date:   2024-12-15
 ;; 
 ;; Sources:
+;;   [christensen2013lispcabinet035]
+;;   G. Christensen, "Lisp Cabinet 0.3.5", 2013
+;;   URL: "https://sourceforge.net/projects/lispcabinet/"
+;;   Notes:
+;;     - Download page of the "Lisp Cabinet" project.
+;;   
 ;;   [esolang2024DQ]
 ;;   The Esolang contributors, "DQ", July 22nd, 2024
 ;;   URL: "https://esolangs.org/wiki/DQ"
