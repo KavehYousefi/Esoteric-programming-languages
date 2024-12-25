@@ -697,7 +697,7 @@
 ;;           let antecedent  <- apply matchingRule handle to topElements
 ;;           
 ;;           push antecedent unto stack
-;;         else if
+;;         else
 ;;           terminate loop
 ;;         end if
 ;;       end repeat
