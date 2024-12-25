@@ -148,12 +148,11 @@
  * 
  * Pursuing the telos of this Objective-C program's compilation, the
  * following input, imputing a current sojourn in the commorancy of the
- * "brainfuck_001.m" source file's directory, ought to be entered in
- * Cygwin:
+ * "main.m" source file's directory, ought to be entered in Cygwin:
  * 
  *   gcc -I "c:/GNUstep/GNUstep/System/Library/Headers"   \
  *       -L "c:/GNUstep/GNUstep/System/Library/Libraries" \
- *       -o brainfuck_002 main.m                          \
+ *       -o brainfuckInterpreter main.m                   \
  *       -lobjc                                           \
  *       -lgnustep-base                                   \
  *       -fconstant-string-class=NSConstantString
@@ -162,7 +161,7 @@
  * the thus generated executable file's invocation, yet in the selfsame
  * directory:
  * 
- *   ./brainfuck_002.exe {brainfuckSourceFile}
+ *   ./brainfuckInterpreter.exe
  * 
  * The same approach as elucidated above has been attempted to a
  * successful patration utilizing the program "GNUstep".
