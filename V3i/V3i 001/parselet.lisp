@@ -32,8 +32,8 @@
                                           associativity)
   "Returns the effective binding power as the coefficient gendrure of
    the BASIC-BINDING-POWER, appertaining to the general case of two
-   competing operator, and the ASSOCIATIVITY, furnishing a mechanim for
-   the conflict's resolution betwixt two equipollent participant."
+   competing operators, and the ASSOCIATIVITY, furnishing a mechanism
+   for the conflict's resolution betwixt two equipollent participants."
   (declare (type integer       basic-binding-power))
   (declare (type associativity associativity))
   (the integer
