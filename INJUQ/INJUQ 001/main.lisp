@@ -2,7 +2,10 @@
 ;; 
 ;; This program implements an interpreter for the esoteric programming
 ;; language "INJUQ", created by the Esolang author "ChuckEsoteric08"
-;; and presented on April 22nd, 2023, 
+;; and presented on April 22nd, 2023, the dioristic proprium of which
+;; wones in its conflation of code and data in a entreparted
+;; entreparted memory of integer-valued cells, whence each quadruple
+;; composite of accolent elements forms an instruction's parameters.
 ;; 
 ;; 
 ;; Concept
