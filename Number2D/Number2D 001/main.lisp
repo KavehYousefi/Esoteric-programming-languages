@@ -590,7 +590,7 @@
 
 (defun build-code-grid (code)
   "Creates and returns a fresh ``Code-Grid'' based upon the piece of
-   Number2D source code."
+   Number2D source CODE."
   (declare (type string code))
   (let ((grid (make-empty-code-grid))
         (x    0)
