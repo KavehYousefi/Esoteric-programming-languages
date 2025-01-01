@@ -97,7 +97,7 @@
 ;; 
 ;; == GRAMMAR ==
 ;; The language's donet shall enjoy a enhanced mete of stringency in
-;; its treatment by an Extended Backus-Naur Form (ENBF) formulation:
+;; its treatment by an Extended Backus-Naur Form (EBNF) formulation:
 ;; 
 ;;   program            := statementList ;
 ;;   statementList      := { statement } ;
@@ -148,7 +148,7 @@
 ;; 
 ;; Instructions
 ;; ============
-;; Do-if's instruction set tallies a quadruple componency, in whose
+;; Do-if's instruction set tallies a quintuple componency, in whose
 ;; compass are admitted such members as to capacitate the declaration
 ;; and assignment of variables, the request of input and issuance of
 ;; output, as well as a conditional execution and a while-based iterance
