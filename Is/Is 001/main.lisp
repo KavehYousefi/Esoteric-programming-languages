@@ -183,7 +183,7 @@
              to the standard output and returns no value."
             (declare (type fixnum index))
             (format T "~d"
-              (aref cells index))
+              (bit cells index))
             (values)))
       (loop with current-cell-index of-type fixnum = 0 do
         (cond
@@ -194,7 +194,7 @@
           ;; Underlying CELLS vector's capacity suffices?
           ;; => Replace current element.
           ((< current-cell-index (length cells))
-            (setf (aref cells current-cell-index) new-value)
+            (setf (bit cells current-cell-index) new-value)
             (print-cell-at current-cell-index)
             (incf current-cell-index))
           ;; Underlying CELLS vector's capacity exhausted?
@@ -270,7 +270,9 @@
 
 (defun interpret-Is (code
                      &key (memory (make-default-program-memory)))
-  "Interprets the piece of Is source CODE and returns no value."
+  "Interprets the piece of Is source CODE, optionally deploying a
+   bespoke MEMORY instance for its operative purposes, and returns no
+   value."
   (declare (type string code))
   (declare (type Memory memory))
   (let ((ip          0)
