@@ -39,8 +39,8 @@
 ;; 
 ;; == WHITESPACES ==
 ;; The participation of spaces and horizontal tabs constitutes, with the
-;; "count" instruction identifier's segregation from the counter name,
-;; an optional insertion.
+;; "count" instruction identifier's segregation from the counter name
+;; posing as the sole exemption, an optional insertion.
 ;; 
 ;; Newline entities, on the other hand, account for an imperative
 ;; element betwixt instruction lines, and as an interdiction in any
@@ -56,23 +56,23 @@
 ;; following Extended Backus-Naur Form (EBNF) description:
 ;; 
 ;;   program          := { innerLine } , [ lastLine ] ;
-;;   lastLine         := lineContent ;
 ;;   innerLine        := lineContent , newlines ;
+;;   lastLine         := lineContent ;
 ;;   lineContent      := padding , [ command ] , [ comment ] ;
 ;;   comment          := "#" , { character - newline } ;
 ;;   command          := initCommand
 ;;                    |  addCommand
 ;;                    |  resetCommand
-;;                    |  printNumCommand
 ;;                    |  printCharCommand
+;;                    |  printNumCommand
 ;;                    |  jumpCommand
 ;;                    |  haltCommand
 ;;                    ;
 ;;   initCommand      := "count" , spacing , counterName ;
 ;;   addCommand       := counterName , operand ;
 ;;   resetCommand     := counterName , "-" ;
-;;   printNumCommand  := "." , operand ;
 ;;   printCharCommand := "," , operand ;
+;;   printNumCommand  := "." , operand ;
 ;;   jumpCommand      := "!" , operand ;
 ;;   haltCommand      := ":" ;
 ;;   
@@ -102,7 +102,7 @@
 ;; 
 ;; Please heed the demarcation of succedaneous tmema by adminculum of
 ;; an amplecting jumelle of braces, "{" and "}", intended for their
-;; substitution by actual Counter code in the ultimate program.
+;; substitution by actual Counterlang code in the ultimate program.
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   Command        | Effect
@@ -1130,23 +1130,23 @@
 (define-function (parse-program program) ((source string))
   "Parses the SOURCE and returns a Counterlang program representation
    of its ensconced instructions."
-  (the program
-    (coerce
-      (with-input-from-string (source-stream source)
-        (declare (type string-stream source-stream))
-        (loop
-          for current-line
-            of-type (or null string)
-            =       (read-line source-stream NIL NIL)
-          
-          while current-line
-          
-          for parsed-instruction
-            = (parse-line current-line)
-          
-          when parsed-instruction
-            collect parsed-instruction))
-      '(simple-array Instruction (*)))))
+  (coerce
+    (with-input-from-string (source-stream source)
+      (declare (type string-stream source-stream))
+      (loop
+        for current-line
+          of-type (or null string)
+          =       (read-line source-stream NIL NIL)
+        
+        while current-line
+        
+        for parsed-instruction
+          of-type (or null Instruction)
+          =       (parse-line current-line)
+        
+        when parsed-instruction
+          collect parsed-instruction))
+    '(simple-array Instruction (*))))
 
 
 
@@ -1231,7 +1231,7 @@
 ;;; -------------------------------------------------------
 
 (define-function (get-counter-names (list-of string))
-                 ((counters          Counter-Table))
+                 ((counters         Counter-Table))
   "Returns a fresh list comprehending the COUNTERS table's registered
    counter names."
   (loop
@@ -1291,7 +1291,7 @@
                   (prefix                   string)
                   (suffix                   string))
   "Determines whether the PREFIX and SUFFIX, conjoined in this exact
-   arrangement, managed to replicate the SOURCE with perfect lealty,
+   arrangement, manage to replicate the SOURCE with perfect lealty,
    returning on confirmation a ``boolean'' value of ``T'', otherwise
    ``NIL''."
   (and
@@ -1595,18 +1595,6 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod process-instruction ((interpreter Interpreter)
-                                (instruction Print-Number-Instruction))
-  (declare (type Interpreter              interpreter))
-  (declare (type Print-Number-Instruction instruction))
-  (format T "~&~d"
-    (resolve-operand interpreter
-      (print-number-instruction-argument instruction)))
-  (finish-output)
-  (values))
-
-;;; -------------------------------------------------------
-
 (defmethod process-instruction
     ((interpreter Interpreter)
      (instruction Print-Character-Instruction))
@@ -1616,6 +1604,18 @@
     (code-char
       (resolve-operand interpreter
         (print-character-instruction-argument instruction))))
+  (finish-output)
+  (values))
+
+;;; -------------------------------------------------------
+
+(defmethod process-instruction ((interpreter Interpreter)
+                                (instruction Print-Number-Instruction))
+  (declare (type Interpreter              interpreter))
+  (declare (type Print-Number-Instruction instruction))
+  (format T "~&~d"
+    (resolve-operand interpreter
+      (print-number-instruction-argument instruction)))
   (finish-output)
   (values))
 
