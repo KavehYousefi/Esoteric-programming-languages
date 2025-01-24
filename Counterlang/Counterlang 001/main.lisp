@@ -62,6 +62,7 @@
 ;;   comment          := "#" , { character - newline } ;
 ;;   command          := initCommand
 ;;                    |  addCommand
+;;                    |  subtractCommand
 ;;                    |  resetCommand
 ;;                    |  printCharCommand
 ;;                    |  printNumCommand
@@ -70,15 +71,15 @@
 ;;                    ;
 ;;   initCommand      := "count" , spacing , counterName ;
 ;;   addCommand       := counterName , operand ;
+;;   subtractCommand  := counterName , "-" , operand ;
 ;;   resetCommand     := counterName , "-" ;
 ;;   printCharCommand := "," , operand ;
 ;;   printNumCommand  := "." , operand ;
 ;;   jumpCommand      := "!" , operand ;
 ;;   haltCommand      := ":" ;
 ;;   
-;;   operand          := signedInteger | counterName ;
-;;   signedInteger    := [ "+" | "-" ] , unsignedInteger ;
-;;   unsignedInteger  := digit , { digit } ;
+;;   operand          := unsignedInteger | counterName ;
+;;   unsignedInteger  := digit  , { digit  } ;
 ;;   counterName      := letter , { letter } ;
 ;;   
 ;;   padding          := { space } ;
@@ -545,7 +546,7 @@
     :documentation "The counter name already registered and subsequently
                     attempted to reuse."))
   (:documentation
-    "The ``Duplicate-Counter-Name-Error'' condition type establishes am
+    "The ``Duplicate-Counter-Name-Error'' condition type establishes an
      institution responsible for the communication of an anomalous
      situation whose etiology wones in the attempt to define a counter
      of an already extant agnomination."))
