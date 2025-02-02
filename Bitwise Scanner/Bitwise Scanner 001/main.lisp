@@ -1148,10 +1148,15 @@
     (declare (type bit-index prevenient-tape-index))
     (reset-bit-state-index bit-state)
     (handler-case
-      (loop do
-        (update-current-bit-with-tape bit-state)
-        (execute-commands             body bit-state)
-        (increment-bit-state-index    bit-state))
+      (loop
+        while
+          (has-bit-at-p
+            (bit-state-tape  bit-state)
+            (bit-state-index bit-state))
+        do
+          (update-current-bit-with-tape bit-state)
+          (execute-commands             body bit-state)
+          (increment-bit-state-index    bit-state))
       (Stop-Condition ()
         NIL))
     (setf (bit-state-index bit-state) prevenient-tape-index)
