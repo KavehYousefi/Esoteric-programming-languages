@@ -1354,7 +1354,7 @@
 ;;   The Esolang contributors, "NeverGonna", June 11th, 2020
 ;;   URL: "https://esolangs.org/wiki/NeverGonna"
 ;;   
-;;   [goodrich214datastructure6th]
+;;   [goodrich2014datastructure6th]
 ;;   Michael T. Goodrich, Roberto Tamassia, Michael H. Goldwasser,
 ;;     "Data Structures & Algorithms in Java", sixth edition, 2014,
 ;;     pages 122--127
