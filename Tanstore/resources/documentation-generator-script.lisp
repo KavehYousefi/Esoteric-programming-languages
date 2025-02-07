@@ -144,7 +144,7 @@
     initially
       (format T "~&{| class=\"wikitable sortable\"")
       (format T "~&|-")
-      (format T "~&| Code !! Character !! Category")
+      (format T "~&! Code !! Character !! Category")
     
     for symbol
       of-type character
