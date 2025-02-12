@@ -468,7 +468,7 @@
 ;;       o This establishes the most pertinent subject for our project.
 ;;       o The pages 126--127 furnish an implementation.
 ;;     - The pages 238--247 describe the queue abstract data type (ADT).
-;;       o The pages 241-244 produce an array-based implementation.
+;;       o The pages 241--244 produce an array-based implementation.
 ;;       o The page 245 demonstrates an implementation via a singly
 ;;         linked list.
 ;;     - The pages 276--280 describe the concept and an
@@ -1870,8 +1870,9 @@
 
 (defgeneric print-as-number (argument)
   (:documentation
-    "Prints the ARGUMENT in a numeric to the standard output, succeeded
-     by an unconditional newline character, and returns no value.")
+    "Prints the ARGUMENT in a numeric form to the standard output,
+     succeeded by an unconditional newline character, and returns no
+     value.")
   
   (:method ((argument integer))
     (declare (type integer argument))
@@ -2197,7 +2198,7 @@
      This operation's interface maintains a stark mete of concinnity
      with the Tueue instruction \"MOV\", where the DESTINATION refers
      to the second argument, whereas the SOURCE conflates with the
-     first \"MOVE\" input.")
+     first \"MOV\" input.")
   
   (:method ((interpreter Interpreter)
             (destination First-Queue-Reference)
