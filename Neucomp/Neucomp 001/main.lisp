@@ -306,7 +306,7 @@
 ;; ==============
 ;; This interpreter's implementation represents an effort in the
 ;; programming language Common Lisp, its realization ultimately a
-;; produced obtained by intrining the stages of lexical analyzation,
+;; produce obtained by intrining the stages of lexical analyzation,
 ;; parsing, and actual interpretation.
 ;; 
 ;; --------------------------------------------------------------------
@@ -1175,16 +1175,14 @@
    macro ``$lexer'' and the ``current-token'' to ``$current-token'',
    evaluates the BODY forms, and returns the desinent form's results.
    ---
-   As a parergon to the to the facility for eath slot access, an
-   adminicular local function's furnishment partakes of the dation:
+   As a parergon to the facility for eath slot access, an adminicular
+   local function's furnishment partakes of the dation:
      ------------------------------------------------------------------
      Function                  | Causatum
      --------------------------+---------------------------------------
-     eat-token (expected-type) | If the current token matches the
-                               | EXPECTED-TYPE, returns the probed
-                               | token, while replacing it in the
-                               | PARSER with the next one; otherwise
-                               | signals an error.
+     eat-current-token ()      | Returns the current token, while
+                               | replacing it in the PARSER with the
+                               | next one.
      ------------------------------------------------------------------"
   (let ((evaluated-parser (gensym)))
     (declare (type symbol evaluated-parser))
@@ -2025,13 +2023,13 @@
 ;;   memory[6] <- 10 (ASCII code for newline)
 (interpret-Neucomp
   "
-  Let 0  0
-  Let 1  1
-  Let 2 10
-  Let 3  0
-  Let 4  0
-  Let 5 42
-  Let 6 10
+  Let 0  0    # The constant 0, employed for termination tests.
+  Let 1  1    # The constant 1, employed for counter decrementations.
+  Let 2 10    # The tally of lines to print.
+  Let 3  0    # The current line index, commences from 1.
+  Let 4  0    # The tally of asterisks printed on the current line.
+  Let 5 42    # The ASCII code of the asterisk symbol '*'.
+  Let 6 10    # The ASCII code of the newline character.
   
   # Line 8:
   If 2 = 0
