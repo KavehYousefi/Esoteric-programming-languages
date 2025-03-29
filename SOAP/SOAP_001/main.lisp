@@ -1884,20 +1884,20 @@
    Several facilities are offered by the Common Lisp standard library
    for engaging in such an activity, enumerating, for instance:
    
-     ------------------------------------------------------------
+     --------------------------------------------------------
      Function         | Exemplary invocation
-     -----------------+------------------------------------------
-     make-path-name   | (make-pathname
+     -----------------+--------------------------------------
+     make-pathname    | (make-pathname
                       |   :device    \"C\"
                       |   :directory '(:absolute
                       |                 \"Users\"
                       |                 \"Kaveh\"
                       |                 \"SOAP\"
                       |                 \"SOAP_001\"))
-     ............................................................
+     ........................................................
      parse-namestring | (parse-namestring
                       |   \"C:/Users/Kaveh/SOAP/SOAP_001/\")
-     ------------------------------------------------------------")
+     --------------------------------------------------------")
 
 
 
