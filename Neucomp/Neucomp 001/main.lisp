@@ -1026,13 +1026,13 @@
 (defstruct (ALU-Instruction
   (:include Instruction))
   "The ``ALU-Instruction'' class applies itself to the representation of
-   the Neucomp \"ALU\" instruction, dedicated to supputate of a binary
-   arithmetic expression and its transfer into a specified program
+   the Neucomp \"ALU\" instruction, dedicated to a binary arithmetic
+   expression's supputation and its transfer into a specified program
    memory cell."
   (left-operand  (error "Missing left ALU instruction operand.")
                  :type      Operand
                  :read-only T)
-  (right-operand (error "Missing right ALU instruction source.")
+  (right-operand (error "Missing right ALU instruction operand.")
                  :type      Operand
                  :read-only T)
   (operator      (error "Missing ALU instruction operator.")
@@ -1079,7 +1079,7 @@
   (left-operand  (error "Missing left If instruction operand.")
                  :type      Operand
                  :read-only T)
-  (right-operand (error "Missing right If instruction source.")
+  (right-operand (error "Missing right If instruction operand.")
                  :type      Operand
                  :read-only T)
   (operator      (error "Missing If instruction operator.")
