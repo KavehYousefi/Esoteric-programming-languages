@@ -787,14 +787,12 @@
 
 (defclass Nybble-Buffer ()
   ((nybble
-    :initarg       :nybble
     :initform      #b0000
     :reader        get-buffered-nybble
     :type          nybble
     :documentation "The nybble to be constructed from the most
                     significant position to the least significant one.")
    (size
-    :initarg       :size
     :initform      0
     :reader        get-nybble-buffer-size
     :type          (integer 0 4)
@@ -968,7 +966,7 @@
     (declare (type DLNode header))
     (declare (type DLNode trailer))
     (psetf
-      (dlnode-next     header) trailer
+      (dlnode-next     header)  trailer
       (dlnode-previous trailer) header))
   (values))
 
@@ -1900,7 +1898,7 @@
 (defun validate-standard-nybblang-program (program)
   "Determines whether the Nybblang PROGRAM's content complies with the
    standard Nybblang language stipulations, scilicet, the representation
-   as a pure binary string compact of exactly four digit, returning on
+   as a pure binary string compact of exactly four digits, returning on
    confirmation the probed PROGRAM; otherwise either an error of the
    type ``Invalid-Program-Code-Error'' or ``Invalid-Program-Size-Error''
    is signaled."
@@ -2337,8 +2335,8 @@
 
 (defun make-jumping-nybblang-interpreter (program-loader)
   "Creates and returns a fresh ``Jumping-Nybblang-Interpreter'' whose
-   sole Nybblang program is educed by incipial request airted to the
-   PROGRAM-LOADER."
+   sole Nybblang program is educed by an incipial request airted
+   towards the PROGRAM-LOADER."
   (declare (type Program-Loader program-loader))
   (the Jumping-Nybblang-Interpreter
     (make-instance 'Jumping-Nybblang-Interpreter :program
@@ -2473,7 +2471,7 @@
 
 (defun retrieve-jump-target (interpreter)
   "Based upon the INTERPRETER stack's bottom element or that aboon the
-   same the jump target for a successfully activated
+   same, determines the jump target for a successfully activated
    \"Jumping Nybblang\" instruction of the type \"11\" and returns
    thilk."
   (declare (type Jumping-Nybblang-Interpreter interpreter))
