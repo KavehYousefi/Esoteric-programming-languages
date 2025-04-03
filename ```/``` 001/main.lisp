@@ -141,8 +141,8 @@
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   Cell # ||  0  |  1  |  2  |  3  | 4--24 | 25--
-;;   -------||-----+-----+-----+-----+-------+--------------------------
-;;   Role   || IP  | CE  | IOS | IOM |  IOB  | arbitrary content
+;;   -------||-----+-----+-----+-----+-------+-------------------------
+;;   Role   || IP  | CE  | IOS | IOM |  IOB  | general-purpose
 ;;   ------------------------------------------------------------------
 ;; 
 ;; == INPUT AND OUTPUT: GOVERNED BY A SWITCH AND A MODE ==
@@ -445,8 +445,8 @@
 ;; athwart airt.
 ;; 
 ;;   ------------------------------------------------------------------
-;;   No. | File             | Role
-;;   ----+------------------+------------------------------------------
+;;   No. | File                      | Role
+;;   ----+---------------------------+---------------------------------
 ;;    1  | types.lisp                | Defines the operations on types
 ;;       |                           | and the custom types employed in
 ;;       |                           | the subsequent files, such as
@@ -530,6 +530,16 @@
 ;; Date:   2025-03-25
 ;; 
 ;; Sources:
+;;   [cox2025unicodebytes]
+;;   Graham Cox, "How Many Bytes Does One Unicode Character Take?",
+;;     March 26th, 2025
+;;   URL: "https://www.baeldung.com/cs/unicode-character-bytes"
+;;   Notes:
+;;     - Mentions the fact that Unicode requires 21 bits for its entire
+;;       code point range's representation.
+;;     - Specifies the code point range, in hexadecimal notation, as
+;;       the closed interval [U+000000, U+10FFFF].
+;;   
 ;;   [devanla2021minimalparsecomb]
 ;;   Guru Devanla, "Minimal Parser Combinator in Python",
 ;;                 26th October 2021

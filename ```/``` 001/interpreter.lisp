@@ -136,7 +136,7 @@
           (setf (cell-value memory destination-address) source-value)
           
           ;; The instruction pointer (IP) cell has been modified?
-          ;; => Do not select next double/triad of memory elements.
+          ;; => Do not simply advance towards next instruction.
           (unless (address-of-ip-cell-p destination-address)
             (advance-ip memory))))))
   
