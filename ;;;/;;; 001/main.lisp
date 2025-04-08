@@ -1134,7 +1134,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Generate the two first random numbers two (2) and three (3) in the
+;; Generate the two first prime numbers two (2) and three (3) in the
 ;; first two cells, relocate the cell pointer, prevent a recess to the
 ;; first cell based upon the prime number antecedent, and increment
 ;; the second cell value from three (3) to four (4).
