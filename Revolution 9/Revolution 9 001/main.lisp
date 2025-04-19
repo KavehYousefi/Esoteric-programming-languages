@@ -359,7 +359,7 @@
 
 (defun list-starts-with-p (source prefix)
   "Determines whether the SOURCE list commences with the string values
-   specifeid in the PREFIX, returning on confirmation a ``boolean''
+   specified in the PREFIX, returning on confirmation a ``boolean''
    value of ``T'', otherwise ``NIL''."
   (declare (type (list-of string) source))
   (declare (type (list-of string) prefix))
@@ -602,7 +602,7 @@
      The provenance of this requisitum's gendrure being the appendage
      of tokens to the rear rather than the front, the ``Token-Buffer''
      relies on the notion of \"tail-consing\", also realized in the
-     consanguinous \"tconc\" diorism, where a separate \"tail pointer\"
+     consanguineous \"tconc\" diorism, where a separate \"tail pointer\"
      entertains the compernage of the list itself, the latter nevened
      the \"head\"."))
 
