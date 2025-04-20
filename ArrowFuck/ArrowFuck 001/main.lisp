@@ -459,7 +459,8 @@
          (current-token
           (the character
             (aref code ip))))
-      (declare (type boolean program-is-completed-p))
+      (declare (type boolean   program-is-completed-p))
+      (declare (type character current-token))
       (loop until program-is-completed-p do
         (case current-token
           (#\>
