@@ -213,9 +213,9 @@
                   accumulator new-accumulator)))
             (format destination "👌")
             (setf accumulator new-accumulator))))
-      (with-output-to-string (arrowfuck-code)
-        (declare (type string-stream arrowfuck-code))
-        (generate-text-program text :destination arrowfuck-code)))))
+      (with-output-to-string (chefs-kiss-code)
+        (declare (type string-stream chefs-kiss-code))
+        (generate-text-program text :destination chefs-kiss-code)))))
 
 
 
