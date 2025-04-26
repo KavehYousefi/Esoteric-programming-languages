@@ -14,7 +14,7 @@
 ;; The Fumber programming language constitutes an augmenting derivation
 ;; of brainfuck by the contingency for the deployment of decimal digits
 ;; as a valid alternative to the stock-father's identifier set, as well
-;; as the introduction of a twain of adscititious instruction: one to
+;; as the introduction of a twain of adscititious instructions: one to
 ;; set the current cell to a subsequent character's ASCII code, the
 ;; second representative as a no-operation (no-op), or NOP.
 ;; 
@@ -59,7 +59,7 @@
 ;; ======
 ;; From the conspectuity's application upon the syntatical language
 ;; aspect, a Fumber program's conformation accommodates an ennead of
-;; niladic one-symbol instruction identifers, an aefauld operations
+;; niladic one-symbol instruction identifers, an aefauld operation
 ;; whose dependency upon a successive operand is registered, as well as
 ;; any other content as a commentary provision.
 ;; 
