@@ -126,7 +126,7 @@
 ;; 
 ;; Sources:
 ;;   [esolang2023searchfuck]
-;;   The Esolang contribtors, "searchfuck", December 8th, 2023
+;;   The Esolang contributors, "searchfuck", December 8th, 2023
 ;;   URL: "https://esolangs.org/wiki/Searchfuck"
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -632,7 +632,7 @@
   "The ``Memory'' class applies itself to the implementation of the
    searchfuck program memory, its diorism conflating with a bilaterally
    infinite dispansion of unsigned byte-valued cells, operated upon by
-   a mobile cell poiner which at any instant designates the currently
+   a mobile cell pointer which at any instant designates the currently
    amenable unit among these."
   (bits                    #b0 :type (unsigned-byte *) :read-only NIL)
   (pointer                 0   :type (integer * *)     :read-only NIL)
@@ -752,7 +752,7 @@
 (defun shift-memory-bits-if-necessary (memory)
   "Determines whether the MEMORY's cell pointer has been translated
    beyond the smallest cell index yet traversed, on confirmation
-   shifting its bits dextrally by eight places, in any case returning
+   shifting its bits sinistrally by eight places, in any case returning
    no value."
   (declare (type Memory memory))
   (when (< (memory-pointer                 memory)
