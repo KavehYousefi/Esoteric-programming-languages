@@ -440,7 +440,7 @@
   "Interprets the piece of ArrowFuck source CODE and returns no value.
    ---
    If the DISPLAYS-PROMPT-P flag resolves to ``NIL'', no prompt message
-   is issued on the standard input conduit, ere a datum's request;
+   is issued on the standard input conduit ere a datum's request;
    otherwise, the character sequence \">> \" furnishes a parasceve to
    the interaction."
   (declare (type string  code))
