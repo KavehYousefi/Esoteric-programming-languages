@@ -450,7 +450,6 @@
 
 (declaim (type unsigned-byte *tape-bits*))
 (declaim (type integer       *cell-pointer-position*))
-(declaim (type octet         *cell-pointer-value*))
 (declaim (type integer       *smallest-cell-index*))
 (declaim (type T             *cell-pointer-byte-location*))
 
@@ -469,10 +468,6 @@
   "The cell pointer's current position, that is, the signed integer
    cell index.")
 
-(defparameter *cell-pointer-value* 0
-  "The value stored in the cell pointer, copied from a desiderated cell
-   and intended for future transfers.")
-
 (defparameter *smallest-cell-index* 0
   "The smallest value assumed by the *CELL-POINTER-POSITION* during the
    course of a program, employed during the translation of the cell
@@ -485,7 +480,6 @@
    no value."
   (psetf *tape-bits*             #b00000000
          *cell-pointer-position* 0
-         *cell-pointer-value*    0
          *smallest-cell-index*   0)
   (values))
 
