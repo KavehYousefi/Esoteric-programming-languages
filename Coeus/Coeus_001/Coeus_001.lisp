@@ -4,6 +4,9 @@
 ;; esoteric programming language "Coeus" invented by the Esolang user
 ;; "Tetrapyronia".
 ;; 
+;; 
+;; Concept
+;; =======
 ;; Most commands constitute sequences of two characters, the first of
 ;; which determines the command name, the second the name of one of the
 ;; four program registers. In addition to the input and output
@@ -19,6 +22,7 @@
 ;; parallel, but, however, endowed with its own set of registers as its
 ;; state's delegate. This facility is requested only upon the sole
 ;; iteration instruction.
+;; 
 ;; 
 ;; Implementation
 ;; ==============
@@ -62,7 +66,9 @@
 ;; Date:   2021-06-12
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Coeus"
+;;   [esolang2020Coeus]
+;;   The Esolang contributors, "Coeus", November 11th, 2020
+;;   URL: "https://esolangs.org/wiki/Coeus"
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -74,10 +80,10 @@
 
 (defstruct Program
   "Represents a Coeus program, consisting of four register."
-  (register-a 1 :type real)
-  (register-b 0 :type real)
-  (register-c 0 :type real)
-  (register-d 0 :type real))
+  (register-a 1 :type real :read-only NIL)
+  (register-b 0 :type real :read-only NIL)
+  (register-c 0 :type real :read-only NIL)
+  (register-d 0 :type real :read-only NIL))
 
 ;;; -------------------------------------------------------
 
