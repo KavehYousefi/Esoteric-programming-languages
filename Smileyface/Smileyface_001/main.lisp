@@ -3,7 +3,9 @@
 ;; This program implements a simple interpreter for the esoteric
 ;; programming language ":)" --- nevened "Smileyface" in cases of the
 ;; original name's symbols being impediments to its illustration ---,
-;; invented by the Esolang user "Martsadas".
+;; invented by the Esolang user "Martsadas" and presented on
+;; August 9th, 2021.
+;; 
 ;; 
 ;; Concept
 ;; =======
@@ -26,6 +28,7 @@
 ;; subtlety encumbers the task of defining a sane terminology. The
 ;; agnomination and its justification are juxtaposed in the below table:
 ;; 
+;;   ------------------------------------------------------------------
 ;;   Token | Name      | Description
 ;;   ------+-----------+-----------------------------------------------
 ;;    :)   | smiling   | A smiling face.
@@ -61,6 +64,7 @@
 ;;         |           | anxious state occupied mostly in surprise or
 ;;         |           | shock. A forced or involuntary air accompanies
 ;;         |           | the effigy as opposed to a debonair grin.
+;;   ------------------------------------------------------------------
 ;; 
 ;; The admission, role and interpretation of any of these tokens depends
 ;; on the context, developing from this proposition the faculty to
@@ -78,6 +82,7 @@
 ;; each such digit must perforce be expressed in a smiley. The following
 ;; associations hold:
 ;; 
+;;   -------------------------------------------------
 ;;   Token | Name      | Represented quaternary digit
 ;;   ------+-----------+------------------------------
 ;;    :)   | smiling   | 0
@@ -87,6 +92,7 @@
 ;;    :]   | satisfied | 2
 ;;   .................................................
 ;;    :D   | grinning  | 3
+;;   -------------------------------------------------
 ;; 
 ;; == DATA IS STORED IN AN INFINITE MEMORY ==
 ;; Very similar to the esoteric programming language "brainfuck", :)
@@ -193,7 +199,10 @@
 ;; 
 ;;   program     := { comment | instruction } ;
 ;;   comment     := ";" , { character } , linebreak ;
-;;   instruction := smiley , smiley , [ number , { ":>" , number } ] , ":O" ;
+;;   instruction := smiley , smiley
+;;               ,  [ number , { ":>" , number } ]
+;;               ,  ":O"
+;;               ;
 ;;   linebreak   := "\n" ;
 ;;   number      := digit , { digit } ;
 ;;   digit       := ":)" | ":P" | ":]" | ":D" ;
@@ -224,6 +233,7 @@
 ;; The IMP avails in selecting the category, with the following
 ;; associations holding:
 ;; 
+;;   ----------------------------------------------------------
 ;;   IMP token | Name      | Instruction category
 ;;   ----------+-----------+-----------------------------------
 ;;    :)       | smiling   | I/O
@@ -235,6 +245,7 @@
 ;;    :>       | delighted | Repeat the last instruction's IMP
 ;;   ..........................................................
 ;;    :D       | grinning  | Flow control
+;;   ----------------------------------------------------------
 ;; 
 ;; == SELECT A CATEGORY, THEN CHOOSE AN INSTRUCTION ==
 ;; Having stated the intended category by the incipient token, the next
@@ -244,6 +255,7 @@
 ;; table below, the possible IMP-token combinations and an apercu of
 ;; their effect are enumerated:
 ;; 
+;;   ------------------------------------------------------------------
 ;;   IMP | Instr. token | Effect
 ;;   ----+--------------+----------------------------------------------
 ;;    :) | :)           | Print cell value as ASCII character.
@@ -295,6 +307,7 @@
 ;;    :D | :>           | Jump to a label if one cell exceeds another.
 ;;   ..................................................................
 ;;    :D | :D           | Halt the program.
+;;   ------------------------------------------------------------------
 ;; 
 ;; It is patent from the list that the instruction set, being a pairing
 ;; of two tokens, constitutes an exhaustive enumeration of the available
@@ -310,14 +323,21 @@
 ;; single ":O". The list below states the tokens' roles in an argument
 ;; list:
 ;; 
+;;   ------------------------------------------------------
 ;;   Token | Name      | Role in instruction argument list
 ;;   ------+-----------+-----------------------------------
 ;;    :)   | smiling   | quaternary digit 0
+;;   ......................................................
 ;;    :P   | cheeky    | quaternary digit 1
+;;   ......................................................
 ;;    :]   | satisfied | quaternary digit 2
+;;   ......................................................
 ;;    :D   | grinning  | quaternary digit 3
+;;   ......................................................
 ;;    :>   | delighted | parameter separator
+;;   ......................................................
 ;;    :O   | surprised | end of line/statement
+;;   ------------------------------------------------------
 ;; 
 ;; == OVERVIEW ==
 ;; The following tabular exposition lists the commands of :).
@@ -340,6 +360,7 @@
 ;;     be either an ASCII character code, a position in the source
 ;;     code, or an arbitrary other one.
 ;; 
+;;   ------------------------------------------------------------------
 ;;   Instruction | Description
 ;;   ------------+-----------------------------------------------------
 ;;    :) :)      | Syntax:
@@ -580,6 +601,7 @@
 ;;               |   Terminates the program.
 ;;               | Interface:
 ;;               |   haltProgram ()
+;;   ------------------------------------------------------------------
 ;; 
 ;; 
 ;; Lacunae in the Specification
@@ -623,15 +645,37 @@
 ;; Date:   2021-12-04
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Smileyface"
-;;   -> "https://en.wikipedia.org/wiki/Emoticon"
-;;       o Describes emoticons and their history.
-;;   -> "https://en.wikipedia.org/wiki/List_of_emoticons"
-;;       o Offers a list of emoticons.
-;;   -> "https://theasciicode.com.ar/"
-;;       o Displays the ASCII character codes.
-;;   -> "https://www.mathsisfun.com/definitions/quaternary.html"
-;;       o Describes the quaternary number system.
+;;   [esolang2021Smileyface]
+;;   The Esolang contributors, "Smileyface", August 29th, 2021
+;;   URL: "https://esolangs.org/wiki/Smileyface"
+;;   
+;;   [wikipedia2025Emoticon]
+;;   The Wikipedia contributors, "Emoticon - Wikipedia", May 4th, 2025
+;;   URL: "https://en.wikipedia.org/wiki/Emoticon"
+;;   Notes:
+;;     - Describes emoticons and their history.
+;;   
+;;   [wikipedia2025Listofemoticons]
+;;   The Wikipedia contributors, "List of emoticons - Wikipedia",
+;;     March 12th, 2025
+;;   URL: "https://en.wikipedia.org/wiki/List_of_emoticons"
+;;   Notes:
+;;     - Offers a list of emoticons.
+;;   
+;;   [www.theasciicode.com.ar2025asciitable]
+;;   www.theASCIIcode.com.ar, "ASCII table , ascii codes :",
+;;    May 5th, 2025
+;;   URL: "https://theasciicode.com.ar/"
+;;   Notes:
+;;     - Displays the ASCII character codes.
+;;   
+;;   [pierce2025quaternarydef]
+;;   Rod Pierce,
+;;     "Quaternary Definition (Illustrated Mathematics Dictionary)",
+;;     2025
+;;   URL: "https://www.mathsisfun.com/definitions/quaternary.html"
+;;   Notes:
+;;     - Describes the quaternary number system.
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -642,7 +686,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (deftype smiley ()
-  "The ``smiley'' type defines the valid tokens of the language."
+  "The ``smiley'' type enumerates the valid tokens of the language."
   '(member
     :smiling      ;; :)
     :cheeky       ;; :P
