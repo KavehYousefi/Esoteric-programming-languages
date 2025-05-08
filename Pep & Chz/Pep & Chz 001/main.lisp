@@ -162,7 +162,7 @@
 ;; Common Lisp program by adminiculum of macros.
 ;; 
 ;; The highest mete of conspectuity harbors its commorancy in the
-;; jump instruction replications, "peeper" and "plopers", the same
+;; jump instruction translations, "peeper" and "plopers", the same
 ;; enjoy their causata's replication via a "go to"-based approach,
 ;; rendered as the ultimity of a Common Lisp "tagbody" form that assigns
 ;; to each twissel of matching forward and back jump token a navigable
@@ -635,7 +635,7 @@
 (defun prepare-pristine-jump-point-table ()
   "Resets the jump point table builder and returns no value."
   (psetf *jump-point-enumerator* 0
-         *jump-point-matcher*  NIL)
+         *jump-point-matcher*    NIL)
   (clrhash *jump-point-table*)
   (values))
 
