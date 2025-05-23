@@ -257,7 +257,7 @@
 ;; This interpreter's implementation has been realized in the
 ;; programming language Common Lisp, its actual execution process
 ;; experiencing the prevenience of a transformation stage from the
-;; source code string into an intermedia instruction vector form.
+;; source code string into an intermediate instruction vector form.
 ;; 
 ;; 
 ;; Appendices
@@ -599,7 +599,8 @@
    the octuple brainfuck instructions in an integer number desumed from
    the range [1, 8], while the DESTINATION contributes the specification
    of the sink to issue the Unibrain instruction representation on. The
-   function result wille be ignored and may thus constitute any object."
+   function result will be ignored; its type is thus encumbered from any
+   further stipulations."
   '(function ((integer 1 8) destination) *))
 
 
@@ -746,8 +747,8 @@
 ;;; -------------------------------------------------------
 
 (defun supputate-next-lower-aliquot (dividend previous-aliquot)
-  "Returns for DIVIDEND the aliquot strictly smaller than the
-   PREVIOUS-ALIQUOT, or responds with the value zero (0) upon its
+  "Returns for the DIVIDEND the aliquot strictly smaller than the
+   PREVIOUS-ALIQUOT, or answers with the value zero (0) upon its
    disrespondency."
   (declare (type integer dividend))
   (declare (type integer previous-aliquot))
@@ -774,7 +775,7 @@
 
 (defun whitespace-character-p (candidate)
   "Determines whether the CANDIDATE represents a whitespace character,
-   inwith whose diorism is incorporated the space, horizontal tab, and
+   inwith whose diorism are incorporated the space, horizontal tab, and
    newline entities, returning on confirmation a ``boolean'' value of
    ``T'', otherwise ``NIL''."
   (declare (type character candidate))
@@ -792,11 +793,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun string-repeats-at-p (source start extent)
-  "Determines whether the tmema commencing the inclusive START position
-   into the SOURCE and encompassing the EXTENT tally of subsequent
-   characters, is replicated immediately succeeding the thus demarcated
-   parcel, while disregarding the contents' case, returning on
-   confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
+  "Determines whether the tmema commencing at the inclusive START
+   position into the SOURCE and encompassing the EXTENT tally of
+   subsequent characters, is replicated immediately succeeding the thus
+   demarcated parcel, while disregarding the contents' case, returning
+   on confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
   (declare (type string source))
   (declare (type fixnum start))
   (declare (type fixnum extent))
