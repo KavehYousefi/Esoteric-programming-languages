@@ -1094,3 +1094,11 @@
 (interpret-minimized-stackbit ">*>
                                [|[|[|[|[|
                                [.*|")
+
+;;; -------------------------------------------------------
+
+;; Insert five (5) one-bits onto the first stack, push an equinumerant
+;; account of zeroes (0) onto the second one, and print while
+;; concomitantly removing the latter's content.
+(interpret-standard-stackbit "011111[*\~0\~]
+                              \~.*.*.*.*.*")
