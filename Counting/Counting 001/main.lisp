@@ -1277,8 +1277,8 @@
   (:constructor make-token (type value)))
   "The ``Token'' class represents a significant object extracted during
    the lexical analyzation of a piece of Counting source code."
-  (type   (error "Missing token type.")  :type keyword)
-  (value  (error "Missing token value.") :type T))
+  (type   (error "Missing token type.")  :type keyword :read-only T)
+  (value  (error "Missing token value.") :type T       :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1366,9 +1366,15 @@
   "The ``Lexer'' class occupies the wike of the detection and extraction
    of significant objects from a piece of Counting source code, the same
    are delivered in the form of tokens."
-  (source    (error "Missing source.") :type string)
-  (position  0                         :type fixnum)
-  (character NIL                       :type (or null character)))
+  (source    (error "Missing source.")
+             :type      string
+             :read-only T)
+  (position  0
+             :type      fixnum
+             :read-only NIL)
+  (character NIL
+             :type (or null character)
+             :read-only NIL))
 
 ;;; -------------------------------------------------------
 
@@ -1639,8 +1645,12 @@
    token provision facilities, augmented by an instance of
    supererogation in the contingency for looking ahead, or peeking, the
    subsequent token without its consumption."
-  (lexer         (error "Missing token stream lexer.") :type Lexer)
-  (current-token (make-token :eof NIL)                 :type Token))
+  (lexer         (error "Missing token stream lexer.")
+                 :type      Lexer
+                 :read-only T)
+  (current-token (make-token :eof NIL)
+                 :type      Token
+                 :read-only NIL))
 
 ;;; -------------------------------------------------------
 
@@ -1713,9 +1723,15 @@
    binary operation, commorant in the realms of arithmetics or logic,
    composed of an operator and its operand twain, and furnished as an
    abstract syntax tree (AST) node."
-  (operator      (error "Missing operator.")      :type binary-operator)
-  (left-operand  (error "Missing left operand.")  :type Node)
-  (right-operand (error "Missing right operand.") :type Node))
+  (operator      (error "Missing operator.")
+                 :type      binary-operator
+                 :read-only T)
+  (left-operand  (error "Missing left operand.")
+                 :type      Node
+                 :read-only T)
+  (right-operand (error "Missing right operand.")
+                 :type      Node
+                 :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1725,9 +1741,15 @@
    assignment operating in champarty with a binary operation, commorant
    in the realms of arithmetics, and composed of an operator and its
    operand twain, and furnished as an abstract syntax tree (AST) node."
-  (operator      (error "Missing operator.")      :type binary-operator)
-  (left-operand  (error "Missing left operand.")  :type Node)
-  (right-operand (error "Missing right operand.") :type Node))
+  (operator      (error "Missing operator.")
+                 :type      binary-operator
+                 :read-only T)
+  (left-operand  (error "Missing left operand.")
+                 :type      Node
+                 :read-only T)
+  (right-operand (error "Missing right operand.")
+                 :type      Node
+                 :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1736,7 +1758,7 @@
   "The ``Group-Node'' class designs a parenthesized expression as a
    composite of coherent elements, molded into an abstract syntax tree
    (AST) node."
-  (expression (error "Missing expression.") :type Node))
+  (expression (error "Missing expression.") :type Node :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1751,7 +1773,7 @@
   (:include Node))
   "The ``Identifier-Node'' class serves as an encapsulation of an
    identifier or variable, addressed by its designating name."
-  (name (error "Missing name.") :type keyword))
+  (name (error "Missing name.") :type keyword :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1759,7 +1781,7 @@
   (:include Node))
   "The ``Nude-Node'' class serves as an integer literal's encapsulation
    in an abstract syntax tree (AST) node."
-  (value (error "Missing value.") :type unsigned-integer))
+  (value (error "Missing value.") :type unsigned-integer :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1767,7 +1789,7 @@
   (:include Node))
   "The ``Out-Node'' class comprehends the abstract syntax tree (AST)
    node representation of a print statement (\"out\")."
-  (argument (error "Missing argument.") :type Node))
+  (argument (error "Missing argument.") :type Node :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1775,7 +1797,7 @@
   (:include Node))
   "The ``Program-Node'' class contributes an abstract syntax tree (AST)
    node representation of the complete parsed Counting program."
-  (statements NIL :type node-list))
+  (statements NIL :type node-list :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1783,7 +1805,7 @@
   (:include Node))
   "The ``Read-Node'' class provides an abstract syntax tree (AST) node
    representation of a \"read\" statement."
-  (argument (error "Missing argument.") :type Node))
+  (argument (error "Missing argument.") :type Node :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1791,7 +1813,7 @@
   (:include Node))
   "The ``String-Node'' class serves as a string literal's encapsulation
    in an abstract syntax tree (AST) node."
-  (value (error "Missing value.") :type string))
+  (value (error "Missing value.") :type string :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1800,8 +1822,12 @@
   "The ``Unary-Operation-Node'' class' onus resolves to the
    encapsulation of a unary prefix operation desumed from the vale of
    arithmetics."
-  (operator (error "Missing operator.") :type unary-operator)
-  (operand  (error "Missing operand.")  :type Node))
+  (operator (error "Missing operator.")
+            :type      unary-operator
+            :read-only T)
+  (operand  (error "Missing operand.")
+            :type      Node
+            :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1811,8 +1837,12 @@
    node representation of a \"when\" block, the same amplects an
    antecedent necessary for its activation, as well as a sequence of
    zero or more statements or expressions."
-  (condition  (error "Missing condition.") :type Node)
-  (statements NIL                          :type node-list))
+  (condition  (error "Missing condition.")
+              :type      Node
+              :read-only T)
+  (statements NIL
+              :type      node-list
+              :read-only T))
 
 
 
@@ -1825,8 +1855,8 @@
   "The ``Precedence'' class serves in the representation of a token's
    precedence information, that is, a coefficiency of the binding power
    and associativity properties."
-  (binding-power 0     :type integer)
-  (associativity :none :type associativity))
+  (binding-power 0     :type integer       :read-only T)
+  (associativity :none :type associativity :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1875,8 +1905,12 @@
   "The ``Nud-Parselet'' class establishes a parselet dedicated to the
    evaluation of a nud token, that is, one independent of the preceding
    expressions."
-  (precedence (make-dummy-precedence)          :type precedence)
-  (processor  (error "Missing nud processor.") :type nud-processor))
+  (precedence (make-dummy-precedence)
+              :type      precedence
+              :read-only T)
+  (processor  (error "Missing nud processor.")
+              :type      nud-processor
+              :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1904,8 +1938,12 @@
   "The ``Led-Parselet'' class establishes a parselet intended for the
    evaluation of a led token, that is, one relying on the preceding
    expression as its sinistral input."
-  (precedence (make-dummy-precedence)          :type Precedence)
-  (processor  (error "Missing led processor.") :type led-processor))
+  (precedence (make-dummy-precedence)
+              :type      Precedence
+              :read-only T)
+  (processor  (error "Missing led processor.")
+              :type      led-processor
+              :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -1940,7 +1978,9 @@
    evaluation of an std token, that is, a token representative of a
    statement, as counterdistinguished from expressions that affiliate
    with the nud and led species."
-  (processor (error "Missing std processor.") :type std-processor))
+  (processor (error "Missing std processor.")
+             :type      std-processor
+             :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -2622,7 +2662,7 @@
                   (generalized-boolean
                    &aux (value (not (null generalized-boolean))))))
   "The ``CBoolean'' class encapsulates a ``boolean'' object."
-  (value (error "Missing value.") :type boolean))
+  (value (error "Missing value.") :type boolean :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -2630,7 +2670,7 @@
   (:include     CObject)
   (:constructor make-cinteger (value)))
   "The ``CInteger'' class encapsulates a signed integer object."
-  (value (error "Missing value.") :type integer))
+  (value (error "Missing value.") :type integer :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -2639,7 +2679,7 @@
   (:constructor make-creference (target)))
   "The ``CReference'' class encapsulates a reference to an identifier,
    usually a variable, by its name's adminiculum."
-  (target (error "Missing target.") :type keyword))
+  (target (error "Missing target.") :type keyword :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -2647,7 +2687,7 @@
   (:include     CObject)
   (:constructor make-cstring (value)))
   "The ``CString'' class encapsulates a string object."
-  (value (error "Missing value.") :type string))
+  (value (error "Missing value.") :type string :read-only T))
 
 
 
@@ -2971,8 +3011,8 @@
 (defgeneric object-true-p (object)
   (:documentation
     "Determines whether the OBJECT shall be regarded as tantamount to a
-     Boolean \"true\" value, returning on confirmation ``T'', otherwise
-     ``NIL''."))
+     Boolean \"true\" value, returning on confirmation a ``boolean''
+     value of ``T'', otherwise ``NIL''."))
 
 ;;; -------------------------------------------------------
 
@@ -3056,23 +3096,33 @@
 
 (defstruct (Interpreter
   (:constructor make-interpreter
-                  (tree
-                   &key (cycle-delay +DEFAULT-CYCLE-DELAY+))))
+    (tree
+     &key (cycle-delay +DEFAULT-CYCLE-DELAY+))))
   "The ``Interpreter'' class is encumbered with the governance of a
    Counter program's abstract syntax tree (AST) representation in order
    to accompass utility to the same."
-  (tree                   (error "Missing tree.") :type Node)
+  (tree                   (error "Missing tree.")
+                          :type      Node
+                          :read-only T)
   ;; The "cnt" variable.
-  (counter                0                       :type integer)
+  (counter                0
+                          :type      integer
+                          :read-only NIL)
   ;; The "acc" variable.
-  (accumulator            0                       :type integer)
+  (accumulator            0
+                          :type      integer
+                          :read-only NIL)
   ;; A Boolean flag which memorizes whether all "when" blocks have
   ;; failed, in which case the instruction count, or COUNTER, must be
   ;; incremented adveniently at the current cycle's desinence.
-  (has-matched-when-block NIL                     :type boolean)
+  (has-matched-when-block NIL
+                          :type      boolean
+                          :read-only NIL)
   ;; An optional delay betwixt two iteration cycles for the purpose of
   ;; augmented visibility regarding the outputs.
-  (cycle-delay            +DEFAULT-CYCLE-DELAY+   :type (real 0.0 *)))
+  (cycle-delay            +DEFAULT-CYCLE-DELAY+
+                          :type      (real 0.0 *)
+                          :read-only T))
 
 ;;; -------------------------------------------------------
 
