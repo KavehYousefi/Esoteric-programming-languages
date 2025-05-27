@@ -1222,16 +1222,16 @@
 
 ;;; -------------------------------------------------------
 
-;; Convert "Hello, World!" from brainfuck to Brainfuck² and print the
-;; resulting code to the standard output.
+;; Convert the "Hello, World!" program from brainfuck to Brainfuck² and
+;; print the resulting code to the standard output.
 (translate-brainfuck-to-Brainfuck²
   "+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]
    <<<<.+++.------.<<-.>>>>+.")
 
 ;;; -------------------------------------------------------
 
-;; Convert "Hello, World!" from brainfuck to Brainfuck² and execute the
-;; resulting program.
+;; Convert the "Hello, World!" program from brainfuck to Brainfuck² and
+;; execute the resulting program.
 (interpret-Brainfuck²
   (translate-brainfuck-to-Brainfuck²
     "+[-->-[>>+>-----<<]<--<---]>-.>>>+.>>..+++[.>]
