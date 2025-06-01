@@ -416,7 +416,7 @@
           :eof)
         ((whitespace-character-p next-character)
           (skip-whitespaces stream)
-          (get-next-token stream))
+          (get-next-token   stream))
         ((identifier-character-p next-character)
           (parse-identifier
             (read-identifier stream)))
@@ -582,17 +582,15 @@
             (push position forward-jump-positions))
           ;; Back jump.
           (:BWEEEEEEEEE
-            (cond
-              (forward-jump-positions
-                (let ((start (pop forward-jump-positions))
-                      (end   position))
-                  (declare (type fixnum start))
-                  (declare (type fixnum end))
-                  (setf (gethash start jump-table) end)
-                  (setf (gethash end   jump-table) start)))
-              (T
-                (error "Unmatched back jump at position ~d."
-                  position))))
+            (if forward-jump-positions
+              (let ((start (pop forward-jump-positions))
+                    (end   position))
+                (declare (type fixnum start))
+                (declare (type fixnum end))
+                (setf (gethash start jump-table) end)
+                (setf (gethash end   jump-table) start))
+              (error "Unmatched back jump at position ~d."
+                position)))
           (otherwise
             NIL)))
     (the jump-table jump-table)))
@@ -664,6 +662,7 @@
             ;; Input character and store its ASCII code in current cell.
             (:BWEEEEEEE
               (format T "~&Please input an ASCII character: ")
+              (finish-output)
               (setf (memory-current-cell memory)
                     (char-code (read-char)))
               (clear-input))
