@@ -116,9 +116,17 @@
 ;;                    | The {instructions} must be a sequence of zero
 ;;                    | or more commands.
 ;;                    |------------------------------------------------
-;;                    | If the active stack is empty at the instant of
-;;                    | this operation's invocation, an error of the
-;;                    | type "EmptyStackError" is signaled.
+;;                    | If the {instructions} list is empty, this
+;;                    | iterance construct experiences a
+;;                    | transmogrification into an ineffectuous
+;;                    | no-operation (NOP); subsequently, no probing of
+;;                    | the stack ensues.
+;;                    |------------------------------------------------
+;;                    | If one or more instructions partake of the
+;;                    | iterance construct's body and the active stack
+;;                    | is empty at the instant of this operation's
+;;                    | invocation, an error of the type
+;;                    | "EmptyStackError" is signaled.
 ;;   ..................................................................
 ;;   .                | Prints the active stack's top element to the
 ;;                    | standard output.
@@ -152,9 +160,16 @@
 ;;           | one (1), relocates the instruction pointer to the
 ;;           | matching "|" token; otherwise proceeds as usual.
 ;;           |---------------------------------------------------------
-;;           | If the active stack is empty at the instant of this
-;;           | operation's invocation, an error of the type
-;;           | "EmptyStackError" is signaled.
+;;           | If the instructions list betwixt this "[" token and the
+;;           | matching "|" command is empty, this iterance construct
+;;           | experiences a transmogrification into an ineffectuous
+;;           | no-operation (NOP); subsequently, no probing of the
+;;           | stack ensues.
+;;           |---------------------------------------------------------
+;;           | If one or more instructions partake of the iterance
+;;           | construct's body and the active stack is empty at the
+;;           | instant of this operation's invocation, an error of the
+;;           | type "EmptyStackError" is signaled.
 ;;   ..................................................................
 ;;   |       | Designates the end of the loop started via the matching
 ;;           | "[" token; if the thus defined loop terminates, pushes
@@ -819,8 +834,14 @@
                     zero-based index into the PROGRAM.")
    (active-stack
     :type          Bit-Stack
-    :documentation "The contemporaneously active stack, being either of
-                    the FIRST-STACK or SECOND-STACK."))
+    :documentation "The contemporaneously active among the two extant
+                    stacks.
+                    ---
+                    The ``Bit-Stack'' class incorporating aspects of a
+                    singly linked node, the jumelle of stacks, as a
+                    consectary, maintained in a singly linked list,
+                    furnished by this ACTIVE-STACK, whose successor
+                    always refers to the alternative collection."))
   (:documentation
     "The ``Interpreter'' class is assigned the wike appertaining to a
      StackBit program's instruction list representation's governance,
@@ -831,7 +852,7 @@
 
 (defmethod initialize-instance :after ((interpreter Interpreter) &key)
   "Builds and stores the jump table for the INTERPRETER's program,
-   interconnects the stack twain, configures the initally active stack,
+   interconnects the stack twain, configures the initially active stack,
    and returns no value."
   (declare (type Interpreter interpreter))
   (with-slots (program jump-table active-stack) interpreter
@@ -952,8 +973,8 @@
 
 (defun program-has-been-completed-p (interpreter)
   "Determines whether the StackBit program consigned to the
-   INTERPRETER's has been executed in its entirety, returning on
-   confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
+   INTERPRETER's castaldy has been executed in its entirety, returning
+   on confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
   (declare (type Interpreter interpreter))
   (the boolean
     (with-slots (program ip) interpreter
