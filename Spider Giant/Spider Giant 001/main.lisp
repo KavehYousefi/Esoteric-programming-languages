@@ -1668,7 +1668,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Repeatin cat program which terminates on a "null character" input.
+;; Repeating cat program which terminates on a "null character" input.
 (interpret-spider-giant
   "Step on Spider!
    I promise not to kill you.
