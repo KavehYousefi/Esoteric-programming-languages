@@ -1602,12 +1602,12 @@
 ;; -- Implementation of brainfuck identifier table.                -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declaim (type (simple-string 8) +BRAINFUCK-COMMAND-TOKENS+))
+(declaim (type (simple-base-string 8) +BRAINFUCK-COMMAND-TOKENS+))
 
 ;;; -------------------------------------------------------
 
 (defparameter +BRAINFUCK-COMMAND-TOKENS+
-  "><+-.,[]"
+  (coerce "><+-.,[]" 'simple-base-string)
   "Associates the recognized brainfuck command symbols with their
    zero-based positions in the Unibrain encoding table.
    ---
@@ -1623,6 +1623,7 @@
   "Returns the zero-based position of the brainfuck TOKEN in the
    Unibrain encoding, or responds with ``NIL'' upon its absence from the
    recognized membership."
+  (declare (type character token))
   (the (or null (integer 0 7))
     (position token +BRAINFUCK-COMMAND-TOKENS+ :test #'char=)))
 
@@ -1677,7 +1678,7 @@
     (brainfuck-code
      &key
        (unibrain-token-generator +DEFAULT-UNIBRAIN-TOKEN-GENERATOR+)
-       (destination             NIL))
+       (destination              NIL))
   "Generates for the BRAINFUCK-CODE an equivalent Unibrain program,
    optionally employing the UNIBRAIN-TOKEN-GENERATOR for the tokens'
    production if not desiderating repetitions of the \"Developers\"
