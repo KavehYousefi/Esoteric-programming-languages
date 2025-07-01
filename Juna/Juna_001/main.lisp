@@ -1,8 +1,290 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; This program implements an interpreter for the esoteric programming
+;; language "Juna", invented by the Esolang user "Tetrapyronia" and
+;; presented on November 16th, 2020, and invested with the proprium of
+;; a single forbisen, enumerating five tokens, whence the potential of
+;; three causata arrive, operating on an infinite set of unsigned
+;; integer-valued registers, most conspicuously by mediation of the
+;; logical NAND operator.
+;; 
+;; 
+;; Concept
+;; =======
+;; The Juna programming language realizes a "One Instruction Set
+;; Computer" (OISC) whose triad of competences is realized in the
+;; format established in confluence of five tokens, designed as one
+;; instruction, and serving in the perquisition and manipulation of
+;; a set of unsigned integer-valued registers.
+;; 
+;; == JUNA DESCRIBES A ONE INSTRUCTION SET COMPUTER (OISC) ==
+;; Juna's membership subscribes to the species of "One Instruction Set
+;; Computers", abbreviated to OISC, and in its delineation inheriting
+;; a ramosity of possible effects from an aefauld operation, the
+;; variation of the same is begotten by the constituents' choice.
+;; 
+;; == FIVE TOKENS DEFINE EACH INSTRUCTION ==
+;; In the concrete case of this language, five tokens participate in
+;; the operative aggregate's edification, each component a non-negative,
+;; unsigned integer number, its placement the index to its purpose.
+;; 
+;; Its triad of conceivable epiphenomena's gendrure constitutes the
+;; effort of the period (".") symbol's presence or absence, and, in the
+;; former circumstance, its location within the quintuple arrangement.
+;; 
+;; == ONE FORMAT PRODUCES THREE CAUSATA ==
+;; The general weftage whose quintuple componency governs the nomothesy
+;; adheres to the following:
+;; 
+;;   lineNumber registerA registerB jumpDestinationA jumpDestinationB
+;; 
+;; The subsumption into the three coarse parcels, the "lineNumber" as
+;; the first, the "registerA" and "registerB" as the second, and the
+;; "jumpDestinationA" and "jumpDestinationB" as the desinent one, shall
+;; be the coming tmemata's cynosure.
+;; 
+;; == THE LINE NUMBER IDENTIFIES A LINE AS A JUMP DESTINATION ==
+;; The "lineNumber" provides a succedaneum for the definition of a
+;; line's identification, furnished in the form of a non-negative,
+;; unsigned integer number, and mandated to a unique assignment for each
+;; line. This piece of information's purpose appertains to the reception
+;; as a jump destination for the several instructions.
+;; 
+;; == THE REGISTERS ACT AS OPERANDS OR INSTRUCTION SELECTORS ==
+;; The "registerA" and "registerB" placeholders contribute the memory
+;; registers participating in an operation, their tally bourneless in
+;; their equipollence with the vastness of conceivable non-negative
+;; integer numbers, and always empight in the default state of zero (0).
+;; 
+;; The presence of both or absence of one of these twains, the latter
+;; case signified via the sentinel ".", begets the three members of the
+;; Juna instruction set.
+;; 
+;; == THE JUMP DESTINATIONS DESIGNATE THE LINE NUMBER TO VISIT NEXT ==
+;; Every instruction invocation's conclusion manifests in a jumping
+;; step, rather than a simple advancement to the subsequent line,
+;; targeting an alternative betwixt two possible destination lines by
+;; mediation of their unambiguous line numbers.
+;; 
+;; A dedication to a particular telos, the period (".") symbol's
+;; installment in lieu of a numeric destination line number capacitates
+;; the immediate program termination upon an attempt to relocate the
+;; instruction pointer (IP) to the thus designated "location".
+;; 
+;; == THE MEMORY: AN INFINITE SET OF INTEGER-VALUED REGISTERS ==
+;; The data castaldy in Juna is assigned to the bailiwick of an infinite
+;; account of registers, each a scalar integer's salvatory, and meted in
+;; its capacity no imposition concerning the datum's mickleness, while
+;; naturally admitting non-negative values only.
+;; 
+;; Each register answers to a unique identifier manifesting in a
+;; non-negative integer number.
+;; 
+;; 
+;; Syntax
+;; ======
+;; Juna's program design is subjected to a stringent homogeneity's
+;; purview, each line following the same forbisen, thilk imposes a
+;; quintuple componency, comprehending an ubiquitous line number,
+;; either one or two register identifiers, and exactly two alternative
+;; destination line numbers.
+;; 
+;; == PROGRAMS: LINES OF INSTRUCTIONS ==
+;; A Juna program's designment expects a sequence of zero or more
+;; lines, everichon among these a single instruction's commorancy,
+;; segregated from its neighbor by at least one newline character.
+;; 
+;; == INSTRUCTIONS: PATTERNS OF A QUINTUPLE COMPONENCY ==
+;; The same forbisen applies to each of the three contingent Juna
+;; instructions, their indicium realized in the period symbol "." which
+;; by its presence and location aids in the triplet's discernment.
+;; 
+;; The entirety of Juna's entelechy may be ostended in a treble of
+;; formats, embracing bitwise NAND-combination, numeric input, and
+;; numeric output, as demonstrated alow.
+;; 
+;; Please heed the designation of each succedaneous tmema via a catena
+;; of asterisks, intended for its supersession by actual Juna code in
+;; the ultimate program.
+;; 
+;;   ------------------------------------------------------------------
+;;   Command                      | Effect
+;;   -----------------------------+------------------------------------
+;;   lineNo regA regB destA destB | NAND-combination
+;;   ****** **** **** ***** ***** | 
+;;   ..................................................................
+;;   lineNo regA .    destA destB | Numeric output
+;;   ****** ****      ***** ***** | 
+;;   ..................................................................
+;;   lineNo .    regB destA destB | Numeric input
+;;   ******      **** ***** ***** | 
+;;   ------------------------------------------------------------------
+;; 
+;; == COMMENTS ==
+;; The supererogative appendage of comments proceeds by means of a
+;; hash sign ("#") following the instruction's tokens, and extending
+;; to the ensconcing line's desinence.
+;; 
+;; == GRAMMAR ==
+;; An amplified formal quality's assignment shall be imparted to the
+;; syntaxis by the ostention of an Extended Backus-Naur Form (ENBF)
+;; description of the language:
+;; 
+;;   program       := { innerLine } , [ lastLine ] ;
+;;   
+;;   lastLine      := [ command ] , [ comment ] ;
+;;   innerLine     := [ command ] , [ comment ] , newline ;
+;;   
+;;   comment       := "#" , { ( character - newline ) } ;
+;;   
+;;   command       := nandCommand | inputCommand | outputCommand ;
+;;   nandCommand   := lineNumber
+;;                 ,  register
+;;                 ,  register
+;;                 ,  destination
+;;                 ,  destination
+;;                 ;
+;;   inputCommand  := lineNumber
+;;                 ,  "."
+;;                 ,  register
+;;                 ,  destination
+;;                 ,  destination
+;;                 ;
+;;   outputCommand := lineNumber
+;;                 ,  register
+;;                 ,  "."
+;;                 ,  destination
+;;                 ,  destination
+;;                 ;
+;;   
+;;   lineNumber    := integer ;
+;;   register      := integer ;
+;;   destination   := integer | "." ;
+;;   
+;;   integer       := digit , { digit } ;
+;;   digit         := "0" | "1" | "2" | "3" | "4"
+;;                 |  "5" | "6" | "7" | "8" | "9"
+;;                 ;
+;; 
+;; 
+;; Instructions
+;; ============
+;; Juna's instruction set enumerates three members, in a compass that
+;; intrines bitwise NAND-combination, numeric input, as well as numeric
+;; output facilities.
+;; 
+;; == OVERVIEW ==
+;; The following apercu's contribution shall be the requisite gnarity's
+;; communication anent the Juna programming language's competences.
+;; 
+;; Please heed the designation of each succedaneous tmema via a catena
+;; of asterisks, intended for its supersession by actual Juna code in
+;; the ultimate program.
+;; 
+;;   ------------------------------------------------------------------
+;;   Command                      | Effect
+;;   -----------------------------+------------------------------------
+;;   lineNo regA regB destA destB | NAND-combines the values of the two
+;;   ****** **** **** ***** ***** | registers {regA} and {regB} and
+;;                                | stores the result in the register
+;;                                | {regB}. If the new state of {regB}
+;;                                | equals zero (0), jumps to the
+;;                                | line amenable to the number
+;;                                | {destA}, otherwise relocates to
+;;                                | the line {destB}.
+;;                                |------------------------------------
+;;                                | If the selected destination line,
+;;                                | either {destA} or {destB},
+;;                                | constitutes the sentinel ".", the
+;;                                | program immediately halts.
+;;                                |------------------------------------
+;;                                | {lineNo} must be a line number,
+;;                                | that is, a non-negative integer
+;;                                | number.
+;;                                |------------------------------------
+;;                                | {regA} and {regB} must be register
+;;                                | identifiers, that is, non-negative
+;;                                | integer numbers.
+;;                                |------------------------------------
+;;                                | {destA} and {destB} must be
+;;                                | destination line numbers, that is,
+;;                                | either non-negative integers or the
+;;                                | sentinel ".".
+;;   ..................................................................
+;;   lineNo regA .    destA destB | Prints the content of the register
+;;   ****** ****      ***** ***** | {regA} in its verbatim numeric form
+;;                                | to the standard output conduit. If
+;;                                | the state of {regA} equals zero
+;;                                | (0), jumps to the line amenable to
+;;                                | the number {destA}, otherwise
+;;                                | relocates to the line {destB}.
+;;                                |------------------------------------
+;;                                | If the selected destination line,
+;;                                | either {destA} or {destB},
+;;                                | constitutes the sentinel ".", the
+;;                                | program immediately halts.
+;;                                |------------------------------------
+;;                                | {lineNo} must be a line number,
+;;                                | that is, a non-negative integer
+;;                                | number.
+;;                                |------------------------------------
+;;                                | {regA} must be register identifier,
+;;                                | that is, non-negative integer
+;;                                | numbers.
+;;                                |------------------------------------
+;;                                | {destA} and {destB} must be
+;;                                | destination line numbers, that is,
+;;                                | either non-negative integers or the
+;;                                | sentinel ".".
+;;   ..................................................................
+;;   lineNo .    regB destA destB | Queries the standard input conduit
+;;   ******      **** ***** ***** | for a non-negative integer number
+;;                                | and stores thilk in the register
+;;                                | {regB}. If the new state of {regB}
+;;                                | equals zero (0), jumps to the
+;;                                | line amenable to the number
+;;                                | {destA}, otherwise relocates to
+;;                                | the line {destB}.
+;;                                |------------------------------------
+;;                                | If the selected destination line,
+;;                                | either {destA} or {destB},
+;;                                | constitutes the sentinel ".", the
+;;                                | program immediately halts.
+;;                                |------------------------------------
+;;                                | {lineNo} must be a line number,
+;;                                | that is, a non-negative integer
+;;                                | number.
+;;                                |------------------------------------
+;;                                | {regB} must be register identifier,
+;;                                | that is, non-negative integer
+;;                                | numbers.
+;;                                |------------------------------------
+;;                                | {destA} and {destB} must be
+;;                                | destination line numbers, that is,
+;;                                | either non-negative integers or the
+;;                                | sentinel ".".
+;;   ------------------------------------------------------------------
+;; 
+;; 
+;; Implementation
+;; ==============
+;; This interpreter's implementation is realized in the programming
+;; language Common Lisp, the prevenience to the execution stage a
+;; transformation of the source code string into a vector of dedicated
+;; "Instruction" objects, serving as an adminicle to an eath processing
+;; effort.
+;; 
+;; --------------------------------------------------------------------
+;; 
 ;; Author: Kaveh Yousefi
 ;; Date:   2022-02-21
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Juna"
+;;   [esolang2020Juna]
+;;   The Esolang contributors, "Juna", November 16th, 2020
+;;   URL: "https://esolangs.org/wiki/Juna"
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
@@ -75,8 +357,8 @@
   (:constructor make-token (type value)))
   "A token avails as a significant portion's encapsulation, produced by
    a prior analyzation of a piece of Juna source code."
-  (type  (error "No token type specified.") :type keyword)
-  (value NIL                                :type T))
+  (type  (error "No token type specified.") :type keyword :read-only T)
+  (value NIL                                :type T       :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -266,12 +548,12 @@
   (:constructor make-operand (type value)))
   "The ``Operand'' class models an object in the agency of an
    instruction's argument."
-  (type
-    (error "No operand type specified.")
-    :type operand-type)
-  (value
-    0
-    :type non-negative-integer))
+  (type  (error "No operand type specified.")
+         :type      operand-type
+         :read-only T)
+  (value 0
+         :type      non-negative-integer
+         :read-only T))
 
 
 
@@ -316,17 +598,29 @@
        &aux
          (type (determine-instruction-type register-a register-b)))))
   "An ``Instruction'' reifies the concept of an operation."
-  (type        :undefined                :type instruction-type)
+  (type        :undefined
+               :type      instruction-type
+               :read-only T)
   ;; The instruction's line number "L".
-  (line-number 0                         :type non-negative-integer)
+  (line-number 0
+               :type      non-negative-integer
+               :read-only T)
   ;; Index (address) of the register "a".
-  (register-a  (make-operand :integer 0) :type Operand)
+  (register-a  (make-operand :integer 0)
+               :type      Operand
+               :read-only T)
   ;; Index (address) of the register "b".
-  (register-b  (make-operand :integer 0) :type Operand)
+  (register-b  (make-operand :integer 0)
+               :type      Operand
+               :read-only T)
   ;; Target line number "Y".
-  (line-Y      (make-operand :dot     0) :type Operand)
+  (line-Y      (make-operand :dot     0)
+               :type      Operand
+               :read-only T)
   ;; Target line number "N".
-  (line-N      (make-operand :dot     0) :type Operand))
+  (line-N      (make-operand :dot     0)
+               :type      Operand
+               :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -698,9 +992,12 @@
           
           (:input
             (format T "~&Please input a bit: ")
-            (let ((input (read)))
-              (declare (type bit input))
-              (setf (register-b) input))
+            (finish-output)
+            (setf (register-b)
+              (parse-integer
+                (read-line NIL)
+                :radix 2))
+            (clear-input)
             (interpreter-jump-to interpreter
               (if (zerop (register-b))
                 (instruction-line-Y current-instruction)
