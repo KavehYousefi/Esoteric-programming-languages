@@ -4,6 +4,7 @@
 ;; language "Goedelang", invented by the Esolang user "TJC games", being
 ;; a derivative of the esoteric language "brainfuck" by Urban Mueller.
 ;; 
+;; 
 ;; Concepts
 ;; ========
 ;; Goedelang's dioristic approach designates a program as a single
@@ -186,7 +187,8 @@
 ;; 
 ;; Concerning the decoding table D and the encoding table E, the
 ;; following associations hold for the Goedelang version 1:
-;;   
+;; 
+;;   ----------------------------
 ;;   Exponent | brainfuck command
 ;;   ---------+------------------
 ;;    0       | end of file
@@ -200,9 +202,11 @@
 ;;    11      | ,
 ;;    13      | [
 ;;    14      | ]
+;;   ----------------------------
 ;; 
 ;; Analogously, the version 2, erstwhile agnominated 1.1, maintains:
-;;   
+;; 
+;;   ----------------------------
 ;;   Exponent | brainfuck command
 ;;   ---------+------------------
 ;;    0       | end of file
@@ -219,6 +223,7 @@
 ;;    15      | none
 ;;    17      | none
 ;;    19      | [-]
+;;   ----------------------------
 ;; 
 ;; During the processing of a Goedelang program, that is, the decoding
 ;; of an integer Goedel number into symbol codes, delineating the
@@ -356,7 +361,8 @@
 ;; The version 1, a nominal rejuvenescence of the language's inchoation,
 ;; merely procured, beside a terminating statement, two operations
 ;; intended to modify the current cell value by an amount of 16.
-;;   
+;; 
+;;   ------------------------------------------------------------------
 ;;   Exponent | bf command       | Effect
 ;;   ---------+------------------+-------------------------------------
 ;;    0       | none             | Terminates the program.
@@ -400,6 +406,7 @@
 ;;            |                  | immediately following the matching
 ;;            |                  | 13; otherwise simply advances to
 ;;            |                  | the next character.
+;;   ------------------------------------------------------------------
 ;; 
 ;; == OVERVIEW: GOEDELANG 2 ==
 ;; The second rendition, Goedelang 2, whilom distributed as the version
@@ -408,7 +415,8 @@
 ;; in conclusion of its forisfamiliation embraces operations for input
 ;; and output as both numbers and characters, and contributes a cell
 ;; value reset to zero (0).
-;;   
+;; 
+;;   ------------------------------------------------------------------
 ;;   Exponent | bf command       | Effect
 ;;   ---------+------------------+-------------------------------------
 ;;    0       | none             | Terminates the program.
@@ -471,6 +479,7 @@
 ;;            |                  | the next character.
 ;;   ..................................................................
 ;;    19      | [-]              | Sets the current cell value to 0.
+;;   ------------------------------------------------------------------
 ;; 
 ;; 
 ;; Implementation
@@ -682,6 +691,16 @@
 
 ;;; -------------------------------------------------------
 
+(deftype decoding-table ()
+  "The ``decoding-table'' type defines a mapping betwixt Goedelang
+   instructions and their tantamount brainfuck command sequences, its
+   manifestation that of a hash table thilk affiliates Goedelang
+   ``instruction'' objects with brainfuck operations ensconced in
+   simple strings."
+  '(hash-table-of instruction simple-string))
+
+;;; -------------------------------------------------------
+
 (deftype language-version ()
   "The ``language-version'' type defines the Goedelang version whose
    conformance shall be ascertained."
@@ -786,7 +805,7 @@
 
 (defun interpret-Goedelang-1 (code)
   "Interprets the piece of Goedelang CODE according to the rules of the
-   version 1, and returns no value."
+   version 1 and returns no value."
   (declare (type goedel-number code))
   
   (let ((instructions (extract-Goedelang-instructions code)))
@@ -1137,7 +1156,8 @@
 
 (defun interpret-Goedelang (code &key (language-version :2.0))
   "Interprets the piece of Goedelang CODE according to the rules of the
-   LANGUAGE-VERSION, defaulting to 2.0"
+   LANGUAGE-VERSION, defaulting to the rendition 2.0, and returns no
+   value."
   (declare (type goedel-number    code))
   (declare (type language-version language-version))
   (case language-version
@@ -1161,7 +1181,8 @@
     (the goedel-number
       (reduce
         #'(lambda (accumulator code)
-            (declare (type instruction code))
+            (declare (type (integer 1 *) accumulator))
+            (declare (type instruction   code))
             (let ((prime (funcall prime-generator)))
               (declare (type (integer 2 *) prime))
               (the (integer 2 *)
@@ -1276,11 +1297,9 @@
 ;; -- Implementation of Goedelang-to-brainfuck converter.          -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declaim (type (hash-table-of instruction string)
-         *brainfuck-decoding-table-v1*))
+(declaim (type decoding-table *brainfuck-decoding-table-v1*))
 
-(declaim (type (hash-table-of instruction string)
-         *brainfuck-decoding-table-v2*))
+(declaim (type decoding-table *brainfuck-decoding-table-v2*))
 
 ;;; -------------------------------------------------------
 
@@ -1291,7 +1310,7 @@
 
 (defparameter *brainfuck-decoding-table-v2*
   (make-hash-table :test #'eq)
-  "The decoding table which assigns to each Goedelang version 1 command
+  "The decoding table which assigns to each Goedelang version 2 command
    the equivalent brainfuck instruction.")
 
 ;;; -------------------------------------------------------
@@ -1327,26 +1346,38 @@
 
 ;;; -------------------------------------------------------
 
-(defun goedel-decode (goedel-number decoding-table
+(defun goedel-decode (goedel-number
+                      decoding-table
                       &key (destination T))
-  (declare (type goedel-number goedel-number))
-  (declare (type destination   destination))
-  (if destination
-    (let ((goedelang-instructions (extract-Goedelang-instructions goedel-number)))
-      (declare (type (simple-array instruction (*))
-                     goedelang-instructions))
-      (loop
-        for goedelang-instruction
-          of-type instruction
-          across  goedelang-instructions
-        do
-          (multiple-value-bind (brainfuck-command contains-instruction-p)
-              (gethash goedelang-instruction decoding-table)
-            (declare (type (or null string) brainfuck-command))
-            (declare (type T                contains-instruction-p))
-            (when contains-instruction-p
-              (write-string brainfuck-command destination)))))
-    (the string
+  "Converts the GOEDELANG-CODE, provided as a nonnegative integer,
+   according to the nomothesia imposed by the DECODING-TABLE, into an
+   equivalent brainfuck program and writes the latter to the
+   DESTINATION, returning for a non-``NIL'' DESTINATION the ``NIL''
+   value; otherwise responds with a fresh string comprehending the
+   output."
+  (declare (type goedel-number  goedel-number))
+  (declare (type decoding-table decoding-table))
+  (declare (type destination    destination))
+  (the (or null string)
+    (if destination
+      (let ((goedelang-instructions
+              (extract-Goedelang-instructions goedel-number)))
+        (declare (type (simple-array instruction (*))
+                       goedelang-instructions))
+        (loop
+          for goedelang-instruction
+            of-type instruction
+            across  goedelang-instructions
+          do
+            (multiple-value-bind
+                (brainfuck-command contains-instruction-p)
+                (gethash goedelang-instruction decoding-table)
+              (declare (type (or null simple-string)
+                             brainfuck-command))
+              (declare (type T
+                             contains-instruction-p))
+              (when contains-instruction-p
+                (write-string brainfuck-command destination)))))
       (with-output-to-string (output)
         (declare (type string-stream output))
         (goedel-decode goedel-number decoding-table
@@ -1359,20 +1390,22 @@
                                             (destination       T))
   "Converts the GOEDELANG-CODE, provided as a nonnegative integer,
    interpreted according to the GOEDELANG-VERSION, into an equivalent
-   brainfuck program and writes the latter to the DESTINATION, which
-   defaults to the standard output ``T''."
+   brainfuck program and writes the latter to the DESTINATION, returning
+   for a non-``NIL'' DESTINATION the ``NIL'' value; otherwise responds
+   with a fresh string comprehending the output."
   (declare (type goedel-number    goedelang-code))
   (declare (type language-version goedelang-version))
   (declare (type destination      destination))
-  (goedel-decode goedelang-code
-    (case goedelang-version
-      (:1.0
-        *brainfuck-decoding-table-v1*)
-      ((:1.1 :2.0)
-        *brainfuck-decoding-table-v2*)
-      (otherwise
-        (error "Invalid Goedelang version: ~s." goedelang-version)))
-    :destination destination))
+  (the (or null string)
+    (goedel-decode goedelang-code
+      (case goedelang-version
+        (:1.0
+          *brainfuck-decoding-table-v1*)
+        ((:1.1 :2.0)
+          *brainfuck-decoding-table-v2*)
+        (otherwise
+          (error "Invalid Goedelang version: ~s." goedelang-version)))
+      :destination destination)))
 
 
 
