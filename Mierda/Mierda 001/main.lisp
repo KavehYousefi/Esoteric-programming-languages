@@ -128,7 +128,7 @@
 ;; dedicated instruction representations, ere their actual evaluation.
 ;; 
 ;; A scion of supererogation, this file comprehends as a paravail
-;; contributions converters betwixt Mierda and brainfuck along both
+;; contribution converters betwixt Mierda and brainfuck along both
 ;; lateralities.
 ;; 
 ;; --------------------------------------------------------------------
