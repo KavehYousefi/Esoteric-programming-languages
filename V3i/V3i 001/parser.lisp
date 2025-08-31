@@ -34,7 +34,7 @@
 
 (defun parse-if-statement (tokens)
   "Parses a V3i \"if\" statement block utilizing the stream of TOKENS
-   and returns an ``If-Node'' representation of the cnosumed content."
+   and returns an ``If-Node'' representation of the consumed content."
   (declare (type Token-Stream tokens))
   (the If-Node
     (make-if-node
@@ -54,7 +54,7 @@
 ;;; -------------------------------------------------------
 
 (defun parse-else-branch (tokens)
-  "Parses an V3i \"if\" statement's \"else\" branch and returns a
+  "Parses a V3i \"if\" statement's \"else\" branch and returns a
    covenable ``AST-Node'' representation thereof."
   (declare (type Token-Stream tokens))
   (the AST-Node
@@ -124,7 +124,7 @@
 (defun consume-optional-semicolon (tokens)
   "Determines whether the next token obtained from the TOKENS stream
    represents a semicolon (\";\") token, on confirmation consuming the
-   same, otherwise accompassing no causatum, in any case return no
+   same, otherwise accompassing no causatum, in any case returning no
    value."
   (declare (type Token-Stream tokens))
   (when (next-token-is-of-type-p tokens :semicolon)
@@ -137,7 +137,7 @@
   "Determines whether the next token obtained from the TOKENS stream
    represents the \"end;\" block terminator sequence, on confirmation
    consuming the same, otherwise accompassing no causatum, in any case
-   return no value."
+   returning no value."
   (declare (type Token-Stream tokens))
   ;; Consume optional "end;" instruction.
   (when (next-token-is-of-type-p tokens :end)

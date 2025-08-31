@@ -24,7 +24,7 @@
 
 (defun get-binary-truth-value-of (object)
   "Produces a binary truth value equivalency of the OBJECT founded upon
-   its construes as a \"generalized boolean\", returning for a
+   its construe as a \"generalized boolean\", returning for a
    non-``NIL'' input a bit value of one (1), otherwise, for a ``NIL''
    OBJECT, zero (0)."
   (declare (type T object))

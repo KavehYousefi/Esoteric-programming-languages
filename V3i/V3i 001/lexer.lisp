@@ -259,7 +259,7 @@
 (defun read-string-literal (lexer)
   "Proceeding from the current position into the LEXER's source, reads
    a string literal demarcated by a twissel of quotation marks ('\"'),
-   and returns a ``:string'' representation thereof."
+   and returns a ``:string'' token representation thereof."
   (declare (type Lexer lexer))
   (advance-lexer lexer)
   (the Token

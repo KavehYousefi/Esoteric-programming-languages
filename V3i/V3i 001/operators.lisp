@@ -108,9 +108,8 @@
 
 (define-binary-operation :equal-to (integer string)
   (the bit
-    (the bit
-      (apply-binary-operator $operator $left
-        (parse-integer $right)))))
+    (apply-binary-operator $operator $left
+      (parse-integer $right))))
 
 ;;; -------------------------------------------------------
 

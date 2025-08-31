@@ -1,9 +1,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; This program implements an interpreter for the esoteric programming
-;; language "Var=Bar", designed by the Esolang user "A" in the year
-;; 2018, and based upon the assignment to variables as the exclusive
-;; warklume for the accomplishment of operational effects.
+;; language "Var=Bar", designed by the Esolang user "A" and presented
+;; July 8th, 2018, and based upon the assignment to variables as the
+;; exclusive warklume for the accomplishment of operational effects.
 ;; 
 ;; 
 ;; Concept
@@ -21,7 +21,7 @@
 ;; the pattern follows a Procrustean rule in the mimicry of a variable
 ;; assignment, irrespective of the intention:
 ;; 
-;;   <variableName> = <command>
+;;   <variable> = <command>
 ;; 
 ;; The sinistral moeity, bearing solely the variable name, may adduce
 ;; any name for the placeholder, including strings and integers. The

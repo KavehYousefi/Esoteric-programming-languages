@@ -27,7 +27,7 @@
     :reader        undefined-variable-error-variable
     :type          variable-name
     :documentation "The name of the variable which, having not yet been
-                    defined, was pursued for an indagation of
+                    defined, was pursued for an indagation or
                     modulation."))
   (:documentation
     "The ``Undefined-Variable-Error'' condition type serves in the
@@ -152,7 +152,7 @@
 ;;; -------------------------------------------------------
 
 (defun valid-variable-name-p (variables name)
-  "Determines whether the NAME identifes a recognized variable in the
+  "Determines whether the NAME identifies a recognized variable in the
    VARIABLES table, returning on confirmation a ``boolean'' value of
    ``T'', otherwise ``NIL''."
   (declare (type Variable-Set variables))
@@ -177,7 +177,7 @@
 
 (defun define-variable (variables name initial-value)
   "Marks the variable amenable to the NAME as defined, if not yet done,
-   stores the INITIAL VALUE in the same, and returns no value."
+   stores the INITIAL-VALUE in the same, and returns no value."
   (declare (type Variable-Set variables))
   (declare (type string       name))
   (declare (type v3i-object   initial-value))

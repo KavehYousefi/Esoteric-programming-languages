@@ -185,7 +185,7 @@
 ;;; -------------------------------------------------------
 
 (deftype variable-set-entries ()
-  "The ``variable-set-entries'' type defines unilateral association
+  "The ``variable-set-entries'' type defines a unilateral association
    betwixt a variable's agnomination and its representative
    encapsulation, its manifestation chosen as an association list
    (alist), the keys of which bear ``variable-name''s and respond with
@@ -195,7 +195,7 @@
 ;;; -------------------------------------------------------
 
 (deftype v3i-object ()
-  "The ``v3i-object'' type defines a datum conable to be admitted to a
+  "The ``v3i-object'' type defines a datum conable to be admitted to the
    participation in a V3i program."
   '(or integer string))
 

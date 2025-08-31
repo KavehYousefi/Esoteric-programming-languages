@@ -3,7 +3,7 @@
 ;; This file implements the expression parser component, adhering to
 ;; the principles of the Pratt parser.
 ;; 
-;; Please heed that this file's content lays its amplectation solely
+;; Please heed that this file's content lays its amplection solely
 ;; across the parselets' class and operation provisions; the actual
 ;; definition of the various "null denotation" (nud), "left denotation"
 ;; (led), and "statement denotation" (std) parselets is relocated to
@@ -158,7 +158,7 @@
     :initform      (error "Missing led parselet precedence.")
     :reader        led-parselet-precedence
     :type          Precedence
-    :documentation "The led token's optional precedence."))
+    :documentation "The led token's obligatory precedence."))
   (:documentation
     "The ``Led-Parselet'' class is apportioned that dever to parse a
      led token, its reliance registered at a mandatory sinistral and
@@ -317,7 +317,7 @@
 (defparameter *std-parselets*
   (make-hash-table :test #'eq)
   "Associates the recognized std token types with parselets dedicated to
-   their transformation into an expression.")
+   their transformation into a statement.")
 
 ;;; -------------------------------------------------------
 

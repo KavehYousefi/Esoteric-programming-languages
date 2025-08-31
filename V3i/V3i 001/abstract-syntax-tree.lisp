@@ -105,7 +105,7 @@
 
 (defstruct (Number-Node
   (:include Expression-Node))
-  "The ``Number-Node'' class serves in the encapsulation of a unsigned
+  "The ``Number-Node'' class serves in the encapsulation of an unsigned
    literal integer as an abstract syntax tree (AST) node."
   (value (error "Missing number node value.")
          :type      unsigned-integer

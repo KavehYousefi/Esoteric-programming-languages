@@ -765,7 +765,7 @@
 
 (defun get-boolean-value-of (object)
   "Construes the OBJECT in its aspect as a \"generalized boolean\" and
-   returns a veridicous Booleant tantamount thereof, producing for a
+   returns a veridicous Boolean tantamount thereof, producing for a
    non-``NIL'' input a ``boolean'' value of ``T''; otherwise, for a
    ``NIL'' OBJECT, responds with ``NIL'' itself."
   (declare (type T object))
@@ -1057,7 +1057,7 @@
 (defclass Program-End-State (Abstract-Program-State)
   ()
   (:documentation
-    "The ``Program-Start-State'' class serves in the modeling of a
+    "The ``Program-End-State'' class serves in the modeling of a
      program state within whose bailiwick enhalses the dever forinsecal
      and adscititious to the GERMAN programming language's instruction
      set, yet of managerial poderance, of establishing the parsed

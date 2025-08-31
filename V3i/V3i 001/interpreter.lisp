@@ -24,15 +24,15 @@
     :type          Variable-Set
     :documentation "A registry comprehending the variable triple."))
   (:documentation
-    "The ``Interpreter'' applies itself to the administration of actual
-     efficacy to a V3i program supplied in the form of an abstract
-     syntax tree (AST)."))
+    "The ``Interpreter'' class applies itself to the administration of
+     actual efficacy to a V3i program supplied in the form of an
+     abstract syntax tree (AST)."))
 
 ;;; -------------------------------------------------------
 
 (defun make-interpreter (tree)
   "Creates and returns a fresh ``Interpreter'' dedicated to the
-   execution of the V3i program specified via its abstractsyntax TREE."
+   execution of the V3i program specified via its abstract syntax TREE."
   (declare (type Program-Node tree))
   (the Interpreter
     (make-instance 'Interpreter :tree tree)))

@@ -231,9 +231,9 @@
 ;;   ------------------------------------------------------------------
 ;; 
 ;; == BINARY OPERATORS ==
-;; A quintuple componency maintains is entalented with the governance
-;; of the binary operations, their conduits in both the input and
-;; result aspects restricted to signed integer numbers:
+;; A quintuple componency is entalented with the governance of the
+;; binary operations, their conduits in both the input and result
+;; aspects restricted to signed integer numbers:
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   Operator | Causatum
@@ -244,8 +244,8 @@
 ;;   -        | Returns the difference obtained by a subtraction of the
 ;;            | left operand by the right one.
 ;;   ..................................................................
-;;   *        | Returns the production obtained by a multiplication of
-;;            | the left operand by the right one.
+;;   *        | Returns the product obtained by a multiplication of the
+;;            | left operand by the right one.
 ;;   ..................................................................
 ;;   /        | Returns the integral quotient obtained by a division of
 ;;            | the left operand by the right one.
@@ -269,7 +269,7 @@
 ;;   1            | true
 ;;   ---------------------------------
 ;; 
-;; A generalized construe's purview appertains to Boolean logic's
+;; A generalized construe's purview appertains to the Boolean logic's
 ;; extension to any integral number as well as string objects:
 ;; 
 ;;   (1) An integer number equal to zero (0) is tantamount to a Boolean
@@ -280,10 +280,10 @@
 ;;   
 ;;   (3) Any string is tantamount to a Boolean "true" output.
 ;; 
-;; The contingency for juxtaposition of integers and strings begets a
-;; heterogeneity in the interpretation of relationship betwixt operands,
-;; whence ensues a requisitum for their reconciliation. The coming
-;; tabulation shall attend to these twissel options' dportment:
+;; The contingency for juxtapositions of integers and strings begets a
+;; heterogeneity in the interpretation of relationships betwixt
+;; operands, whence ensues a requisitum for their reconciliation. The
+;; coming tabulation shall attend to these twissel options' deportment:
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   Left operand | Right operand | Handling
@@ -334,7 +334,7 @@
 ;; 
 ;; Lacunae in the Specialization
 ;; =============================
-;; The yet inchoate nature of the V3i protolog --- magure the boons of
+;; The yet inchoate nature of the V3i protolog --- maugre the boons of
 ;; senescence at the temporal fixation of this documentation's
 ;; persistence --- serves to procure inroads for ambiguous construes.
 ;; As a consequence distilled from this fact, the following sections
@@ -344,7 +344,7 @@
 ;; The provision of examples, rather than to alleviate this cumbrance,
 ;; incurs one's conspectuity's application upon the subject of statement
 ;; terminators with a high mete of ambivalency: While a preponderance
-;; among the code lines ostend a semicolon as a statement's suffix,
+;; among the code lines ostends a semicolon as a statement's suffix,
 ;; sometimes betwixt an instruction's constituents themselves, a,
 ;; ostentatiously whimsical, selection eschews their participation.
 ;; 
@@ -489,7 +489,7 @@
 ;; 
 ;; == APPENDIX B: OPERATOR BINDING POWERS AND ASSOCIATIVITIES ==
 ;; This implementation's reliance upon the Pratt parser and its innate
-;; components, the binding power and associativity, rede a compendious
+;; components, the binding power and associativity, redes a compendious
 ;; tendance's adhibition upon the subject.
 ;; 
 ;; A listing of the available operators, their binding powers, and
@@ -499,7 +499,7 @@
 ;;   ------------------------------------------------------------------
 ;;   Operator | Binding power | Associativity | Apostil
 ;;   ---------+---------------+---------------+------------------------
-;;   =        | 10            | left-to-right | Designated equality.
+;;   =        | 10            | left-to-right | Designates equality.
 ;;   ..................................................................
 ;;   <        | 20            | left-to-right | 
 ;;   ..................................................................
