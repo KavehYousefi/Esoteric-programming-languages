@@ -51,6 +51,17 @@
 ;; beyond thilk no advancement may be actuated.
 ;; 
 ;; 
+;; Syntax
+;; ======
+;; Indulging in the usufruct of brainfuck's syntactical notions, XSVL
+;; employs a set of one-symbol instruction identifiers, in their
+;; preponderance appropriated from the entheus' forbisen.
+;; 
+;; Any character not engaged in a vinculum with an epiphenomenal onus
+;; is allotted a tolerance endowed with equipollence to its neglect,
+;; whence the contingency for scholia's interpositions emerges.
+;; 
+;; 
 ;; Instructions
 ;; ============
 ;; XSVL's instruction set enumerates a cardinality of 16 members, the
@@ -283,8 +294,8 @@
 (define-modify-macro multiplyf (&rest factors)
   *
   "Destructively modifies the first member of the FACTORS, acting as a
-   place, by assignment of all the FACTOR's product and returns the
-   result.")
+   place, by assignment of all the combined FACTORS' product and returns
+   the result.")
 
 
 

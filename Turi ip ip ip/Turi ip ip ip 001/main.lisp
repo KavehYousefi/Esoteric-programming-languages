@@ -1212,7 +1212,7 @@
           SUBJECT-NAME, which defaults to the STRUCTURE identifier
           itself, the slots of which are prefixed by the SLOT-PREFIX,
           upon omission deriving from the SUBJECT-NAME, while a ``NIL''
-          value prevents any prefixion in favor the verbatim slot
+          value prevents any prefixion in favor of the verbatim slot
           names.
           ---
           A trifurcation of configurations governs the possibilities for
