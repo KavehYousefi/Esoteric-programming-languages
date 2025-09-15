@@ -658,8 +658,8 @@
     :initform      (error "Missing tip ratio.")
     :reader        inappropriate-tip-error-actual-tip-ratio
     :type          (rational 0 *)
-    :documentation "The actual, contingently rounded, percentage of tip
-                    in relation to a program's command count.")
+    :documentation "The actual, contingently rounded, ratio of tips in
+                    relation to a program's command count.")
    (number-of-commands
     :initarg       :number-of-commands
     :initform      (error "Missing number of commands.")
@@ -1172,9 +1172,9 @@
 ;;; -------------------------------------------------------
 
 (defun tip-is-appropriate-p (tip-ratio)
-  "Determines whether the TIP-RATIO constitutes a valid percentage,
-   returning on confirmation a ``boolean'' value of ``T'', otherwise
-   ``NIL''."
+  "Determines whether the TIP-RATIO constitutes a valid percentage of
+   the DotSF commands, returning on confirmation a ``boolean'' value of
+   ``T'', otherwise ``NIL''."
   (declare (type (rational 0 *) tip-ratio))
   (the boolean
     (get-boolean-value-of
