@@ -5,7 +5,7 @@
 ;; presented on August 27th, 2024, its conception that of a minimization
 ;; applied to Urban Mueller's language "brainfuck", the cambistry's
 ;; adhibition a curtailment from the octuple operation contingency to a
-;; quintuple by conflations in the cell pointer motion and arithmetic
+;; quadruple by conflations in the cell pointer motion and arithmetic
 ;; capabilities, the input and output intercourse, as well as the
 ;; jump-based control duction mechanism's poles.
 ;; 
@@ -14,14 +14,14 @@
 ;; =======
 ;; The Xtrod programming language's dioristic contribution wones in the
 ;; reduction of brainfuck's octuple instruction set to a cardinality of
-;; five members; a chevisance whose obtention's gendrure emerges from
+;; four members; a chevisance whose obtention's gendrure emerges from
 ;; the conflation of several originally separate faculties into a
 ;; single symbol.
 ;; 
 ;; == XTROD: A BRAINFUCK MINIMALIZATION ==
 ;; The cynosure of Xtrod's purpose and telos appertains to an expression
 ;; of its brainfuck entheus' octuple instruction set in a more
-;; compendious format, the same recludes to its tolerance a quintuple
+;; compendious format, the same recludes to its tolerance a quadruple
 ;; contingency.
 ;; 
 ;; The warklume deployed to this accomplishment is located in the
@@ -49,7 +49,7 @@
 ;; Instructions
 ;; ============
 ;; The retention of brainfuck's capabilities in Xtrod ensues from the
-;; conflation of the provenance's eight instructions to a quintuple of
+;; conflation of the provenance's eight instructions to a quadruple of
 ;; aggregates.
 ;; 
 ;; == OVERVIEW ==
@@ -59,17 +59,19 @@
 ;;   ------------------------------------------------------------------
 ;;   Command | Effect
 ;;   --------+---------------------------------------------------------
-;;   (       | Increments the current cell value by one (1) and
-;;           | translates the cell pointer one step to the right. If
-;;           | the modified cell's new state transcends the upper
-;;           | bourne of 255, its value wraps around to the minimum of
-;;           | zero (0).
+;;   (       | If the current cell value contains zero (0), relocates
+;;           | the cell pointer one step in the dextral airt;
+;;           | otherwise, for a non-zero cell state, increments the
+;;           | current cell value by one (1). If the modified cell's
+;;           | new state transcends the upper bourne of 255, its value
+;;           | wraps around to the minimum of zero (0).
 ;;   ..................................................................
-;;   <       | Translates the cell pointer one step to the left.
-;;   ..................................................................
-;;   -       | Decrements the current cell value by one (1). If the new
-;;           | state transcends the lower bourne of zero (0), the value
-;;           | wraps around to the maximum of 255.
+;;   )       | If the current cell value contains zero (0), relocates
+;;           | the cell pointer one step in the sinistral airt;
+;;           | otherwise, for a non-zero cell state, decrements the
+;;           | current cell value by one (1). If the modified cell's
+;;           | new state transcends the lower bourne of zero (0), the
+;;           | value wraps around to the maximum of 255.
 ;;   ..................................................................
 ;;   !       | If the current cell contains zero (0), queries the
 ;;           | standard input conduit for a character and stores its
@@ -175,7 +177,7 @@
   (declare (type character candidate))
   (the boolean
     (get-boolean-value-of
-      (find candidate "(<-!|" :test #'char=))))
+      (find candidate "()!|" :test #'char=))))
 
 
 
@@ -434,12 +436,13 @@
     (loop while (< ip (length optimized-code)) do
       (case (schar code ip)
         (#\(
-          (incf (current-cell-value tape))
-          (move-cell-pointer-right tape))
-        (#\<
-          (move-cell-pointer-left tape))
-        (#\-
-          (decf (current-cell-value tape)))
+          (if (zerop (current-cell-value tape))
+            (move-cell-pointer-right tape)
+            (incf (current-cell-value tape))))
+        (#\)
+          (if (zerop (current-cell-value tape))
+            (move-cell-pointer-left tape)
+            (decf (current-cell-value tape))))
         (#\!
           (if (zerop (current-cell-value tape))
             (request-input tape :displays-prompt-p displays-prompt-p)
@@ -462,19 +465,3 @@
 
 ;; One-time cat program.
 (interpret-Xtrod "!!")
-
-;;; -------------------------------------------------------
-
-;; Repeating cat program which moves one cell to the right ere each
-;; input request.
-(interpret-Xtrod "||<!!|")
-
-;;; -------------------------------------------------------
-
-;; Repeating cat program which moves one cell to the right ere each
-;; input request.
-(with-input-from-string (input-stream "I like house sparrows.")
-  (declare (type string-stream input-stream))
-  (let ((*standard-input* input-stream))
-    (interpret-Xtrod "||<!!|" :displays-prompt-p NIL))
-  (values))
