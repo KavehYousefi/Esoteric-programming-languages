@@ -397,8 +397,8 @@
 (defgeneric both-objects-are-equal-p (first-object second-object)
   (:documentation
     "Determines whether the FIRST-OBJECT and the SECOND-OBJECT partake
-     commit a relationship of equality, returning on confirmation a
-     ``boolean'' value of ``T'', otherwise ``NIL''.")
+     of a relationship governed by equiparance, returning on
+     confirmation a ``boolean'' value of ``T'', otherwise ``NIL''.")
   
   (:method ((first-object integer) (second-object integer))
     (declare (type integer first-object))
@@ -447,7 +447,7 @@
 
 (defun insert-an-entry-into-the-bucket (bucket new-key new-value)
   "Integrates the entry compact of the NEW-KEY and the NEW-VALUE into
-   the BUCKET, either by a fresh entry's prepending to the underlying
+   the BUCKET, either by a fresh entry's prefixion to the underlying
    linked list, or, upon the NEW-KEY's presence inwith the same, by the
    modification of the extant entry's value compartment to hold the
    NEW-VALUE; in any case returning no value."
@@ -526,7 +526,7 @@
   (declare (type T      key))
   (the fixnum
     (mod
-      (sxhash key)
+      (sxhash     key)
       (slot-value table 'capacity))))
 
 ;;; -------------------------------------------------------
