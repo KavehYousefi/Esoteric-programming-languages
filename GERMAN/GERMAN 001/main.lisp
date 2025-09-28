@@ -161,7 +161,7 @@
 ;; of a common interface or class may react to an eponymous method
 ;; invocation in distinct manners. This accoutrement with a succedaneum
 ;; for catenas of "if" statements in dedicated classes identifies the
-;; claviger of a system's dynamic behavior's partage into indepdent
+;; claviger of a system's dynamic behavior's partage into independent
 ;; units.
 ;; 
 ;; == COMPLEX SYSTEM = CONTEXT (DATA) + STATE MACHINE (BEHAVIOR) ==
@@ -175,7 +175,7 @@
 ;; states.
 ;; 
 ;; Adduced as a purlicue, the context should, in a rather kenspeckle
-;; mete, remain devoid of sophistication is operative value, while the
+;; mete, remain devoid of sophistication in operative value, while the
 ;; several states entrepart the functionality in a manner rendering
 ;; each entity from this species sufficiently competent and potent for
 ;; a well-defined subset of devers.
@@ -196,25 +196,25 @@
 ;; active state. A subsequent stage to its inchoation with an incipial
 ;; state, the transitions themselves elude the context's private
 ;; efforts; in lieu of this castaldy's encumbrance, the concrete states
-;; themselves, their diorisms please behold alow, apply themselves to
-;; the segues by the current state field's modulation.
+;; by their own effort, their diorisms please behold alow, commit to the
+;; requisite segues, actuated in the current state field's modulation.
 ;; 
-;; == THE STATE: AN INTERFACE FOR THE ACTUALLY OPERATIVE UNITS ==
+;; == THE STATE: AN INTERFACE FOR THE ACTUAL OPERATIVE UNITS ==
 ;; In the "State" interface is realized the firmament of the implicitly
 ;; defined state machine. In the most common manifestation, an aefauld
 ;; operation's imposition delineates the slim covenant to whom the
-;; context's trust is arranged, and inwith whose circumference the
+;; context's trust is arraigned, and inwith whose circumference the
 ;; conditional case represented by the state subclass advances its
 ;; entelechia, producing some causatum, ere progressing into the
 ;; consectaneous next state.
 ;; 
-;; == THE CONCRETE STATES: IMPLEMENTATION OF PARCELS OF LOGIC ==
+;; == THE CONCRETE STATES: IMPLEMENTATIONS OF PARCELS OF LOGIC ==
 ;; Every concrete state implements the "State" interface in its pursuit
 ;; to produce a specific parcel of functionality from the "Context"
 ;; object's offered services.
 ;; 
 ;; In an actual apprehension, the concrete state's competences
-;; bifurcates into a twissel of devers:
+;; bifurcate into a twissel of devers:
 ;; 
 ;;   (1) The expected causata's actuation; that is, the realization of
 ;;       the logic.
@@ -1281,7 +1281,7 @@
                            (previous-state Program-State)
                            (current-state  Program-State))
   "Connects the PREVIOUS-STATE to the CURRENT-STATE, assigning no
-   effective value to the state machine BUILDER's participiation, and
+   effective value to the state machine BUILDER's participation, and
    returns no value."
   (declare (type State-Machine-Builder builder)
            (ignore                     builder))
@@ -1848,7 +1848,7 @@
       (loop
         for current-brainfuck-character
           of-type character
-          across   brainfuck-code
+          across  brainfuck-code
         when (brainfuck-symbol-p current-brainfuck-character) do
           (format destination "~&~a"
             (translate-brainfuck-symbol current-brainfuck-character)))

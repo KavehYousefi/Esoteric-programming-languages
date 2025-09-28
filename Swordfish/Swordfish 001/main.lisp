@@ -827,7 +827,7 @@
 
 (defstruct (SFObject)
   "The ``SFObject'' interface furnishes a common foundry for all classes
-   pursing the encapsulation of object native to the Swordfish
+   pursuing the encapsulation of objects native to the Swordfish
    programming language.")
 
 ;;; -------------------------------------------------------
@@ -921,7 +921,7 @@
 (defgeneric get-sfobject-as-boolean (sfobject)
   (:documentation
     "Returns a ``boolean'' equivalent to the SFOBJECT, or signals an
-     error of an unspecified type upon its want of eligiblity.")
+     error of an unspecified type upon its want of eligibility.")
   
   (:method ((sfboolean SFBoolean))
     (declare (type SFBoolean sfboolean))
@@ -1244,7 +1244,7 @@
 
 (defun advance-program (interpreter)
   "Relocates the INTERPRETER's instruction pointer (IP) to the next
-   cells in its GRID and returns no value."
+   cell in its GRID and returns no value."
   (declare (type Interpreter interpreter))
   (with-slots (grid instruction-pointer) interpreter
     (declare (type Grid    grid))
@@ -1257,8 +1257,8 @@
 ;;; -------------------------------------------------------
 
 (defun get-current-token (interpreter)
-  "Returns the grid symbol located at the INTERPRETER's instruction
-   pointer (IP) position in its code grid."
+  "Returns the symbol located at the INTERPRETER's instruction pointer
+   (IP) position in its code grid."
   (declare (type Interpreter interpreter))
   (the character
     (get-grid-cell
@@ -1280,7 +1280,7 @@
 
 (defun pop-from-stack (interpreter)
   "Pops the top element from the INTERPRETER's stack and returns no
-   value, or, upon the stack's vacancy, signals an error of the type
+   value; or, upon the stack's vacancy, signals an error of the type
    ``Empty-Stack-Error''."
   (declare (type Interpreter interpreter))
   (the SFObject
@@ -1315,7 +1315,7 @@
      &body body)
   "Defines an implementation of the generic function
    ``process-instruction'', the first argument of which derives its
-   agnomination from the INTERPRETER-VARIABLE, the second being nevend
+   agnomination from the INTERPRETER-VARIABLE, the second being nevened
    automatically, and dispatches on an ``eql''-equality to the
    INSTRUCTION character, the method's body is injected with the BODY
    forms, and returns no values.
@@ -1365,8 +1365,8 @@
 ;;; -------------------------------------------------------
 
 (define-instruction-processor #\v (interpreter)
-  "Changes the INTERPRETER's instruction pointer (IP) direction to an
-   upward movement and returns no value."
+  "Changes the INTERPRETER's instruction pointer (IP) direction to a
+   downward movement and returns no value."
   (setf (pointer-direction (instruction-pointer interpreter))
         :down))
 
@@ -1416,7 +1416,7 @@
 ;;; -------------------------------------------------------
 
 (define-instruction-processor #\{ (interpreter)
-  "Tops the top element from the INTERPRETER stack; if the same
+  "Pops the top element from the INTERPRETER stack; if the same
    constitutes a Boolean \"false\" value, omits the subsequent
    instruction, otherwise proceeds as usual, in any case returning no
    value."
@@ -1426,8 +1426,8 @@
 ;;; -------------------------------------------------------
 
 (define-instruction-processor #\} (interpreter)
-  "Tops the top element from the INTERPRETER stack; if the same
-   constitutes a Boolean \"false\" value, omits the subsequent
+  "Pops the top element from the INTERPRETER stack; if the same
+   constitutes a Boolean \"true\" value, omits the subsequent
    instruction, otherwise proceeds as usual, in any case returning no
    value."
   (when (get-sfobject-as-boolean (pop-from-stack interpreter))

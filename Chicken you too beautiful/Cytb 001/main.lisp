@@ -874,8 +874,8 @@
 ;;; -------------------------------------------------------
 
 (defun count-the-jump-points-in (the-program)
-  "Returns the tally of forward or back jump instructions partaking in
-   THE-PROGRAM."
+  "Returns the combined tally of forward and back jump instructions
+   partaking in THE-PROGRAM."
   (declare (type program the-program))
   (the fixnum
     (count-if
@@ -891,7 +891,7 @@
 
 (defun construct-a-jump-table-for (the-program)
   "Creates and returns a fresh ``Jump-Table'' dedicated to the
-   bidirectional ligation of the THE-PROGRAM's jump points."
+   bidirectional ligation of THE-PROGRAM's jump points."
   (declare (type program the-program))
   (let ((the-new-jump-table
           (prepare-an-empty-jump-table
@@ -901,17 +901,17 @@
     (declare (type Jump-Table       the-new-jump-table))
     (declare (type (list-of fixnum) a-stack-of-start-points))
     (loop
-      for current-instruction of-type instruction across the-program
-      and current-position    of-type fixnum      from   0 by 1
+      for the-current-instruction of-type instruction across the-program
+      and the-current-position    of-type fixnum      from   0 by 1
       do
-        (case current-instruction
+        (case (aref the-program the-current-position)
           (:jump-forward
-            (push current-position a-stack-of-start-points))
+            (push the-current-position a-stack-of-start-points))
           (:jump-back
             (if a-stack-of-start-points
               (connect-the-jump-points the-new-jump-table
                 (pop a-stack-of-start-points)
-                current-position)
+                the-current-position)
               (error "Unmatched back jump point detected.")))
           (otherwise
             NIL))
@@ -1070,7 +1070,7 @@
 
 ;;; -------------------------------------------------------
 
-(defun the-cell-pointer-occupies-the-leftmost-position (tape)
+(defun the-cell-pointer-occupies-the-leftmost-position-p (tape)
   "Determines whether the TAPE's cell pointer is located in the leftmost
    cell of the discovered dispansion, returning on confirmation a
    ``boolean'' value of ``T'', otherwise ``NIL''."
@@ -1092,7 +1092,7 @@
   (declare (type Tape tape))
   (with-slots (pointer) tape
     (declare (type Tape-Cell pointer))
-    (when (the-cell-pointer-occupies-the-leftmost-position tape)
+    (when (the-cell-pointer-occupies-the-leftmost-position-p tape)
       (insert-a-new-tape-cell-betwixt tape
         (tape-cell-previous pointer)
         pointer)))
@@ -1100,7 +1100,7 @@
 
 ;;; -------------------------------------------------------
 
-(defun the-cell-pointer-occupies-the-rightmost-position (tape)
+(defun the-cell-pointer-occupies-the-rightmost-position-p (tape)
   "Determines whether the TAPE's cell pointer is located in the
    rightmost cell of the discovered dispansion, returning on
    confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
@@ -1122,7 +1122,7 @@
   (declare (type Tape tape))
   (with-slots (pointer) tape
     (declare (type Tape-Cell pointer))
-    (when (the-cell-pointer-occupies-the-rightmost-position tape)
+    (when (the-cell-pointer-occupies-the-rightmost-position-p tape)
       (insert-a-new-tape-cell-betwixt tape pointer
         (tape-cell-next pointer))))
   (values))
