@@ -816,15 +816,11 @@
 ;; Its gendrure a purlicue's vouchsafement, the following membership of
 ;; five exhausts the contingency:
 ;; 
-;;   (1) Standard state
-;;   
+;;   (1) Standard    state
 ;;   (2) String mode state
-;;   
-;;   (3) Skipping state
-;;   
-;;   (4) Halting state
-;;   
-;;   (5) Error state
+;;   (3) Skipping    state
+;;   (4) Halting     state
+;;   (5) Error       state
 ;; 
 ;; == CHARACTERS INSTIGATE THE TRANSITIONS BETWIXT THESE STATES ==
 ;; The vincula's governail betwixt the states, as a function of the
@@ -1067,14 +1063,16 @@
 ;;    V                  |     | exhausted      |                  |
 ;; +----------------+    | "   |                V                  |
 ;; |                |----+     |            +-------+              |
-;; |  String mode   |          +----------->|       |              |
-;; |                |---------------------->| error |<-------------+
-;; +----------------+   source exhausted    |       |
-;;    |          ^                          +-------+
-;;    |          |                              |
-;;    |          |                              |
-;;    +----------+                              V
-;;    character except '"'                     (X)
+;; |  String mode   |          +----------->|       |<-------------+
+;; |                |---------------------->| error |
+;; +----------------+   source exhausted    |       |--------------+
+;;    |          ^                          +-------+              |
+;;    |          |                            |   ^                |
+;;    |          |                            |   |                |
+;;    +----------+                            |   +----------------+
+;;    character except '"'                    |       character
+;;                                            V
+;;                                           (X)
 ;; 
 ;; --------------------------------------------------------------------
 ;; 
@@ -1911,11 +1909,17 @@
 ;;; -------------------------------------------------------
 
 (defmethod initialize-instance :after ((interpreter Interpreter) &key)
-  "Configures the INTERPRETER's initial state to a fresh
-   ``Standard-State'' and returns no value."
+  "Configures the INTERPRETER's incipial state to a fresh
+   ``Standard-State'', initializes the random number generator, and
+   returns no value."
   (declare (type Interpreter interpreter))
-  (setf (slot-value interpreter 'state)
-    (make-instance 'Standard-State :context interpreter))
+  (with-slots (state) interpreter
+    (declare (type Program-State state))
+    (psetf
+      state
+        (make-instance 'Standard-State :context interpreter)
+      *random-state*
+        (make-random-state T)))
   (values))
 
 ;;; -------------------------------------------------------
