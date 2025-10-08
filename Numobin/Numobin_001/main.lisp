@@ -1,7 +1,136 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; This program implements an interpreter for the esoteric programming
-;; language "Numobin", invented by the Esolang user "Zzo38".
+;; language "Numobin", invented by the Esolang user "Zzo38" and
+;; presented on January 5th, 2007, the commorancy of its diorism the
+;; tallying of the hitherto encountered hash signs ("#") and their
+;; subsequent insertion on the memory stack, the same operates in
+;; champarty with a registry of variables, and a Boolean flag.
+;; 
+;; 
+;; Concept
+;; =======
+;; The Numobin programming language ostends a proprium woning in the
+;; kenspeckle definition of its numeric literals via hash signs, the
+;; "#" symbols, whose hitherto tallied quantity upon each encounter
+;; is pushed onto the memory's stack, thilk, as a compernage which
+;; completed a triad in componency, lays its amplection around a
+;; variable registry and an appurtenant data castaldy object, and a
+;; Boolean flag to whom the wike of the sole looping construct's
+;; perpetuation or abortion is assigned.
+;; 
+;; == DATA IS REPRESENTED BY "#" INSTANCES ==
+;; The statement of data literals in a Numobin ensues from the insertion
+;; on hash signs, designated via "#" instances, acting in a concomitant
+;; agency as an instruction that pushes the currently encountered tally
+;; of this onto the memory's stack.
+;; 
+;; A hash counter, by default initialized to the inchoate value of zero
+;; (0), but amenable in its state's configuration to a random selection
+;; via the "?" operation, is consigned to the castaldy of the hitherto
+;; visited "#" tokens. Upon such a symbol's consumption, the
+;; contemporaneous counter state is pushed onto the stack, succeeded by
+;; a consequent incrementation of the counter by a quantity of one (1).
+;; Please heed that the counter state is *not* reset after communicating
+;; its value to this salvatory.
+;; 
+;; == THE MEMORY: STACK + VARIABLES + BOOLEAN FLAG ==
+;; The Numobin memory enumerates a treble of partages, identified as a
+;; stack of integers and characters, a variable registry whose names and
+;; values both resolve to the aforementioned twissel of species, and a
+;; Boolean flag whose state serves as the antecedent to the looping
+;; mechanism's entelechy.
+;; 
+;; == THE STACK: A SALVATORY FOR NON-NEGATIVE INTEGER AND CHARACTERS ==
+;; Entalented with the most elevated mete of potentials among the
+;; salvatories' triad, the stack component accoutres a theoretically
+;; infinite storage for both non-negative integer numbers and ASCII
+;; characters.
+;; 
+;; == THE VARIABLE REGISTRY: NAMED INTEGERS AND CHARACTERS ==
+;; The variable registry's establishment constitutes such as to
+;; associate with a non-negative integer number or ASCII character,
+;; construed in a unique identifier's agency, a value desumed from the
+;; selfsame realm.
+;; 
+;; == THE BOOLEAN FLAG: AN ITERANCE GUARD ==
+;; Least in its componency's perimeter, a Boolean flag partakes of the
+;; execution in a role whose exclusivity appertains to the enabling or
+;; disabling of the sole control flow construct, signified by the
+;; jumelle of "[" and "]" tokens.
+;; 
+;; 
+;; Instructions
+;; ============
+;; Numobin's instruction set enumerates an undecimal cardinality, the
+;; compass assigned to this competences amplects rudimentary
+;; arithmetics, stack, variables and Boolean flag manipulations, input
+;; and output communications, as well as an aefauld conditional control
+;; flow mechanism.
+;; 
+;; Please heed that succedaneous tmemata are underlined by a catena of
+;; carets ("^"), intended to be replaced by actual Numobin code in the
+;; ultimate program.
+;; 
+;;   ------------------------------------------------------------------
+;;   Command | Effect
+;;   --------+---------------------------------------------------------
+;;   #       | Pushes the current hash sign counter value onto the
+;;           | stack and subsequently increments the counter.
+;;   ..................................................................
+;;   [ stm ] | While the Boolean flag is true, repeats the instructions
+;;     ^^^   | {stm}.
+;;           |---------------------------------------------------------
+;;           | {stm} must be a sequence comprising zero or more
+;;           | instructions.
+;;   ..................................................................
+;;   -       | Pops the top element, yclept "a" here, and expected to
+;;           | represent a number, from the stack, pops the new top
+;;           | element, "b", also required to be numeric in type,
+;;           | supputates the absolute value of the difference (a - b),
+;;           | and pushes this new number onto the stack.
+;;           |---------------------------------------------------------
+;;           | In a pseudocode diction, the following holds:
+;;           |   let left          <- pop from stack
+;;           |   let right         <- pop from stack
+;;           |   let absDifference <- abs(left - right)
+;;           |   push difference onto stack
+;;   ..................................................................
+;;   {       | Pops the top stack element, here yclept "a", from the
+;;           | stack, pops the new top element, "b", and associates
+;;           | the variable with the name signified by the content of
+;;           | "a" with the value of "b" in the variables registry.
+;;   ..................................................................
+;;   }       | Pops the top stack element, employs thilk as a variable
+;;           | name, and pushes the value associated with this name
+;;           | onto the stack.
+;;   ..................................................................
+;;   ~       | Swap the two top stack elements.
+;;   ..................................................................
+;;   *       | Toggles the Boolean flag's state.
+;;   ..................................................................
+;;   =       | Pops the two top numbers from the stack; if these are
+;;           | equal, toggles the Boolean flag; otherwise accompasses
+;;           | no causatum.
+;;   ..................................................................
+;;   (       | Pops the top element from the stack and discards thilk.
+;;   ..................................................................
+;;   )       | Queries the standard input conduit for either an
+;;           | unsigned integer number greater than or equal to zero
+;;           | (0), or a single ASCII character and pushes the received
+;;           | object onto the stack.
+;;   ..................................................................
+;;   ?       | Sets the hash sign counter to a random integer number
+;;           | greater than or equal to zero (0), with no natural
+;;           | bourne concerning its mickleness.
+;;   ------------------------------------------------------------------
+;; 
+;; 
+;; Implementation
+;; ==============
+;; This interpreter's implementation has been realized in the
+;; programming language Common Lisp, its operations' entelechia being
+;; adhibited immediately on the provided Numobin source code string.
 ;; 
 ;; --------------------------------------------------------------------
 ;; 
@@ -9,9 +138,17 @@
 ;; Date:   2022-07-09
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Numobin"
-;;   -> "https://esolangs.org/wiki/Truth-machine#Numobin"
-;;       o Implementation of a truth-machine in Numobin.
+;;   [esolang2022Numobin]
+;;   The Esolang contributors, "Numobin", July 10th, 2022
+;;   URL: "https://esolangs.org/wiki/Numobin"
+;;   Notes:
+;;     - Original specification of the Numobin programming language.
+;;   
+;;   [esolang2022Truth-machine]
+;;   The Esolang contributors, "Truth-machine", July 10th, 2022
+;;   URL: "https://esolangs.org/wiki/Truth-machine#Numobin"
+;;   Notes:
+;;     - Implementation of a truth-machine in Numobin.
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -76,15 +213,24 @@
 
 ;;; -------------------------------------------------------
 
+(deftype non-negative-integer ()
+  "The ``non-negative-integer'' type defines an unsigned integer number
+   occupying the range with zero (0) as its lower extremum, but wisting
+   of no upper bourne."
+  '(integer 0 *))
+
+;;; -------------------------------------------------------
+
 (deftype numobin-object ()
   "The ``numobin-object'' type embraces the homologated data types in
    currency during a Numobin program's execution."
-  '(or character integer))
+  '(or character non-negative-integer))
 
 ;;; -------------------------------------------------------
 
 (deftype variable-set ()
-  "The ``variable-set'' type defines a hash table which associates a
+  "The ``variable-set'' type defines a mapping betwixt variable names
+   and values, manifesting in a hash table which associates a
    ``numobin-object'' key with exactly one value of the same type."
   '(hash-table-of numobin-object numobin-object))
 
@@ -115,11 +261,10 @@
    iteration terminator returns to the respective starter for a new
    continuation predicate check and potential repetition."
   (declare (type string code))
-  
   (let ((jump-table  (make-hash-table :test #'eql))
         (loop-starts NIL))
-    (declare (type jump-table jump-table))
-    (declare (type list       loop-starts))
+    (declare (type jump-table       jump-table))
+    (declare (type (list-of fixnum) loop-starts))
     
     (loop
       for character of-type character across code
@@ -149,10 +294,25 @@
             NIL)))
     
     (when loop-starts
-      (error "Unmatched loop starts \"[\" at positions ~{~d~^, ~}."
+      (error "Unmatched loop start~p \"[\" at position~:p ~{~d~^, ~}."
+        (length loop-starts)
         loop-starts))
     
     (the jump-table jump-table)))
+
+;;; -------------------------------------------------------
+
+(defun validate-as-non-negative-integer (candidate)
+  "Determines whether the CANDIDATE represents a non-negative integer
+   number greater than or equal to zero (0), with no upper march to its
+   mickleness, returning on confirmation the CANDIDATE itself; otherwise
+   an error of an unspecified type is signaled."
+  (declare (type integer candidate))
+  (the non-negative-integer
+    (if (minusp candidate)
+      (error "Expected a non-negative integer, but encountered ~d."
+        candidate)
+      candidate)))
 
 ;;; -------------------------------------------------------
 
@@ -161,11 +321,13 @@
    returning on confirmation the parsed numeric value, otherwise
    ``NIL''."
   (declare (type string string))
-  (the (or null integer)
-    (handler-case
-      (parse-integer string)
-      (error ()
-        NIL))))
+  (let ((parsed-integer
+          (ignore-errors
+            (parse-integer string))))
+    (declare (type (or null non-negative-integer) parsed-integer))
+    (the (or null non-negative-integer)
+      (and parsed-integer
+           (validate-as-non-negative-integer parsed-integer)))))
 
 ;;; -------------------------------------------------------
 
@@ -174,7 +336,9 @@
    zero character, returning on confirmation a ``boolean'' value of
    ``T'', otherwise ``NIL''."
   (declare (type string string))
-  (the boolean (zerop (length string))))
+  (the boolean
+    (zerop
+      (length string))))
 
 ;;; -------------------------------------------------------
 
@@ -184,7 +348,8 @@
    single space character, otherwise ``NIL''."
   (declare (type string string))
   (the (or null character)
-    (when (zerop (length (string-trim " " string)))
+    (and
+      (zerop (length (string-trim " " string)))
       #\Space)))
 
 ;;; -------------------------------------------------------
@@ -245,7 +410,7 @@
       (declare (type variable-set        variables))
       (declare (type (integer 0 *)       hash-counter))
       
-      (setf *random-state* (make-random-state))
+      (setf *random-state* (make-random-state T))
       
       (labels
           ((advance ()
@@ -297,6 +462,9 @@
            
            
            (check-if-stack-is-empty ()
+            "Determines whether the stack is empty, on confirmation
+             signaling an error of an unspecified type; otherwise
+             accompasses no causatum and returns no value."
             (unless stack
               (error "Cannot pop from an empty stack."))
             (values))
@@ -309,16 +477,17 @@
             (check-if-stack-is-empty)
             (let ((top-element (pop stack)))
               (declare (type numobin-object top-element))
-              (unless (typep top-element 'integer)
+              (unless (integerp top-element)
                 (error "The top stack element is not a number."))
-              (the integer top-element)))
+              (the non-negative-integer top-element)))
            
            (pop-value ()
             "Pops the topmost value from the STACK, expecting it to be
              either a character or an integer number, and returns the
              same"
             (check-if-stack-is-empty)
-            (the numobin-object (pop stack))))
+            (the numobin-object
+              (pop stack))))
         
         (loop while token do
           (case token
@@ -346,8 +515,8 @@
             (#\-
               (let ((left-operand  (pop-number))
                     (right-operand (pop-number)))
-                (declare (type integer left-operand))
-                (declare (type integer right-operand))
+                (declare (type non-negative-integer left-operand))
+                (declare (type non-negative-integer right-operand))
                 (push (abs (- left-operand right-operand)) stack))
               (advance))
             
@@ -381,8 +550,8 @@
             (#\=
               (let ((first-number  (pop-number))
                     (second-number (pop-number)))
-                (declare (type integer first-number))
-                (declare (type integer second-number))
+                (declare (type non-negative-integer first-number))
+                (declare (type non-negative-integer second-number))
                 (when (= first-number second-number)
                   (setf boolean-flag (not boolean-flag))))
               (advance))
@@ -397,16 +566,18 @@
             ;; Input and push.
             (#\)
               (format T "~&Please enter either an ASCII character ~
-                           or an integer: ")
+                           or a non-negative integer: ")
+              (finish-output)
               (let ((input (read-line)))
-                (declare (type T input))
+                (declare (type string input))
                 (clear-input)
                 (push (parse-input input) stack))
               (advance))
             
             ;; Set random hash counter offset.
             (#\?
-              (setf hash-counter (random random-upper-bound))
+              (setf hash-counter
+                (random random-upper-bound))
               (advance))
             
             ;; All other characters are prohibited.
