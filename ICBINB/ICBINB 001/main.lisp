@@ -681,7 +681,7 @@
 (defstruct (Integer-Stack
   (:constructor prepare-an-empty-integer-stack ())
   (:copier      NIL))
-  "The ``Integer-Stack'' class serves in a ICBINB memory stack's
+  "The ``Integer-Stack'' class serves in the ICBINB memory stack's
    furnishment, the same accommodates a haft to an arbitrary accompt of
    32-bit signed integer numbers, based upon a simple list."
   (elements NIL :type (list-of 32-bit-integer) :read-only NIL))
@@ -956,7 +956,7 @@
                                                jump-table
                                                start-point)
   "Returns the forward jump point (\"[\") reached from the back jump
-   START-POINT (\"[\") in the ICBINB program's SOURCE, being among those
+   START-POINT (\"]\") in the ICBINB program's SOURCE, being among those
    connections governed by JUMP-TABLE.
    ---
    If no such association partakes of an existency, an error of the type
@@ -1019,10 +1019,10 @@
    the entities to their ASCII codes as a prevenient measure, and
    returns no value.
    ---
-   Please heed that, as a consectary of the last-in-first-out principle
+   Please heed that, as a consectary of the last-in first-out principle
    commorant in the stack abstract data type, the inserted string's
    character sequence will be effectively reversed, the desinent
-   character being rendered as the STACK's new top."
+   character being aligned at the STACK's new top."
   (declare (type Integer-Stack stack))
   (declare (type simple-string string))
   (loop for current-character of-type character across string do
@@ -1184,27 +1184,6 @@
 
 ;;; -------------------------------------------------------
 
-(defmethod initialize-instance :after ((interpreter Interpreter) &key)
-  "Supputates a jump table for the ICBINB program consigned to the
-   INTERPRETER's castaldy, stores thilk in the INTERPRETER, and returns
-   no value."
-  (declare (type Interpreter interpreter))
-  (setf (slot-value interpreter 'jump-table)
-    (build-a-jump-table-for
-      (slot-value interpreter 'program)))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun prepare-an-interpreter-for (program)
-  "Creates and returns a fresh ``Interpreter'' dedicated to the ICBINB
-   PROGRAM's execution."
-  (declare (type simple-string program))
-  (the Interpreter
-    (make-instance 'Interpreter :program program)))
-
-;;; -------------------------------------------------------
-
 (defmacro with-interpreter ((interpreter) &body body)
   "Evaluates the INTERPRETER, binds its slots to local symbol macros
    whose agnomination ensues from an eponymy with a prefixion of the
@@ -1252,6 +1231,29 @@
 
 ;;; -------------------------------------------------------
 
+(defmethod initialize-instance :after ((interpreter Interpreter) &key)
+  "Supputates a jump table for the ICBINB program consigned to the
+   INTERPRETER's castaldy, stores thilk in the INTERPRETER, initializes
+   the random number generator, and returns no value."
+  (declare (type Interpreter interpreter))
+  (with-interpreter (interpreter)
+    (setf $jump-table
+      (build-a-jump-table-for $program)))
+  (setf *random-state*
+    (make-random-state T))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defun prepare-an-interpreter-for (program)
+  "Creates and returns a fresh ``Interpreter'' dedicated to the ICBINB
+   PROGRAM's execution."
+  (declare (type simple-string program))
+  (the Interpreter
+    (make-instance 'Interpreter :program program)))
+
+;;; -------------------------------------------------------
+
 (defun advance-to-the-next-symbol (interpreter)
   "Advances the INTERPRETER's instruction pointer (IP) to the next
    position in its program and returns no value."
@@ -1266,11 +1268,9 @@
 ;;; -------------------------------------------------------
 
 (defun jump-forward (interpreter)
-  "Proceeding from the inclusive instruction pointer (IP) position,
-   searches in a sinistrodextral airt for a back jump instruction with
-   the correct nesting level for an imputed contemporaneous forward
-   jump token, set the instruction pointer to this detected index, and
-   returns no value."
+  "Expected to contemporaneously reside on a forward jump instruction
+   (\"[\"), relocates the INTERPRETER's instruction pointer (IP) to the
+   affiliated back jump point (\"]\") and returns no value."
   (declare (type Interpreter interpreter))
   (with-interpreter (interpreter)
     (setf $ip
@@ -1280,11 +1280,9 @@
 ;;; -------------------------------------------------------
 
 (defun jump-back (interpreter)
-  "Proceeding from the inclusive instruction pointer (IP) position,
-   searches in a dextrosinistral airt for a forward jump instruction
-   with the correct nesting level for an imputed contemporaneous back
-   jump token, set the instruction pointer to this detected index, and
-   returns no value."
+  "Expected to contemporaneously reside on a back jump instruction
+   (\"]\"), relocates the INTERPRETER's instruction pointer (IP) to the
+   affiliated forward jump point (\"[\") and returns no value."
   (declare (type Interpreter interpreter))
   (with-interpreter (interpreter)
     (setf $ip
