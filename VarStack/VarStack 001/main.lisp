@@ -2097,8 +2097,9 @@
    matching, returns thilk's result; otherwise produces a generalized
    boolean \"false\" value."
   (declare (type META-Alternative meta))
-  `(or ,@(mapcar #'compile-expression
-           (meta-alternative-alternatives meta))))
+  `(the T
+     (or ,@(mapcar #'compile-expression
+             (meta-alternative-alternatives meta)))))
 
 
 
@@ -2189,8 +2190,9 @@
    returns the desinent element's result; otherwise produces a
    generalized boolean \"false\" value."
   (declare (type META-Sequence meta))
-  `(and ,@(mapcar #'compile-expression
-            (meta-sequence-forms meta))))
+  `(the T
+     (and ,@(mapcar #'compile-expression
+              (meta-sequence-forms meta)))))
 
 
 
@@ -2226,7 +2228,7 @@
    of ``T''; otherwise, neither an assignment nor consumption precedes
    the ``NIL'' value response."
   (declare (type META-Type-Test meta))
-  `(the T
+  `(the boolean
      (match-type
        ,(meta-type-test-expected-type   meta)
        ,(meta-type-test-receiving-place meta))))
@@ -2329,30 +2331,30 @@
 ;; -- Implementation of type matching code generator.              -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun generate-type-match-code (expected-type output-variable)
+(defun generate-type-match-code (expected-type target-place)
   "Generates and returns a Common Lisp code tmema which probes whether
    the current *SOURCE-CHARACTER* complies with the EXPECTED-TYPE, on
-   confirmation storing the probed character in the OUTPUT-VARIABLE,
+   confirmation storing the probed character in the TARGET-PLACE,
    while advancing to the next position in the *SOURCE-CODE*, finally
    returning a ``boolean'' value of ``T''; otherwise responds with
    ``NIL'' without any epiphenomena's actuation."
   (declare (type T expected-type))
-  (declare (type T output-variable))
+  (declare (type T target-place))
   `(the boolean
      (when (and *source-has-next-character-p*
                 (typep *source-character* ',expected-type))
-       (setf ,output-variable *source-character*)
+       (setf ,target-place *source-character*)
        (incf *source-position*)
        T)))
 
 ;;; -------------------------------------------------------
 
-(defmacro match-type (expected-type output-variable)
+(defmacro match-type (expected-type target-place)
   "Probes the input source's current character for its compliance with
    the EXPECTED-TYPE, storing on confirmation the probed character in
-   the OUTPUT-VARIABLE, while returning a generalized boolean \"true\"
+   the TARGET-PLACE, while returning a generalized boolean \"true\"
    value; otherwise responds with a \"false\" sentinel."
-  (generate-type-match-code expected-type output-variable))
+  (generate-type-match-code expected-type target-place))
 
 
 
@@ -2935,8 +2937,8 @@
 
 (defun skip-spaces ()
   "Proceeding from the current position into the *SOURCE-CODE*, skips a
-   catena composed of zero or more accolent spaces, and returns a
-   ``boolean'' value of ``T'', otherwise ``NIL''."
+   catena composed of zero or more accolent spaces, and consistently
+   returns a ``boolean'' value of ``T''."
   (match-expression ${#\Space #\Tab})
   (the boolean T))
 
@@ -2945,7 +2947,7 @@
 (defun skip-newlines ()
   "Proceeding from the current position into the *SOURCE-CODE*, skips a
    catena composed of zero or more accolent newline characters, and
-   returns a ``boolean'' value of ``T'', otherwise ``NIL''."
+   consistently returns a ``boolean'' value of ``T''."
   (let ((current-character NIL))
     (declare (type (or null character) current-character))
     (declare (ignorable                current-character))
@@ -2958,8 +2960,8 @@
   "Proceeding from the current *SOURCE-POSITION*, consumes an identifier
    compact of zero or more eligible characters, and returns a fresh
    simple string representation of the result."
-  (let ((current-character #\Null))
-    (declare (type character current-character))
+  (let ((current-character NIL))
+    (declare (type (or null character) current-character))
     (the simple-string
       (convert-into-simple-string
         (with-output-to-string (identifier)
@@ -2975,7 +2977,7 @@
    identifier, validates its concinnity with the label designation
    stipulations, and returns upon its confirmation the unmodified
    identifier as a simple string; otherwise, for an invalid
-   conformation, signals an error of an unspecified type."
+   constitution, signals an error of an unspecified type."
   (the simple-string
     (validate-label-name
       (read-identifier))))
@@ -2987,7 +2989,7 @@
    identifier, validates its concinnity with the stack designation
    stipulations, and returns upon its confirmation the unmodified
    identifier as a simple string; otherwise, for an invalid
-   conformation, signals an error of an unspecified type."
+   constitution, signals an error of an unspecified type."
   (the simple-string
     (validate-stack-name
       (read-identifier))))
@@ -3006,12 +3008,10 @@
       (declare (type (or null simple-string) initial-elements))
       (and
         (match-expression
-          [
-            #\@
-            !(setf stack-name       (parse-stack-name))
-            #\:
-            !(setf initial-elements (read-identifier))
-          ])
+          [#\@
+           !(setf stack-name       (parse-stack-name))
+           #\:
+           !(setf initial-elements (read-identifier))])
         (make-create-stack-command
           :stack            stack-name
           :initial-elements initial-elements)))))
@@ -3252,29 +3252,21 @@
   (the Command
     (or
       (match-expression
-        [
-          !(skip-spaces)
-          
-          {
-            !(parse-jump-if-equals-literal-command)
-            !(parse-jump-if-does-not-equal-literal-command)
-            !(parse-jump-if-equals-stack-command)
-            
-            !(parse-create-stack-command)
-            !(parse-push-command)
-            !(parse-pop-command)
-            !(parse-output-literal-command)
-            !(parse-output-stack-command)
-            !(parse-input-command)
-            
-            !(parse-swap-command)
-            !(parse-reverse-command)
-            !(parse-top-relocation-command)
-          }
-        ])
-      
-      (error "No command found at position ~d, introducting the tmema ~
-              ~s."
+        [!(skip-spaces)
+         {!(parse-jump-if-equals-literal-command)
+          !(parse-jump-if-does-not-equal-literal-command)
+          !(parse-jump-if-equals-stack-command)
+          !(parse-create-stack-command)
+          !(parse-push-command)
+          !(parse-pop-command)
+          !(parse-output-literal-command)
+          !(parse-output-stack-command)
+          !(parse-input-command)
+          !(parse-swap-command)
+          !(parse-reverse-command)
+          !(parse-top-relocation-command)}])
+      (error "No command found at position ~d, introducing the ~
+              source code tmema ~s."
         *source-position*
         (subseq *source-code* *source-position*)))))
 
@@ -3331,8 +3323,7 @@
            #\;
            !(setf command     (parse-command))
            #\;
-           !(setf destination (parse-label-name))
-          ])
+           !(setf destination (parse-label-name))])
         (make-standard-statement
           :line-label  line-label
           :command     command
@@ -3376,8 +3367,8 @@
   (the boolean
     (or
       (match-expression
-        [ !(skip-spaces)
-          !(not *source-has-next-character-p*)])
+        [!(skip-spaces)
+         !(not *source-has-next-character-p*)])
       (error "Expected the end of the program."))))
 
 ;;; -------------------------------------------------------
@@ -3419,8 +3410,8 @@
                     positions into the parsed VarStack program."))
   (:documentation
     "The ``Label-Table'' class applies itself to a VarStack program
-     labels' castaldy, affiliated in this wike the identifying names
-     with ther zero-based positions into the ensconcing program."))
+     labels' castaldy, affiliating in this wike the identifying names
+     with their zero-based positions into the ensconcing program."))
 
 ;;; -------------------------------------------------------
 
@@ -3961,7 +3952,7 @@
    If no affiliation for the STACK-NAME can be detected, or if such a
    stack exists, but is incapable of responding to the request because
    of its empty state, this operation signals a ``Halt-Condition'' in
-   order to terminate the program"
+   order to terminate the program."
   (declare (type Interpreter   interpreter))
   (declare (type simple-string stack-name))
   (halt-if-stack-cannot-be-accessed interpreter stack-name)
@@ -3979,7 +3970,7 @@
    If no affiliation for the STACK-NAME can be detected, or if such a
    stack exists, but is incapable of responding to the request because
    of its empty state, this operation signals a ``Halt-Condition'' in
-   order to terminate the program"
+   order to terminate the program."
   (declare (type Interpreter   interpreter))
   (declare (type simple-string stack-name))
   (halt-if-stack-cannot-be-accessed interpreter stack-name)
@@ -3991,12 +3982,13 @@
 ;;; -------------------------------------------------------
 
 (defun get-elements-of-stack-with-name (interpreter stack-name)
-  "Returns without removing all eelments from the stack entalented
+  "Returns without removing all elements from the stack entalented
    with an amenability to the STACK-NAME in the INTERPRETER.
    ---
    If no affiliation for the STACK-NAME can be detected, or if such a
-   stack exists, this operation signals a ``Halt-Condition'' in
-   order to terminate the program"
+   stack exists, but is incapable of responding to the request because
+   of its empty state, this operation signals a ``Halt-Condition'' in
+   order to terminate the program."
   (declare (type Interpreter   interpreter))
   (declare (type simple-string stack-name))
   (halt-if-stack-does-not-exist interpreter stack-name)
