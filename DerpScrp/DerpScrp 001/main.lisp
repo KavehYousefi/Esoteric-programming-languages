@@ -254,7 +254,9 @@
 ;; ==============
 ;; The project at hand has been implemented in the programming language
 ;; Common Lisp, its operative causata's adhibition a sequela from the
-;; immediate DerpScrp source code's consumption.
+;; immediate DerpScrp source code's consumption, whence the most
+;; recently detected instruction's reformulation as a dedicated object
+;; furnishes a parasceve to its operative causata's adhibition.
 ;; 
 ;; The most peisant contribution, however, to whom a commorancy inwith
 ;; this project serves a vouchsafement is nevened in the "META" parser's
