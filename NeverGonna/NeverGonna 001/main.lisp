@@ -1158,8 +1158,8 @@
 ;; relationships' enunciation by the "ASDF" system. This simple example,
 ;; however, has been adjudged as rather inflicted with a digressive
 ;; cumbrance in an advenient structuring's adhibition, rather than its
-;; enjoying — a more serious enterprise certainly would be assayed in an
-;; athwart airt.
+;; enjoying --- a more serious enterprise certainly would be assayed in
+;; an athwart airt.
 ;; 
 ;;   ------------------------------------------------------------------
 ;;   No. | File                   | Role
