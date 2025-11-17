@@ -38,7 +38,7 @@
    conformation that of a catena comprehending one or more decimal
    digits, on success returning the represented non-negative integer
    datum; otherwise responds with ``NIL''."
-  (declare (type string source))
+  (declare (type simple-string source))
   (the (or null (integer 0 *))
     (ignore-errors
       (parse-integer source))))
@@ -48,7 +48,7 @@
 (defun attempt-to-extract-the-character-code (source)
   "If the SOURCE represents a string comprehending a single digit,
    returns its character code; otherwise responds with ``NIL''."
-  (declare (type string source))
+  (declare (type simple-string source))
   (the (or null fixnum)
     (and
       (string-is-a-singleton-p source)
@@ -60,7 +60,7 @@
   "Signals an error of the type ``Invalid-Input-Error'' whose purpose
    involves the apprizal about the INPUT's status as neither an unsigned
    integer number nor a single character."
-  (declare (type string input))
+  (declare (type simple-string input))
   (error 'Invalid-Input-Error :offending-input input))
 
 ;;; -------------------------------------------------------
@@ -70,7 +70,7 @@
    comprehends decimal digits only; or, upon its status as a singleton
    character sequence, produces its character code; in any other case
    signaling an error of an unspecified type."
-  (declare (type string input))
+  (declare (type simple-string input))
   (the (integer 0 *)
     (or (attempt-to-parse-as-an-integer        input)
         (attempt-to-extract-the-character-code input)

@@ -399,7 +399,7 @@
 (define-a-5-symbol-processor * *
   (when (digit-char-p $symbol)
     (multiple-value-bind (extracted-number new-ip)
-        (extract-a-number-from-5-code $source $ip)
+        (extract-a-number-from-the-5-code $source $ip)
       (declare (type (integer 0 *) extracted-number))
       (declare (type fixnum        new-ip))
       (psetf
@@ -431,7 +431,7 @@
 
 (define-a-5-symbol-processor * #\`
   (multiple-value-bind (string-literal new-ip)
-      (extract-a-string-literal-from-5-code $source $ip)
+      (extract-a-string-literal-from-the-5-code $source $ip)
     (declare (type simple-string string-literal))
     (declare (type fixnum        new-ip))
     (format T "~a~%" string-literal)

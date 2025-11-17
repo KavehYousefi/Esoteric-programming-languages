@@ -42,7 +42,7 @@
 
 ;;; -------------------------------------------------------
 
-(defun extract-a-string-literal-from-5-code (source start)
+(defun extract-a-string-literal-from-the-5-code (source start)
   "Proceeding from the inclusive START position into the SOURCE, and
    expecting this inchoate index to signify the introducing \"`\"
    character, extracts a \"5\" string literal, concluding with a second
@@ -66,7 +66,7 @@
 
 ;;; -------------------------------------------------------
 
-(defun extract-a-number-from-5-code (source start)
+(defun extract-a-number-from-the-5-code (source start)
   "Proceeding from the inclusive START position into the SOURCE,
    extracts a sequence composed of one or more decimal digits and
    returns two values:
