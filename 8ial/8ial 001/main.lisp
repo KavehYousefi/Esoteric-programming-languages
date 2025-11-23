@@ -6,44 +6,46 @@
 ;; wones in its octuple instruction set, desumed in a conceptual
 ;; exercise of the conspectuity in the mimicry of an assembly language,
 ;; its competences' cynosure being the manipulation of integer objects
-;; stored in registers and a stack, aided in this endeavour by a
+;; stored in 16 registers, aided in this endeavour by a twissel of
 ;; label-based control flow mechanism.
 ;; 
 ;; 
 ;; Concept
 ;; =======
 ;; The 8ial programming language simulates an assembly language tallying
-;; eight instructions, chosen as warklumes for a register bank, selected
-;; register, and stack's manipulation by adminiculum of integer objects.
+;; eight instructions, chosen as warklumes for a register bank's
+;; manipulation by adminiculum of integer objects.
 ;; 
 ;; == 8IAL: AN [8] [i]NSTRUCTION [a]SSEMBLY [l]ANGUAGE ==
 ;; The 8ial programming language's agnomination engages in a bewrayment
 ;; of its operative circumference and its designment's entheus, this
 ;; being an "8 instruction assembly language".
 ;; 
-;; == THE MEMORY: REGISTER BANK, POINTED REGISTER, AND STACK ==
-;; 8ial intrines for its data castaldy, thilk always appertains to
-;; signed integers of any magnitude, a register bank of theoretically
-;; infinite componency, a particular active, or "pointed", register, and
-;; a stack with no upper bourne in its mickleness.
+;; == THE MEMORY: 16 REGISTERS ==
+;; 8ial's data compartment employs the services of 16 registers, each
+;; such a salvatory to a single unsigned byte value, occupying the
+;; integral range of [0, 255], and, upon any of its bournes' violation,
+;; wrapping to the overthwart extremum.
 ;; 
 ;; == REGISTERS: NEVENED BY NUMERICS ==
 ;; A register reference's syntactical indicium manifests in a
 ;; parasceuastic dollar sign, "$", whence follows an unsigned positive
-;; integer identifier.
+;; integer identifier, for the same an enumeration principle applies
+;; with an indexing from inclusive one (1) through sixteen (16).
 ;; 
 ;; 
 ;; Syntax
 ;; ======
 ;; From a conspection's exercise on its syntaxis, the 8ial programming
 ;; language's conformation limns an ordered sequence of zero or more
-;; lines, everichon among these, if not blank or a lone comment's
-;; woning, accommodates an aefauld instruction, thilk's identifier
-;; is succeeded by zero through three operands.
+;; tokens, their occasions' merist a catena enumerating at least one
+;; whitespace.
 ;; 
-;; == PROGRAMS: LINES OF INSTRUCTIONS ==
-;; Every line not administered a blank composition or a commentary
-;; dever only, bears a single instruction's causatum.
+;; == PROGRAMS: SEQUENCES OF TOKENS ==
+;; The gendrure of a program's consitution emerges from a
+;; whitespace-separated token sequence, the ordonnance of which imposes
+;; an instruction's definition, in the pevenience of zero through three
+;; operands.
 ;; 
 ;; == INSTRUCTIONS: IDENTIFERS + ARGUMENTS ==
 ;; An instruction's inchoation proceeds by means of its identifier, a
@@ -57,68 +59,66 @@
 ;; == REGISTER NAMES: DESIGNATED POSITIVE INTEGER IDENTIFIERS ==
 ;; A register name empights an discriminating dollar sign, "$", to the
 ;; actual identification moeity's prevenience, a positive integer
-;; number.
+;; number to whom the tolerance's admission of identifiers from
+;; inclusive one (1) to inclusive sixteen (16) delineate the dation.
 ;; 
 ;; == INTEGER LITERALS: SIGNED OR UNSIGNED DECIMAL NUMBERS ==
 ;; Integer literals may assume signed or unsigned decimal numbers
 ;; endowed with bourneless mickleness along both axes.
 ;; 
 ;; == COMMENTS ==
-;; The 8ial programming language homologates the incarnation of comments
-;; as constituents of either a line of reserved dedication, or a
-;; compernage to the posterior of a prevenient instruction statement.
-;; Such a descant's introduction ensues from an ecphoneme's ("!")
-;; adminicular agency, whence any content may emerge until the carrying
-;; line's desinence.
+;; The current language rendition's capacitation tholes a carency in
+;; explicit commentary introductions; however, any token not engaged in
+;; an operative causatum's affiliation constitutes a perfect neglect's
+;; subject, whence is begotten the contingency for descants'
+;; incarnations.
 ;; 
 ;; == GRAMMAR ==
 ;; The 8ial programming language's donet shall enjoy an augmented ilk
 ;; of formality's dation by mediation of an Extended Backus-Naur Form
 ;; (ENBF) description:
 ;; 
-;;   program         := { innerLine } , [ finalLine ] ;
-;;   innerLine       := [ command ] , [ comment ] , newlines ;
-;;   finalLine       := [ command ] , [ comment ] ;
+;;   program         := { command } ;
 ;;   
-;;   comment         := "!" , { character - newline } ;
-;;   command         := evrCommand
-;;                   |  jirCommand
-;;                   |  labelDefinition
+;;   command         := incCommand
+;;                   |  decCommand
 ;;                   |  outCommand
-;;                   |  ptrCommand
-;;                   |  pshCommand
 ;;                   |  putCommand
+;;                   |  labelDefCommand
+;;                   |  jmpCommand
+;;                   |  jirCommand
+;;                   |  endCommand
 ;;                   ;
 ;;   
-;;   evrCommand      := "EVR" , numericOperand ;
-;;   jirCommand      := "JIR" , labelName , registry , numericOperand ;
-;;   labelDefinition := ";" , labelName ;
-;;   outCommand      := "OUT" ;
-;;   ptrCommand      := "PTR" , registryName ;
-;;   pshCommand      := "PSH" , registryName ;
-;;   putCommand      := "PUT" , registryName ;
+;;   incCommand      := "INC" , registerName ;
+;;   decCommand      := "DEC" , registerName ;
+;;   outCommand      := "OUT" , registerName ;
+;;   putCommand      := "PUT" , registerName ;
+;;   labelDefCommand := ";"   , labelName ;
+;;   jmpCommand      := "JMP" , labelName ;
+;;   jirCommand      := "JIR" , labelName
+;;                            , registerName
+;;                            , numericOperand ;
+;;   endCommand      := "END" ;
 ;;   
 ;;   labelName       := labelCharacter , { labelCharacter } ;
 ;;   labelCharacter  := digit | letter | "-" | "_" ;
 ;;   
-;;   numericOperand  := signedInteger | registryName ;
-;;   registryName    := "$" , unsignedInteger ;
+;;   numericOperand  := signedInteger | registerName ;
+;;   registerName    := "$" , unsignedInteger ;
 ;;   signedInteger   := [ "+" | "-" ] , unsignedInteger ;
 ;;   unsignedInteger := digit , { digit } ;
 ;;   digit           := "0" | "1" | "2" | "3" | "4"
 ;;                   |  "5" | "6" | "7" | "8" | "9"
 ;;                   ;
 ;;   letter          := "a" | ... | "z" | "A" | ... | "Z" ;
-;;   newlines        := newline , { newline } ;
-;;   newline         := "\n" ;
-;;   space           := " " | "\t" ;
 ;; 
 ;; 
 ;; Instructions
 ;; ============
 ;; 8ial's operative competences are begotten by an octuple instruction
-;; set, the compass of which enumerates warklumes for the register and
-;; stack manipulation, numeric input and output conduits, as well as a
+;; set, the compass of which enumerates warklumes for the register
+;; manipulation, numeric input and output conduits, as well as a
 ;; label-based control flow mechanism.
 ;; 
 ;; == OVERVIEW ==
@@ -135,21 +135,41 @@
 ;;   ------------------------------------------------------------------
 ;;   Command                  | Effect
 ;;   -------------------------+----------------------------------------
-;;   PSH registry             | Pushes the value of the {registry} onto
-;;       ********             | the stack.
-;;   ..................................................................
-;;   PUT registry             | Queries the standard input for a signed
-;;       ********             | or unsigned integer number and stores
-;;                            | the response in the {registry}.
-;;   ..................................................................
-;;   OUT                      | Pops the top stack element and prints
-;;                            | the same in its verbatim numeric form
-;;                            | to the standard output.
+;;   INC register             | Increments the value of the {register}
+;;       ********             | by an amount of one (1). Upon a
+;;                            | transgression of its upper bourne of
+;;                            | 255, the {register} state wraps around
+;;                            | to the minimum of zero (0).
 ;;                            |----------------------------------------
-;;                            | If the stack is empty at the instant
-;;                            | of this operation's invocation, an
-;;                            | error of the type "EmptyStackError" is
-;;                            | signaled.
+;;                            | The {register} must be a register name
+;;                            | whose index is desumed from the closed
+;;                            | integer interval of [1, 16].
+;;   ..................................................................
+;;   DEC register             | Decrements the value of the {register}
+;;       ********             | by an amount of one (1). Upon a
+;;                            | transgression of its lower bourne of
+;;                            | zero (0), the {register} state wraps
+;;                            | around to the maximum of 255.
+;;                            |----------------------------------------
+;;                            | The {register} must be a register name
+;;                            | whose index is desumed from the closed
+;;                            | integer interval of [1, 16].
+;;   ..................................................................
+;;   PUT register             | Queries the standard input for a signed
+;;       ********             | or unsigned integer number and stores
+;;                            | the response in the {register}.
+;;                            |----------------------------------------
+;;                            | The {register} must be a register name
+;;                            | whose index is desumed from the closed
+;;                            | integer interval of [1, 16].
+;;   ..................................................................
+;;   OUT register             | Prints the value of the {register} in
+;;       ********             | its verbatim numeric form to the
+;;                            | standard output conduit.
+;;                            |----------------------------------------
+;;                            | The {register} must be a register name
+;;                            | whose index is desumed from the closed
+;;                            | integer interval of [1, 16].
 ;;   ..................................................................
 ;;   ;label                   | Declares a label amenable to the
 ;;    *****                   | {label} name and memorizes an
@@ -161,54 +181,35 @@
 ;;                            | type "DuplicateLabelNameError" is
 ;;                            | signaled.
 ;;   ..................................................................
-;;   JIR label registry guard | If the value of the {registry} equals
-;;       ***** ******** ***** | the {guard}, relocates the instruction
-;;                            | pointer (IP) to the position of the
-;;                            | label designated by the {labelName};
-;;                            | otherwise accompasses no causatum.
-;;                            |----------------------------------------
-;;                            | The {guard} must either be a literal
-;;                            | integer number or a registry name.
+;;   JMP label                | Relocates the instruction pointer (IP)
+;;       *****                | to the position of the label designated
+;;                            | by the {labelName}.
 ;;                            |----------------------------------------
 ;;                            | If the {label} cannot be retrieved in
 ;;                            | the program, an error of the type
 ;;                            | "UndefinedLabelError" is signaled.
 ;;   ..................................................................
-;;   PTR registry             | Designates the registry with the name
-;;       ********             | {registry} as the currently active
-;;                            | one.
+;;   JIR label register guard | If the value of the {register} equals
+;;       ***** ******** ***** | the {guard}, relocates the instruction
+;;                            | pointer (IP) to the position of the
+;;                            | label designated by the {labelName};
+;;                            | otherwise accompasses no causatum.
+;;                            |----------------------------------------
+;;                            | The {register} must be a register name
+;;                            | whose index is desumed from the closed
+;;                            | integer interval of [1, 16].
+;;                            |----------------------------------------
+;;                            | The {guard} must either be a literal
+;;                            | integer number or a register name whose
+;;                            | index is desumed from the closed
+;;                            | integer interval of [1, 16].
+;;                            |----------------------------------------
+;;                            | If the {label} cannot be retrieved in
+;;                            | the program, an error of the type
+;;                            | "UndefinedLabelError" is signaled.
 ;;   ..................................................................
-;;   EVR newValue             | Stores the {newValue} in the currently
-;;       ********             | selected registry.
-;;                            |----------------------------------------
-;;                            | The {newValue} must either be a literal
-;;                            | integer number or a registry name.
-;;                            |----------------------------------------
-;;                            | If no registry is currently selected,
-;;                            | an error of the type
-;;                            | "NoPointedRegistryError" is signaled.
+;;   END                      | Immediately terminates the program.
 ;;   ------------------------------------------------------------------
-;; 
-;; 
-;; Lacunae in the Specification
-;; ============================
-;; A few inroads of dubiety inflict the 8ial protolog, whence provenance
-;; a selected parcel shall be extracted for an express disquisition.
-;; 
-;; == DO ERRONEOUS INSTRUCTIONS TRANSMOGRIFY TO COMMENTS? ==
-;; As an instance of supererogation besides the dedicated comment
-;; syntax, the source [esolang2024comment] parlays of commands
-;; invalidated in their conformance with the governing stipulations as
-;; construed in the sense of a commentary supplement; the language's
-;; main document, [esolang2024_8ial], abstains from this claim's
-;; replication.
-;; 
-;; It has been adjudged, with the adminicular lacuna of the paravail
-;; command-to-comment transcription in the protolog, and the fact of
-;; the crebritude by which the 8ial standard has changed in the
-;; preterite chronology, to excise this option, retaining merely the
-;; explicit comment species, introduced via an ecphoneme ("!"), as a
-;; canonical proprium.
 ;; 
 ;; 
 ;; Implementation
@@ -217,8 +218,9 @@
 ;; language Common Lisp, the entirety's componency being distributed
 ;; among several tiers, the incipiency among these obtaining its
 ;; provision from a lexical analyzation and concomitant parsing applied
-;; to the sere lines, yielding as its product an encapsulation in an
-;; "Instruction" class object.
+;; to the sere tokens, contingently by an coalescence of operands with
+;; their affiliated operations, yielding as its product an encapsulation
+;; in an "Instruction" class object.
 ;; 
 ;; The generation and gathering of these instruction representations in
 ;; a vector compound establishes the interpreter's requisitum for an
@@ -227,11 +229,11 @@
 ;; --------------------------------------------------------------------
 ;; 
 ;; Author: Kaveh Yousefi
-;; Date:   2024-11-25
+;; Date:   Date: 2025-11-23
 ;; 
 ;; Sources:
-;;   [esolang2024_8ial]
-;;   The Esolang contributors, "8ial", October 5th, 2024
+;;   [esolang2025_8ial]
+;;   The Esolang contributors, "8ial", November 14th, 2025
 ;;   URL: "https://esolangs.org/wiki/8ial"
 ;;   
 ;;   [esolang2024comment]
@@ -242,6 +244,8 @@
 ;;       programming language.
 ;;     - States that an error inflicting a command transforms thilk
 ;;       into a comment.
+;;     - The statements, at least partially, have been rendered
+;;       obsolete by the current 8ial language rendition.
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -294,12 +298,28 @@
 
 ;;; -------------------------------------------------------
 
-(deftype registry-number ()
-  "The ``registry-number'' type defines a registry identifier as an
+(deftype register-number ()
+  "The ``register-number'' type defines a register identifier as an
    integral number greater than or equal to one (1), but without a
    natural bourne towards the upper extremum, thus being a commorant of
    the integer range [1, +infinity]."
-  '(integer 1 *))
+  '(integer 1 16))
+
+;;; -------------------------------------------------------
+
+(deftype octet ()
+  "The ``octet'' type defines an unsigned byte datum comprised of eight
+   (8) accolent bits, and thus a commorant of the closed integral
+   interval [0, 255]."
+  '(unsigned-byte 8))
+
+;;; -------------------------------------------------------
+
+(deftype register-array ()
+  "The ``register-array'' type defines a random-access bank of sixteen
+   (16) unsigned byte-valued registers in the guise of a one-dimensional
+   simple array of octets."
+  '(simple-array octet (16)))
 
 ;;; -------------------------------------------------------
 
@@ -353,13 +373,13 @@
 
 ;;; -------------------------------------------------------
 
-(defstruct (Registry-Operand
+(defstruct (Register-Operand
   (:include Operand))
-  "The ``Registry-Operand'' class represents a numeric registry
+  "The ``Register-Operand'' class represents a numeric register
    identifier specified as an 8ial instruction operand."
-  (name (error "Missing registry operand identifier.")
-        :type      registry-number
-        :read-only T))
+  (index (error "Missing register operand identifier.")
+         :type      register-number
+         :read-only T))
 
 
 
@@ -374,43 +394,47 @@
 
 ;;; -------------------------------------------------------
 
-(defstruct (Edit-Instruction
+(defstruct (INC-Instruction
   (:include Instruction))
-  "The ``Edit-Instruction'' class serves in the encapsulation of an
-   8ial \"EVR\" operation, nuncupated to the selected registry's
-   modulation."
-  (new-value (error "Missing Edit-Instruction value.")
-             :type      Operand
-             :read-only T))
-
-;;; -------------------------------------------------------
-
-(defstruct (Input-Instruction
-  (:include Instruction))
-  "The ``Input-Instruction'' class serves in the encapsulation of an
-   8ial \"PUT\" operation, nuncupated to a specified registry value's
-   reception of data from the standard input."
-  (registry (error "Missing Input-Instruction registry name.")
-            :type      Registry-Operand
+  "The ``INC-Instruction'' class serves in the encapsulation of an
+   8ial \"INC\" operation, nuncupated to an optated register's
+   incrementation by an amount of one (1)."
+  (register (error "Missing INC-Instruction register index.")
+            :type      Register-Operand
             :read-only T))
 
 ;;; -------------------------------------------------------
 
-(defstruct (Jump-Instruction
+(defstruct (DEC-Instruction
   (:include Instruction))
-  "The ``Jump-Instruction'' class serves in the encapsulation of an
-   8ial \"JIR\" operation, nuncupated to the program instruction
-   pointer's (IP) conditional relocation to a specific label upon a
-   given registry value's equiparation with a guard."
-  (label     (error "Missing Jump-Instruction label name.")
-             :type      string
-             :read-only T)
-  (candidate (error "Missing Jump-Instruction candidate registry.")
-             :type      Registry-Operand
-             :read-only T)
-  (guard     (error "Missing Jump-Instruction guard.")
-             :type      Operand
-             :read-only T))
+  "The ``DEC-Instruction'' class serves in the encapsulation of an
+   8ial \"DEC\" operation, nuncupated to an optated register's
+   incrementation by an amount of one (1)."
+  (register (error "Missing DEC-Instruction register index.")
+            :type      Register-Operand
+            :read-only T))
+
+;;; -------------------------------------------------------
+
+(defstruct (OUT-Instruction
+  (:include Instruction))
+  "The ``OUT-Instruction'' class serves in the encapsulation of an 8ial
+   \"OUT\" operation, nuncupated to the printing of an optated
+   register's value on the standard output."
+  (register (error "Missing OUT-Instruction register index.")
+            :type      Register-Operand
+            :read-only T))
+
+;;; -------------------------------------------------------
+
+(defstruct (PUT-Instruction
+  (:include Instruction))
+  "The ``PUT-Instruction'' class serves in the encapsulation of an
+   8ial \"PUT\" operation, nuncupated to a specified register value's
+   reception of numeric data from the standard input."
+  (register (error "Missing PUT-Instruction register index.")
+            :type      Register-Operand
+            :read-only T))
 
 ;;; -------------------------------------------------------
 
@@ -418,39 +442,52 @@
   (:include Instruction))
   "The ``Label-Definition-Instruction'' class encapsulates the behest
    involving the definition of a label in an 8ial program."
-  (name (error "Missing Label-Definition-Instruction name.")
-        :type      string
-        :read-only T))
+  (label (error "Missing Label-Definition-Instruction label.")
+         :type      string
+         :read-only T))
 
 ;;; -------------------------------------------------------
 
-(defstruct (Output-Instruction
+(defstruct (JMP-Instruction
   (:include Instruction))
-  "The ``Output-Instruction'' class serves in the encapsulation of an
-   8ial \"OUT\" operation, nuncupated to the program stack top element's
-   display on the standard output.")
+  "The ``JMP-Instruction'' class serves in the encapsulation of an 8ial
+   \"JMP\" operation, nuncupated to the unconditional navigation to an
+   optated label."
+  (label (error "Missing JMP-Instruction label.")
+         :type      string
+         :read-only T))
 
 ;;; -------------------------------------------------------
 
-(defstruct (Point-Instruction
+(defstruct (JIR-Instruction
   (:include Instruction))
-  "The ``Point-Instruction'' class serves in the encapsulation of an
-   8ial \"PTR\" operation, nuncupated to a specified registry's
-   selection as the currently active unit."
-  (registry (error "Missing Point-Instruction registry name.")
-            :type      Registry-Operand
-            :read-only T))
+  "The ``JIR-Instruction'' class serves in the encapsulation of an
+   8ial \"JIR\" operation, nuncupated to the program instruction
+   pointer's (IP) conditional relocation to a specific label upon a
+   given register value's equiparation with a guard."
+  (label     (error "Missing JIR-Instruction label.")
+             :type      string
+             :read-only T)
+  (candidate (error "Missing JIR-Instruction candidate register.")
+             :type      Register-Operand
+             :read-only T)
+  (guard     (error "Missing JIR-Instruction guard.")
+             :type      Operand
+             :read-only T))
 
 ;;; -------------------------------------------------------
 
-(defstruct (Push-Instruction
+(defstruct (END-Instruction
   (:include Instruction))
-  "The ``Push-Instruction'' class serves in the encapsulation of an
-   8ial \"PSH\" operation, nuncupated to a specified registry value's
-   insertion on the program stack."
-  (registry (error "Missing Push-Instruction registry name.")
-            :type      Registry-Operand
-            :read-only T))
+  "The ``END-Instruction'' class serves in the encapsulation of an 8ial
+   \"END\" operation, nuncupated to a program's immediate termination.")
+
+;;; -------------------------------------------------------
+
+(defstruct (NOP-Instruction
+  (:include Instruction))
+  "The ``NOP-Instruction'' class serves in the encapsulation of a
+   ineffectual no-operation, or NOP.")
 
 
 
@@ -537,74 +574,6 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of program stack.                             -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defclass Stack ()
-  ((elements
-    :initform      NIL
-    :accessor      stack-elements
-    :type          (list-of integer)
-    :documentation "A list representing the last in, first out (LIFO)
-                    store of integers."))
-  (:documentation
-    "The ``Stack'' class implements an unbounded stack of signed integer
-     numbers."))
-
-;;; -------------------------------------------------------
-
-(defun stack-size (stack)
-  "Returns the tally of elements comprising the STACK."
-  (declare (type Stack stack))
-  (the (integer 0 *)
-    (length
-      (stack-elements stack))))
-
-;;; -------------------------------------------------------
-
-(defun stack-is-empty-p (stack)
-  "Determines whether the STACK is destitute of any elements, returning
-   on confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
-  (declare (type Stack stack))
-  (the boolean
-    (null
-      (stack-elements stack))))
-
-;;; -------------------------------------------------------
-
-(defun push-onto-stack (stack new-element)
-  "Pushes the NEW-ELEMENT onto the STACK's top and returns no value."
-  (declare (type Stack stack))
-  (push new-element
-    (stack-elements stack))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun pop-from-stack (stack)
-  "Removes and returns the STACK's top element.
-   ---
-   If the STACK is empty at this operation's invocation, an error of the
-   type ``Empty-Stack-Error'' is signaled."
-  (declare (type Stack stack))
-  (the integer
-    (if (stack-is-empty-p stack)
-      (error 'Empty-Stack-Error)
-      (pop (stack-elements stack)))))
-
-;;; -------------------------------------------------------
-
-(defmethod print-object ((stack Stack) (stream T))
-  (declare (type Stack       stack))
-  (declare (type destination stream))
-  (format stream "~&Stack with ~d element~:p:"
-    (stack-size stack))
-  (format stream "~{~&~2t~d~}"
-    (stack-elements stack)))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of condition types.                           -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -617,7 +586,7 @@
 
 ;;; -------------------------------------------------------
 
-(define-condition Label-Error (8ial-error)
+(define-condition Label-Error (8ial-Error)
   ((name
     :initarg       :name
     :initform      (error "Missing label error name.")
@@ -662,36 +631,6 @@
      communication of an anomalous situation whose etiology emerges
      from the attempt to perquire a label with an identifier not
      registered for this purpose."))
-
-;;; -------------------------------------------------------
-
-(define-condition No-Pointed-Registry-Error (8ial-Error)
-  ()
-  (:report
-    (lambda (condition stream)
-      (declare (type No-Pointed-Registry-Error condition))
-      (declare (ignore                         condition))
-      (declare (type destination               stream))
-      (format stream "No pointed registry has been selected.")))
-  (:documentation
-    "The ``No-Pointed-Registry-Error'' condition type serves in the
-     apprizal about the attempt to query or modify an 8ial program's
-     pointed registry without a prevenient selection of such."))
-
-;;; -------------------------------------------------------
-
-(define-condition Empty-Stack-Error (8ial-Error)
-  ()
-  (:report
-    (lambda (condition stream)
-      (declare (type Empty-Stack-Error condition))
-      (declare (ignore                 condition))
-      (declare (type destination       stream))
-      (format stream "Cannot peek into or pop from an empty stack.")))
-  (:documentation
-    "The ``Empty-Stack-Error'' condition type serves to apprize about
-     an anomalous situation whose etiology emerges from the attempt to
-     peek into or pop from an empty stack."))
 
 ;;; -------------------------------------------------------
 
@@ -770,21 +709,36 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of registry identifier operations.            -- ;;
+;; -- Implementation of register identifier operations.            -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun validate-registry-number (identifier)
-  "Determines whether the numeric IDENTIFIER represents a valid registry
+(defun validate-register-number (identifier)
+  "Determines whether the numeric IDENTIFIER represents a valid register
    name, which ought to constitute a positive integer number, returning
    on confirmation the IDENTIFIER in its ipsissima verba guise;
    otherwise signals an error of an unspecified type."
   (declare (type integer identifier))
   (the integer
-    (or (and (plusp identifier) identifier)
-        (error "The value ~d does not represent a valid registry ~
-                number, as the same must be a positive integer ~
-                greater than or equal to one."
-          identifier))))
+    (if (typep identifier 'register-number)
+      identifier
+      (error "The value ~d does not represent a valid register ~
+              number, as the same must be a positive integer ~
+              greater than or equal to one."
+        identifier))))
+
+;;; -------------------------------------------------------
+
+(defun string-introduces-register-name-p (source)
+  "Determines whether the SOURCE, by adminiculum of a dollar sign
+   (\"$\") prefixion, is entalented with the contingency for a register
+   reference's designation, returning on confirmation a ``boolean''
+   value of ``T'', otherwise ``NIL''."
+  (declare (type string source))
+  (the boolean
+    (get-boolean-value-of
+      (and
+        (plusp (length source))
+        (string= source #\$ :start1 0 :end1 1)))))
 
 
 
@@ -800,7 +754,7 @@
   (the boolean
     (get-boolean-value-of
       (or (alphanumericp candidate)
-          (find candidate "_-" :test #'char=)))))
+          (find          candidate "_-" :test #'char=)))))
 
 ;;; -------------------------------------------------------
 
@@ -831,21 +785,37 @@
       (T
         name))))
 
+;;; -------------------------------------------------------
+
+(defun string-introduces-a-label-definition-p (source)
+  "Determines whether the SOURCE, by adminiculum of a semicolon (\";\")
+   prefixion, is entalented with the contingency for a label
+   definition's designation, returning on confirmation a ``boolean''
+   value of ``T'', otherwise ``NIL''."
+  (declare (type string source))
+  (the boolean
+    (get-boolean-value-of
+      (and
+        (plusp (length source))
+        (string= source #\; :start1 0 :end1 1)))))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of character operations.                      -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun space-character-p (candidate)
-  "Determines whether the CANDIDATE represents a space or horizontal
-   tab, returning on confirmation a ``boolean'' value of ``T'',
-   otherwise ``NIL''."
+(defun whitespace-character-p (candidate)
+  "Determines whether the CANDIDATE represents a whitespace character,
+   returning on confirmation a ``boolean'' value of ``T'', otherwise
+   ``NIL''."
   (declare (type character candidate))
   (the boolean
     (get-boolean-value-of
-      (or (char= candidate #\Space)
-          (char= candidate #\Tab)))))
+      (member candidate
+        '(9 10 11 12 13 32)
+        :key  #'code-char
+        :test #'char=))))
 
 ;;; -------------------------------------------------------
 
@@ -855,10 +825,7 @@
    of ``T'', otherwise ``NIL''."
   (declare (type character candidate))
   (the boolean
-    (get-boolean-value-of
-      (and
-        (not (space-character-p candidate))
-        (char/= candidate #\!)))))
+    (not (whitespace-character-p candidate))))
 
 
 
@@ -866,41 +833,39 @@
 ;; -- Definition of global scanner variables.                      -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declaim (type fixnum    *current-line-index*))
-(declaim (type string    *current-line*))
-(declaim (type fixnum    *current-line-length*))
-(declaim (type fixnum    *current-column-index*))
-(declaim (type character *current-character*))
-(declaim (type boolean   *current-line-is-exhausted-p*))
+(declaim (type string  *source*))
+(declaim (type fixnum  *source-length*))
+(declaim (type fixnum  *word-start-index*))
+(declaim (type fixnum  *word-end-index*))
+(declaim (type string  *current-word*))
+(declaim (type boolean *source-is-exhausted-p*))
 
 ;;; -------------------------------------------------------
 
-(defparameter *current-line-index* -1
-  "The zero-based index of the currently processed line.")
+(defparameter *source* ""
+  "The piece of 8ial source code to analyze.")
 
-(defparameter *current-line* ""
-  "The currently processed line's content as a string.")
-
-(defparameter *current-column-index* 0
-  "The zero-based index into the *CURRENT-LINE*.")
-
-;;; -------------------------------------------------------
-
-(define-symbol-macro *current-line-length*
+(define-symbol-macro *source-length*
   (the fixnum
-    (length *current-line*)))
+    (length *source*)))
 
-(define-symbol-macro *current-character*
-  (the character
-    (if (array-in-bounds-p *current-line* *current-column-index*)
-      (char *current-line* *current-column-index*)
-      #\Null)))
+(defparameter *word-start-index* 0
+  "The inclusive zero-based start position of the most recently
+   extracted ``*CURRENT-WORD*'' from the ``*SOURCE*''.")
 
-(define-symbol-macro *current-line-is-exhausted-p*
+(defparameter *word-end-index* 0
+  "The exclusive zero-based end position of the most recently extracted
+   ``*CURRENT-WORD*'' from the ``*SOURCE*''.")
+
+(define-symbol-macro *current-word*
+  (the string
+    (subseq *source* *word-start-index* *word-end-index*)))
+
+(define-symbol-macro *source-is-exhausted-p*
   (the boolean
     (get-boolean-value-of
-      (>= *current-column-index*
-          *current-line-length*))))
+      (>= *word-start-index*
+          *word-end-index*))))
 
 
 
@@ -908,306 +873,193 @@
 ;; -- Implementation of scanner operations.                        -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun reset-scanner ()
-  "Restores the scanner's incipial configurations and returns no value."
+(defun set-scanner-source (new-source)
+  "Sets the NEW-SOURCE as the scanner's source, restores the its
+   incipial configurations, and returns no value."
   (psetf
-    *current-line-index*   -1
-    *current-line*         ""
-    *current-column-index* 0)
+    *source*           new-source
+    *word-start-index* 0
+    *word-end-index*   0)
   (values))
 
 ;;; -------------------------------------------------------
 
-(defun assign-next-line-index ()
-  "Returns the subsequent line index."
-  (incf *current-line-index*)
-  (the fixnum *current-line-index*))
-
-;;; -------------------------------------------------------
-
-(defun set-current-line (new-line)
-  "Configures the scanner in a fashion which accepts the NEW-LINE as
-   the currently processed one and returns no value."
-  (declare (type string new-line))
-  (psetf
-    *current-line-index*   (assign-next-line-index)
-    *current-line*         new-line
-    *current-column-index* 0)
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun conclude-current-line ()
-  "Relocates the *CURRENT-COLUMN-INDEX* to the *CURRENT-LINE*'s desinent
-   position and returns no value."
-  (setf *current-column-index* *current-line-length*)
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun skip-spaces ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   skips a sequence of zero or more accolent spaces and returns no
+(defun locate-start-of-next-word ()
+  "Proceeding from the current position into the *SOURCE*, locates the
+   index of the nearest following word's first character and returns no
    value."
-  (setf *current-column-index*
-    (or (position-if-not #'space-character-p *current-line*
-          :start *current-column-index*)
-        *current-line-length*))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun comment-starts-p ()
-  "Determines whether, proceeding from the *CURRENT-COLUMN-INDEX* into
-   the *CURRENT-LINE*, a comment section commences, returning on
-   confirmation a ``boolean'' value of ``T'', otherwise ``NIL''."
-  (the boolean
-    (get-boolean-value-of
-      (and (not *current-line-is-exhausted-p*)
-           (char= *current-character* #\!)))))
-
-;;; -------------------------------------------------------
-
-(defun skip-optional-comment ()
-  "Determines whether, proceeding from the *CURRENT-COLUMN-INDEX* into
-   the *CURRNET-LINE*, a comment section commences, on confirmation
-   relocating the *COLUMN-COLUMN-INDEX* to the *CURRENT-LINE*'s
-   desinence, otherwise administering no causatum, and in any case
-   returns no value."
-  (when (comment-starts-p)
-    (conclude-current-line))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun expect-end-of-current-line ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   determines whether the latter is destitute of any effective content,
-   admitting exclusively spaces and an optional comment segment, on
-   confirmation returning no value; otherwise an error of an unspecified
-   type is signaled."
-  (skip-spaces)
-  (skip-optional-comment)
-  (unless *current-line-is-exhausted-p*
-    (error "Expected the line number ~d to conclude, but encountered ~
-            the character \"~c\" at position ~d."
-      *current-line-index*
-      *current-character*
-      *current-column-index*))
+  (setf *word-start-index*
+    (or (position-if #'word-character-p *source*
+          :start *word-end-index*)
+        *source-length*))
   (values))
 
 ;;; -------------------------------------------------------
 
 (defun locate-end-of-word ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   returns the position of the nearest space character."
-  (the fixnum
-    (or (position-if-not #'word-character-p *current-line*
-          :start *current-column-index*)
-        *current-line-length*)))
+  "Proceeding from the current position into the *SOURCE*, locates the
+   index succeeding the desinent character of the nearest following word
+   and returns no value."
+  (setf *word-end-index*
+    (or (position-if-not #'word-character-p *source*
+          :start *word-start-index*)
+        *source-length*))
+  (values))
 
 ;;; -------------------------------------------------------
 
 (defun peek-next-word ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   peeks the next word, demarcated either by a succeeding space or the
-   end of the line, and returns three values:
-     (1) A fresh string representing the detected word.
-     (2) The start position of this word, which conflates with the
-         *CURRENT-COLUMN-INDEX*.
-     (3) The position into the *CURRENT-LINE* immediately succeeding the
-         detected word.
-   ---
-   The scanner's state will not be modified by this operation."
-  (let ((start-position *current-column-index*)
-        (end-position   (locate-end-of-word)))
-    (declare (type fixnum start-position))
-    (declare (type fixnum end-position))
-    (the (values string fixnum fixnum)
-      (values
-        (subseq *current-line* start-position end-position)
-        start-position
-        end-position))))
+  "Proceeding from the current position into the *SOURCE*, consumes the
+   nearest following word, memorizes its bournes, and returns no value."
+  (locate-start-of-next-word)
+  (locate-end-of-word)
+  (values))
 
 ;;; -------------------------------------------------------
 
-(defun registry-reference-follows-p ()
-  "Determines whether the character at the *CURRENT-LINE-INDEX* into
-   the *CURRENT-LINE* introduces a registry reference, being equal to
-   the \"$\" sign, returning on confirmation a ``boolean'' value of
-   ``T'', otherwise ``NIL''."
+(defun current-word-represents-register-p ()
+  "Determines whether *CURRENT-WORD* represents a register significator,
+   returning on confirmation a ``boolean'' value of ``T'', otherwise
+   ``NIL''."
   (the boolean
-    (get-boolean-value-of
-      (char= *current-character* #\$))))
+    (string-introduces-register-name-p *current-word*)))
 
 ;;; -------------------------------------------------------
 
-(defun expect-dollar-sign ()
-  "Determines whether the character at the *CURRENT-COLUMN-INDEX* into
-   the *CURRENT-LINE* introduces a registry reference, being equal to
-   the \"$\" sign, on confirmation returning no value; otherwise an
-   error of an unspecified type is signaled."
-  (unless (registry-reference-follows-p)
-    (error "Expected the character \"$\" to introduce a registry ~
-            name, but encountered the symbol \"~c\" in column ~d ~
-            of line ~d."
-      *current-character* *current-column-index* *current-line-index*))
+(defun expect-register-reference ()
+  "Determines whether the *CURRENT-WORD* introduces a register
+   reference, its incipient character being equal to the \"$\" sign, on
+   confirmation returning no value; otherwise an error of an
+   unspecified type is signaled."
+  (unless (current-word-represents-register-p)
+    (error "The token ~s, commencing at position ~d, does not ~
+            represent a register reference."
+      *current-word* *word-start-index*))
   (values))
 
 ;;; -------------------------------------------------------
 
 (defun read-number ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   reads an signed or unsigned integer number and returns thilk."
-  (multiple-value-bind (next-word start-position end-position)
-      (peek-next-word)
-    (declare (type string next-word))
-    (declare (type fixnum start-position))
-    (declare (ignore      start-position))
-    (declare (type fixnum end-position))
-    (the integer
-      (prog1
-        (handler-case
-          (parse-integer next-word)
-          (error ()
-            (error "The token ~s in column ~d of line ~d does not ~
-                    represent an integral number."
-              next-word *current-column-index* *current-line-index*)))
-        (setf *current-column-index* end-position)))))
+  "Parses the *CURRENT-WORD* as a signed or unsigned integer literal and
+   returns the extracted numeric object."
+  (the integer
+    (handler-case
+      (parse-integer *current-word*)
+      (error ()
+        (error "The token ~s, starting at the position ~d, does not~
+                represent an integral number."
+          *current-word* *word-start-index*)))))
 
 ;;; -------------------------------------------------------
 
 (defun read-integer-literal ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   reads a signed or unsigned integer literal and returns a connable
-   representation thereof."
+  "Parses the *CURRENT-WORD* as a signed or unsigned integer literal and
+   returns a fresh ``Literal-Operand'' representation of the extracted
+   numeric object."
   (the Literal-Operand
     (make-literal-operand :value
       (read-number))))
 
 ;;; -------------------------------------------------------
 
-(defun read-registry-reference ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   reads a registry reference and returns a connable representation
-   thereof."
-  (expect-dollar-sign)
-  (incf *current-column-index*)
-  (the Registry-Operand
-    (make-registry-operand :name
-      (validate-registry-number
+(defun read-register-reference ()
+  "Parses the *CURRENT-WORD* as a register reference and returns a fresh
+   ``Register-Operand'' representation of the extracted numeric object."
+  (expect-register-reference)
+  (incf *word-start-index*)
+  (the Register-Operand
+    (make-register-operand :index
+      (validate-register-number
         (read-number)))))
 
 ;;; -------------------------------------------------------
 
 (defun read-numeric-operand ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   reads either a registry reference or a numeric literal and returns
-   a covenable representation thereof."
+  "Attempts to parse the *CURRENT-WORD* as a register reference, on
+   success returning a fresh ``Register-Operand'' representation of its
+   signified target; otherwise produces a fresh ``Literal-Operand'' of
+   the imputed signed or unsigned integer datum extracted from the
+   string object."
   (the Operand
-    (if (registry-reference-follows-p)
-      (read-registry-reference)
+    (if (current-word-represents-register-p)
+      (read-register-reference)
       (read-integer-literal))))
 
 ;;; -------------------------------------------------------
 
 (defun read-label-name ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   reads and returns a label name."
-  (multiple-value-bind (next-word start-position end-position)
-      (peek-next-word)
-    (declare (type string next-word))
-    (declare (type fixnum start-position))
-    (declare (ignore      start-position))
-    (declare (type fixnum end-position))
-    (the string
-      (prog1
-        (validate-label-name next-word)
-        (setf *current-column-index* end-position)))))
+  "Interprets the *CURRENT-WORD* as a label name, validates its
+   conformation, and returns thilk in its ipsissima verba form."
+  (the string
+    (validate-label-name *current-word*)))
 
 ;;; -------------------------------------------------------
 
-(defun read-instruction ()
-  "Proceeding from the *CURRENT-COLUMN-INDEX* into the *CURRENT-LINE*,
-   reads an 8ial instruction and returns a covenable representation
-   thereof."
-  (multiple-value-bind (next-word start-position end-position)
-      (peek-next-word)
-    (declare (type string next-word))
-    (declare (type fixnum start-position))
-    (declare (type fixnum end-position))
-    
-    (the Instruction
-      (prog1
-        (cond
-          ((char= *current-character* #\;)
-            (incf *current-column-index*)
-            (make-label-definition-instruction :name
-              (read-label-name)))
-          
-          ((string= next-word "EVR")
-            (setf *current-column-index* end-position)
-            (skip-spaces)
-            (make-edit-instruction :new-value
-              (read-numeric-operand)))
-          
-          ((string= next-word "OUT")
-            (setf *current-column-index* end-position)
-            (make-output-instruction))
-          
-          ((string= next-word "PSH")
-            (setf *current-column-index* end-position)
-            (skip-spaces)
-            (make-push-instruction :registry
-              (read-registry-reference)))
-          
-          ((string= next-word "PTR")
-            (setf *current-column-index* end-position)
-            (skip-spaces)
-            (make-point-instruction :registry
-              (read-registry-reference)))
-          
-          ((string= next-word "PUT")
-            (setf *current-column-index* end-position)
-            (skip-spaces)
-            (make-input-instruction :registry
-              (read-registry-reference)))
-          
-          ((string= next-word "JIR")
-            (setf *current-column-index* end-position)
-            (skip-spaces)
-            (make-jump-instruction
-              :label
-                (prog1
-                  (read-label-name)
-                  (skip-spaces))
-              :candidate
-                (prog1
-                  (read-registry-reference)
-                  (skip-spaces))
-              :guard
-                (prog1
-                  (read-numeric-operand)
-                  (skip-spaces))))
-          
-          (T
-            (error "The identifier ~s, inchoating in the column ~d of ~
-                    line number ~d does not introduce an instruction."
-              next-word start-position *current-line-index*)))
-        
-        (expect-end-of-current-line)))))
+(defun read-next-instruction ()
+  "Proceeding from the current position into the *SOURCE*, reads an
+   8ial instruction and returns a covenable ``Instruction''
+   representation thereof."
+  (the Instruction
+    (cond
+      ((string-introduces-a-label-definition-p *current-word*)
+        (incf *word-start-index*)
+        (make-label-definition-instruction :label
+          (read-label-name)))
+      
+      ((string= *current-word* "INC")
+        (peek-next-word)
+        (make-inc-instruction :register
+          (read-register-reference)))
+      
+      ((string= *current-word* "END")
+        (peek-next-word)
+        (make-end-instruction))
+      
+      ((string= *current-word* "OUT")
+        (peek-next-word)
+        (make-out-instruction :register
+          (read-register-reference)))
+      
+      ((string= *current-word* "JMP")
+        (peek-next-word)
+        (make-jmp-instruction :label
+          (read-label-name)))
+      
+      ((string= *current-word* "PUT")
+        (peek-next-word)
+        (make-put-instruction :register
+          (read-register-reference)))
+      
+      ((string= *current-word* "JIR")
+        (make-jir-instruction
+          :label     (progn
+                       (peek-next-word)
+                       (read-label-name))
+          :candidate (progn
+                       (peek-next-word)
+                       (read-register-reference))
+          :guard     (progn
+                       (peek-next-word)
+                       (read-numeric-operand))))
+      
+      ((string= *current-word* "DEC")
+        (peek-next-word)
+        (make-dec-instruction :register
+          (read-register-reference)))
+      
+      (T
+        (make-nop-instruction)))))
 
 ;;; -------------------------------------------------------
 
-(defun parse-current-line ()
-  "Parses the *CURRENT-LINE* and returns an ``Instruction''
+(defun parse-next-instruction ()
+  "Requests and parses the next token and returns an ``Instruction''
    representation of its content, if possible; otherwise responds with
-   the ``NIL'' value to designate a no-operation (NOP)."
-  (skip-spaces)
-  (skip-optional-comment)
+   the ``NIL'' value to designate the *SOURCE*'s exhaustion."
+  (peek-next-word)
   (the (or null Instruction)
-    (unless *current-line-is-exhausted-p*
-      (read-instruction))))
+    (unless *source-is-exhausted-p*
+      (read-next-instruction))))
 
 ;;; -------------------------------------------------------
 
@@ -1215,30 +1067,16 @@
   "Parses the piece of 8ial SOURCE code and returns a fresh ``Program''
    encapsulation of its entailed instructions."
   (declare (type string source))
-  (reset-scanner)
-  (flet ((prepare-instruction-for-appendage (instruction)
-          "Prepares the INSTRUCTION for a gathering via a ``loop'' macro
-           invocation's ``append'' action by wrapping the same in a
-           singleton list, if non-``NIL'', otherwise, for a ``NIL''
-           INSTRUCTION, returns the ``NIL'' sentinel itself."
-          (declare (type (or null Instruction) instruction))
-          (the (or null (cons Instruction null))
-            (when instruction
-              (list instruction)))))
-    (with-input-from-string (source-stream source)
-      (declare (type string-stream source-stream))
-      (the Program
-        (make-instance 'Program :instructions
-          (make-instruction-vector
-            (loop
-              for source-line
-                of-type (or null string)
-                =       (read-line source-stream NIL NIL)
-              while source-line append
-                (progn
-                  (set-current-line source-line)
-                  (prepare-instruction-for-appendage
-                    (parse-current-line))))))))))
+  (set-scanner-source source)
+  (the Program
+    (make-instance 'Program :instructions
+      (make-instruction-vector
+        (loop
+          for next-instruction
+            of-type (or null Instruction)
+            =       (parse-next-instruction)
+          while next-instruction
+            collect next-instruction)))))
 
 
 
@@ -1332,7 +1170,7 @@
         by      1
       when (label-definition-instruction-p current-instruction) do
         (define-label labels
-          (label-definition-instruction-name current-instruction)
+          (label-definition-instruction-label current-instruction)
           current-position))
     (the Label-Table labels)))
 
@@ -1360,96 +1198,6 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of registry bank.                             -- ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defclass Registry-Bank ()
-  ((entries
-    :initform      (make-hash-table :test #'eql)
-    :accessor      registry-bank-entries
-    :type          (hash-table-of registry-number integer)
-    :documentation "Affiliates the numeric registry identifiers with
-                    their values."))
-  (:documentation
-    "The ``Registry-Bank'' class is apportioned the dever of an 8ial
-     program registries' castaldy."))
-
-;;; -------------------------------------------------------
-
-(defun ensure-registry-entry (registries name)
-  "Ascertains the existency of a registry amenable to the NAME in the
-   REGISTRIES bank by either returning its value, if already present, or
-   inserting a new zero-valued entry upon its absence, ere this datum
-   is produced."
-  (declare (type Registry-Bank   registries))
-  (declare (type registry-number name))
-  (with-slots (entries) registries
-    (declare (type (hash-table-of registry-number integer) entries))
-    (multiple-value-bind (extant-value contains-name-p)
-        (gethash name entries)
-      (declare (type (or null integer) extant-value))
-      (declare (type T                 contains-name-p))
-      (the integer
-        (if contains-name-p
-          extant-value
-          (prog1 0
-            (setf (gethash name entries) 0)))))))
-
-;;; -------------------------------------------------------
-
-(defun read-registry (registries name)
-  "Returns the integer value stored in the registry amenable to the NAME
-   in the REGISTRIES bank.
-   ---
-   A registry not yet explicitly set will be generated in a tacit mode
-   and affiliated with the default value of zero (0), prevenient to the
-   delivery of a response with the same datum."
-  (declare (type Registry-Bank   registries))
-  (declare (type registry-number name))
-  (the integer
-    (ensure-registry-entry registries name)))
-
-;;; -------------------------------------------------------
-
-(defun write-registry (registries name new-value)
-  "Stores the NEW-VALUE in the registry amenable to the NAME in the
-   REGISTRIES bank and returns no value."
-  (declare (type Registry-Bank   registries))
-  (declare (type registry-number name))
-  (declare (type integer         new-value))
-  (with-slots (entries) registries
-    (declare (type (hash-table-of registry-number integer) entries))
-    (setf (gethash name entries 0) new-value))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun registry-bank-size (registries)
-  "Returns the tally of entries in the REGISTRIES bank."
-  (declare (type Registry-Bank registries))
-  (the (integer 0 *)
-    (hash-table-count
-      (registry-bank-entries registries))))
-
-;;; -------------------------------------------------------
-
-(defmethod print-object ((registries Registry-Bank) (stream T))
-  (declare (type Registry-Bank registries))
-  (declare (type destination   stream))
-  (format stream "~&Registry-Bank with ~d entr~:@p:"
-    (registry-bank-size registries))
-  (loop
-    for current-name
-      of-type registry-number
-      being the hash-keys in (registry-bank-entries registries)
-    using
-      (hash-value current-value)
-    do
-      (format stream "~&~2t~d => ~d" current-name current-value)))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of interpreter.                               -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1470,21 +1218,16 @@
     :accessor      interpreter-ip
     :type          fixnum
     :documentation "The current instruction pointer (IP) location.")
-   (registries
-    :initform      (make-instance 'Registry-Bank)
-    :reader        interpreter-registries
-    :type          Registry-Bank
-    :documentation "Maps registry names to their integer values.")
-   (stack
-    :initform      (make-instance 'Stack)
-    :reader        interpreter-stack
-    :type          Stack
-    :documentation "Maintains an unbounded stack of integer numbers.")
-   (pointed-registry
-    :initform      NIL
-    :accessor      interpreter-pointed-registry
-    :type          (or null registry-number)
-    :documentation "The currently selected registry's identifier."))
+   (registers
+    :initform      (make-array 16
+                     :element-type    'octet
+                     :initial-element 0
+                     :adjustable      NIL
+                     :fill-pointer    NIL)
+    :reader        interpreter-registers
+    :type          register-array
+    :documentation "Maintains the memory's 16 unsigned-byte valued
+                    registers as a vector."))
   (:documentation
     "The ``Interpreter'' class is apportioned the onus of accompassing
      efficacy to an 8ial program furnished in the form of a sequence of
@@ -1528,68 +1271,29 @@
 
 ;;; -------------------------------------------------------
 
-(defun registry-value (interpreter name)
-  "Returns the integral value stored in the INTERPRETER's registry
-   amenable to the NAME."
+(defun register-value (interpreter index)
+  "Returns the integral value stored in the INTERPRETER's register
+   amenable to the INDEX."
   (declare (type Interpreter     interpreter))
-  (declare (type registry-number name))
-  (with-slots (registries) interpreter
-    (declare (type Registry-Bank registries))
+  (declare (type register-number index))
+  (with-slots (registers) interpreter
+    (declare (type register-array registers))
     (the integer
-      (read-registry registries name))))
+      (aref registers
+        (1- index)))))
 
 ;;; -------------------------------------------------------
 
-(defun (setf registry-value) (new-value interpreter name)
-  "Stores the NEW-VALUE in the INTERPRETER registry amenable to the
-   NAME and returns no value.."
+(defun (setf register-value) (new-value interpreter index)
+  "Stores the NEW-VALUE in the INTERPRETER register amenable to the
+   INDEX and returns no value.."
   (declare (type integer         new-value))
   (declare (type Interpreter     interpreter))
-  (declare (type registry-number name))
-  (with-slots (registries) interpreter
-    (declare (type Registry-Bank registries))
-    (write-registry registries name new-value))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun confirm-pointed-registry-selected (interpreter)
-  "Determines whether a pointed registry has been specified in the
-   INTERPRETER's context, returning on confirmation no value; otherwise
-   an error of the type ``No-Pointed-Registry-Error'' is signaled."
-  (declare (type Interpreter interpreter))
-  (unless (interpreter-pointed-registry interpreter)
-    (error 'No-Pointed-Registry-Error))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defun pointed-registry-value (interpreter)
-  "Returns the ineger value stored in the INTERPRETER's pointer
-   registry.
-   ---
-   If no pointed registry has yet been chosen, an error of the type
-   ``No-Pointed-Registry-Error'' will be signaled."
-  (declare (type Interpreter interpreter))
-  (confirm-pointed-registry-selected interpreter)
-  (the integer
-    (registry-value interpreter
-      (interpreter-pointed-registry interpreter))))
-
-;;; -------------------------------------------------------
-
-(defun (setf pointed-registry-value) (new-value interpreter)
-  "Stores the NEW-VALUE in the INTERPRETER's pointed registry and
-   returns no value.
-   ---
-   If no pointed registry has yet been chosen, an error of the type
-   ``No-Pointed-Registry-Error'' will be signaled."
-  (declare (type integer     new-value))
-  (declare (type Interpreter interpreter))
-  (confirm-pointed-registry-selected interpreter)
-  (with-slots (pointed-registry) interpreter
-    (declare (type (or null registry-number) pointed-registry))
-    (setf (registry-value interpreter pointed-registry) new-value))
+  (declare (type register-number index))
+  (with-slots (registers) interpreter
+    (declare (type register-array registers))
+    (setf (aref registers (1- index))
+      (mod new-value 256)))
   (values))
 
 ;;; -------------------------------------------------------
@@ -1606,12 +1310,12 @@
     (the integer
       (literal-operand-value operand)))
   
-  (:method ((interpreter Interpreter) (operand Registry-Operand))
+  (:method ((interpreter Interpreter) (operand Register-Operand))
     (declare (type Interpreter      interpreter))
-    (declare (type Registry-Operand operand))
+    (declare (type Register-Operand operand))
     (the integer
-      (registry-value interpreter
-        (registry-operand-name operand)))))
+      (register-value interpreter
+        (register-operand-index operand)))))
 
 ;;; -------------------------------------------------------
 
@@ -1638,39 +1342,24 @@
 ;;; -------------------------------------------------------
 
 (defmethod process-instruction ((interpreter Interpreter)
-                                (instruction Edit-Instruction))
-  (declare (type Interpreter      interpreter))
-  (declare (type Edit-Instruction instruction))
-  (setf (pointed-registry-value interpreter)
-    (resolve-operand interpreter
-      (edit-instruction-new-value instruction)))
+                                (instruction INC-Instruction))
+  (declare (type Interpreter     interpreter))
+  (declare (type INC-Instruction instruction))
+  (incf
+    (register-value interpreter
+      (register-operand-index
+        (inc-instruction-register instruction))))
   (values))
 
 ;;; -------------------------------------------------------
 
 (defmethod process-instruction ((interpreter Interpreter)
-                                (instruction Input-Instruction))
-  (declare (type Interpreter       interpreter))
-  (declare (type Input-Instruction instruction))
-  (setf (registry-value interpreter
-          (registry-operand-name
-            (input-instruction-registry instruction)))
-    (query-integer))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defmethod process-instruction ((interpreter Interpreter)
-                                (instruction Jump-Instruction))
-  (declare (type Interpreter      interpreter))
-  (declare (type Jump-Instruction instruction))
-  (when (operands-are-equal-p interpreter
-          (jump-instruction-candidate instruction)
-          (jump-instruction-guard     instruction))
-    (setf (interpreter-ip interpreter)
-      (look-up-label
-        (interpreter-labels     interpreter)
-        (jump-instruction-label instruction))))
+                                (instruction END-Instruction))
+  (declare (type Interpreter     interpreter))
+  (declare (ignore               interpreter))
+  (declare (type END-Instruction instruction))
+  (declare (ignore               instruction))
+  (signal 'Halt-Condition)
   (values))
 
 ;;; -------------------------------------------------------
@@ -1687,36 +1376,74 @@
 ;;; -------------------------------------------------------
 
 (defmethod process-instruction ((interpreter Interpreter)
-                                (instruction Output-Instruction))
-  (declare (type Interpreter        interpreter))
-  (declare (type Output-Instruction instruction))
-  (declare (ignore                  instruction))
+                                (instruction OUT-Instruction))
+  (declare (type Interpreter     interpreter))
+  (declare (type OUT-Instruction instruction))
   (format T "~&~d"
-    (pop-from-stack
-      (interpreter-stack interpreter)))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defmethod process-instruction ((interpreter Interpreter)
-                                (instruction Point-Instruction))
-  (declare (type Interpreter       interpreter))
-  (declare (type Point-Instruction instruction))
-  (setf (interpreter-pointed-registry interpreter)
-    (registry-operand-name
-      (point-instruction-registry instruction)))
-  (values))
-
-;;; -------------------------------------------------------
-
-(defmethod process-instruction ((interpreter Interpreter)
-                                (instruction Push-Instruction))
-  (declare (type Interpreter      interpreter))
-  (declare (type Push-Instruction instruction))
-  (push-onto-stack
-    (interpreter-stack interpreter)
     (resolve-operand interpreter
-      (push-instruction-registry instruction)))
+      (out-instruction-register instruction)))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defmethod process-instruction ((interpreter Interpreter)
+                                (instruction JMP-Instruction))
+  (declare (type Interpreter     interpreter))
+  (declare (type JMP-Instruction instruction))
+  (setf (interpreter-ip interpreter)
+    (look-up-label
+      (interpreter-labels    interpreter)
+      (jmp-instruction-label instruction)))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defmethod process-instruction ((interpreter Interpreter)
+                                (instruction PUT-Instruction))
+  (declare (type Interpreter     interpreter))
+  (declare (type PUT-Instruction instruction))
+  (setf
+    (register-value interpreter
+      (register-operand-index
+        (put-instruction-register instruction)))
+    (query-integer))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defmethod process-instruction ((interpreter Interpreter)
+                                (instruction JIR-Instruction))
+  (declare (type Interpreter     interpreter))
+  (declare (type JIR-Instruction instruction))
+  (when (operands-are-equal-p interpreter
+          (jir-instruction-candidate instruction)
+          (jir-instruction-guard     instruction))
+    (setf (interpreter-ip interpreter)
+      (look-up-label
+        (interpreter-labels    interpreter)
+        (jir-instruction-label instruction))))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defmethod process-instruction ((interpreter Interpreter)
+                                (instruction DEC-Instruction))
+  (declare (type Interpreter     interpreter))
+  (declare (type DEC-Instruction instruction))
+  (decf
+    (register-value interpreter
+      (register-operand-index
+        (dec-instruction-register instruction))))
+  (values))
+
+;;; -------------------------------------------------------
+
+(defmethod process-instruction ((interpreter Interpreter)
+                                (instruction NOP-Instruction))
+  (declare (type Interpreter     interpreter))
+  (declare (ignore               interpreter))
+  (declare (type NOP-Instruction instruction))
+  (declare (ignore               instruction))
   (values))
 
 ;;; -------------------------------------------------------
@@ -1751,51 +1478,10 @@
 ;; -- Test cases.                                                  -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Perpetually repeating numeric cat program.
-(interpret-8ial
-  ";repeat
-   PUT $1
-   PSH $1
-   OUT
-   JIR repeat $2 0")
-
-;;; -------------------------------------------------------
-
-;; Repeating cat program which demonstrates the program termination upon
-;; the input conduit's exhaustion.
-(with-input-from-string (input "")
-  (declare (type string-stream input))
-  (let ((*standard-input* input))
-    (interpret-8ial
-      ";repeat
-       PUT $1
-       PSH $1
-       OUT
-       JIR repeat $1 0")))
-
-;;; -------------------------------------------------------
-
 ;; Truth-machine.
-(interpret-8ial
-  "
-  PUT $1
-  JIR o $1 1
-  PSH $1
-  OUT
-  JIR e $1 0
-  ;o
-  PSH $1
-  OUT
-  JIR o $1 1
-  ;e   
-  ")
+(interpret-8ial "PUT $1 ;d JIR l $1 0 JIR l $1 1 DEC $1 JMP d ;l OUT $1 JIR l $1 1 END")
 
 ;;; -------------------------------------------------------
 
-;; Select the register "$1", set its value to 100, and print the
-;; this content.
-(interpret-8ial
-  "PTR $1
-   EVR 100
-   PSH $1
-   OUT")
+;; Numeric cat program which terminates on a zero (0) input.
+(interpret-8ial ";repeat PUT $1 OUT $1 JIR x $1 0 JMP repeat ;x END")
