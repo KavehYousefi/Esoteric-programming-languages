@@ -1996,7 +1996,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun convert-into-simple-string (source)
-  "Returns a fresh simple string representation of the SOURCE."
+  "Returns a simple string representation of the SOURCE, either
+   producing for the same a fresh instance, if the input does not
+   already subsume into this special type, or, upon its compliance to
+   the ``simple-string'' species, delivers the SOURCE in its verbatim
+   constitution."
   (declare (type string source))
   (the simple-string
     (coerce source 'simple-string)))
@@ -2061,7 +2065,7 @@
    detection's failure, responds with the HAYSTACK's length."
   (declare (type simple-string needle))
   (declare (type simple-string haystack))
-  (declare (type fixnum haystack-start))
+  (declare (type fixnum        haystack-start))
   (the fixnum
     (or (search needle haystack :start2 haystack-start :test #'char=)
         (length haystack))))
@@ -2070,7 +2074,7 @@
 
 (defun replace-all-occurrences-in-string (source eject substitute)
   "If the EJECT does not represent an empty string, creates and returns
-   a fresh string which entails the SOURCE's characters, but
+   a fresh simple string which entails the SOURCE's characters, but
    supersedes all of the EJECT's occurrencies by the SUBSTITUTE;
    otherwise, for an EJECT destitute of any characters, responds with
    the SOURCE itself."
@@ -2105,8 +2109,8 @@
 ;;; -------------------------------------------------------
 
 (defun remove-all-occurrences-in-string (source eject)
-  "Creates and returns a fresh string which retains from the SOURCE all
-   content except for the EJECT's occurrencies."
+  "Creates and returns a fresh simple string which retains from the
+   SOURCE all content except for the EJECT's occurrencies."
   (declare (type simple-string source))
   (declare (type simple-string eject))
   (the simple-string
@@ -2115,8 +2119,8 @@
 ;;; -------------------------------------------------------
 
 (defun retain-all-occurrences-in-string (source desideratum)
-  "Creates and returns a fresh string which removes from the SOURCE all
-   content except for the occurrencies of the DESIDERATUM.
+  "Creates and returns a fresh simple string which removes from the
+   SOURCE all content except for the occurrencies of the DESIDERATUM.
    ---
    If the DESIDERATUM represents the empty string, the result will per
    force entail no characters at all."
@@ -2636,8 +2640,8 @@
 (defun read-non-ampersand-identifier ()
   "Proceeding from the current position into the *SOURCE-CODE*, reads
    an identifier compact of zero or more characters, except for the
-   ampersand symbol \"&\", and returns a fresh string representation
-   thereof."
+   ampersand symbol \"&\", and returns a fresh simple string
+   representation thereof."
   (let ((current-character NIL))
     (declare (type (or null character) current-character))
     (the simple-string
@@ -2651,7 +2655,7 @@
 (defun read-non-plus-symbol-identifier ()
   "Proceeding from the current position into the *SOURCE-CODE*, reads
    an identifier compact of zero or more characters, except for the
-   plus symbol \"+\", and returns a fresh string representation
+   plus symbol \"+\", and returns a fresh simple string representation
    thereof."
   (let ((current-character NIL))
     (declare (type (or null character) current-character))
@@ -2666,8 +2670,8 @@
 (defun read-non-equal-sign-identifier ()
   "Proceeding from the current position into the *SOURCE-CODE*, reads
    an identifier compact of zero or more characters, except for the
-   equality sign \"=\", and returns a fresh string representation
-   thereof."
+   equality sign \"=\", and returns a fresh simple string
+   representation thereof."
   (let ((current-character NIL))
     (declare (type (or null character) current-character))
     (the simple-string
@@ -2681,7 +2685,7 @@
 (defun read-non-greater-than-symbol-identifier ()
   "Proceeding from the current position into the *SOURCE-CODE*, reads
    an identifier compact of zero or more characters, except for the
-   \"greater than\" symbol \">\", and returns a fresh string
+   \"greater than\" symbol \">\", and returns a fresh simple string
    representation thereof."
   (let ((current-character NIL))
     (declare (type (or null character) current-character))
@@ -2696,8 +2700,8 @@
 (defun read-non-less-than-symbol-identifier ()
   "Proceeding from the current position into the *SOURCE-CODE*, reads
    an identifier compact of zero or more characters, except for the
-   \"less than\" symbol \"<\", and returns a fresh string representation
-   thereof."
+   \"less than\" symbol \"<\", and returns a fresh simple string
+   representation thereof."
   (let ((current-character NIL))
     (declare (type (or null character) current-character))
     (the simple-string
@@ -2990,7 +2994,7 @@
 
 (defun excise-command-from-string (source command)
   "Removes the parcel occupied by the COMMAND from the SOURCE string
-   and a fresh string comprehending the remaining segment.
+   and a fresh simple string comprehending the remaining segment.
    ---
    The SOURCE string will not be subjected to alterations."
   (declare (type simple-string source))
@@ -3066,7 +3070,7 @@
 
 (defun query-line-input-from-console ()
   "Queries the console's associated standard input for a line of
-   characters, purges the conduit, and returns a fresh string
+   characters, purges the conduit, and returns a fresh simple string
    comprehending the response, destitute of the terminating linebreak
    entity.
    ---
