@@ -2298,6 +2298,13 @@
      accompassing no causatum when responding with ``NIL''.")
   
   (:method ((expected-character character))
+    "Generates and returns a Common Lisp code tmema which probes the
+     *SOURCE-CODE*'s current character for its owelty with the
+     EXPECTED-CHARACTER, the code producing on confirmation a
+     ``boolean'' value of ``T'', while concomitantly advancing the
+     *SOURCE-POSITION* cursor to the subsequent position; otherwise,
+     the resulting program fragment responds with ``NIL'', without any
+     further epiphenomenon's actuation."
     (declare (type character expected-character))
     `(the boolean
        (when (and *source-has-next-character-p*
@@ -2306,6 +2313,14 @@
          T)))
   
   (:method ((expected-string string))
+    "Generates and returns a Common Lisp code tmema which probes the
+     characters commencing in the *SOURCE-CODE* from its currently
+     occupied position with the EXPECTED-STRING's content, the code
+     producing on confirmation a ``boolean'' value of ``T'', while
+     concomitantly advancing the *SOURCE-POSITION* cursor beyond the
+     matched interval in the *SOURCE-CODE*; otherwise, the resulting
+     program fragment responds with ``NIL'', without any further
+     epiphenomenon's actuation."
     (declare (type string expected-string))
     `(the boolean
        (when (and *source-has-next-character-p*
