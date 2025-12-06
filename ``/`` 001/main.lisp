@@ -870,7 +870,7 @@
    ``Parser'' instance, the processor callback function of which is
    defined in an implicit fashion, admitting as its aefauld input a
    ``Parse-State'' nevened via the STATE-VARIABLE, and employing for its
-   implementations the BODY forms, the desinent one of which is expected
+   implementation the BODY forms, the desinent one of which is expected
    to return a ``Parse-Result'' that encapsulates the thus produced
    parser's response to an invocation request."
   `(the Parser
