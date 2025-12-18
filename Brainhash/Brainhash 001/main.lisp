@@ -800,7 +800,7 @@
 
 ;; ASCII code in [48, 57] to twissel of ASCII code in [48, 57].
 (defun third-pass-encode-the-instruction (second-pass-cipher)
-  "Encodes the SECOND-PASS-CIPHER, thish constituting a decimal digit's
+  "Encodes the SECOND-PASS-CIPHER, this constituting a decimal digit's
    ASCII code as an integer from the range [48, 57], into a twissel of
    ASCII codes by a segregation of the SECOND-PASS-CIPHER's two ASCII
    code digits and a subsequent transcription of these separate entities
