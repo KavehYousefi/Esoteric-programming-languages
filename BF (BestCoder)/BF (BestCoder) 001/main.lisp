@@ -2,7 +2,7 @@
 ;; 
 ;; This program implements an interpreter of the esoteric programming
 ;; lanugage "BF", invented by the Esolang user "BestCode" and presented
-;; on September 22nd, 2025, conceived as a derivation of Urban Mueller's
+;; on June 24th, 2024, conceived as a derivation of Urban Mueller's
 ;; "brainfuck", while, maugre its patration in the quantitative and
 ;; syntactical congruency with the entheus, applies a transposition in
 ;; the octuple identifier set with regard to the affiliated causata,
