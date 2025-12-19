@@ -190,7 +190,7 @@
 (defparameter *tape* #b00000000
   "The memory tape as an integer-encoded bit sequence, each attiguous
    catena of eight bits forming a cell's unsigned byte representation,
-   which the lowest bits mapping to the cell amenable to the smallest
+   with the lowest bits mapping to the cell amenable to the smallest
    address, increasing in the subscripts towards the most significant
    bit (MSB) positions.")
 
@@ -200,12 +200,14 @@
    perquisitions and modulations.
    ---
    As a parasceve to the obtention or modification of the currently
-   selected cell, cell pointer ought to experience a transcription into")
+   selected cell, the cell pointer ought to experience a transcription
+   into a non-negative bit offset into the ``*TAPE*'', the same defines
+   the cell states as an attiguous sequence of bits.")
 
 (defparameter *lowest-accessed-cell-index* 0
   "The bit offset into the ``*tape*'''s binary sequence which
    corresponds to the unsigned byte's lowest significant bit (LSB) in
-   the cell designated by the ``*cell-pointer*''")
+   the cell designated by the ``*cell-pointer*''.")
 
 (define-symbol-macro *byte-selector-for-the-current-cell*
   (the T
