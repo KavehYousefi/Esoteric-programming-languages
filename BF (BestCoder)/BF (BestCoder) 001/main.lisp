@@ -239,7 +239,7 @@
 ;;; -------------------------------------------------------
 
 (defun move-the-cell-pointer-right ()
-  "Translates the tape's cell pointer one stepe to the right and returns
+  "Translates the tape's cell pointer one step to the right and returns
    no value."
   (incf *cell-pointer*)
   (values))
