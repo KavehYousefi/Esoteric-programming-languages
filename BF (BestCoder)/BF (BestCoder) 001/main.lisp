@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
-;; This program implements an interpreter of the esoteric programming
+;; This program implements an interpreter for the esoteric programming
 ;; lanugage "BF", invented by the Esolang user "BestCode" and presented
 ;; on June 24th, 2024, conceived as a derivation of Urban Mueller's
 ;; "brainfuck", while, maugre its patration in the quantitative and
@@ -84,12 +84,12 @@
 ;;   ..................................................................
 ;;   .       | If the current cell value equals zero (0), moves the
 ;;           | instruction pointer (IP) forward to the position
-;;           | immediately succeeding the matching "]" instruction;
+;;           | immediately succeeding the matching "," instruction;
 ;;           | otherwise proceeds as usual.
 ;;   ..................................................................
 ;;   ,       | If the current cell value does not equal zero (0),
 ;;           | moves the instruction pointer (IP) back to the position
-;;           | immediately succeeding the matching "[" instruction;
+;;           | immediately succeeding the matching "." instruction;
 ;;           | otherwise proceeds as usual.
 ;;   ------------------------------------------------------------------
 ;; 
