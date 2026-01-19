@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; This program implements an interpreter for the esoteric programming
-;; lanugage "FJ", invented by the Esolang user "None1" and presented
+;; language "FJ", invented by the Esolang user "None1" and presented
 ;; on August 7th, 2023, conceived as a derivation of Urban Mueller's
 ;; "brainfuck", while, maugre its patration in the quantitative and
 ;; syntactical congruency with the entheus, deploys a set of identifiers
