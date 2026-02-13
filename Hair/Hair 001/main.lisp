@@ -90,7 +90,7 @@
 ;;   ..................................................................
 ;;   }       | Decrements the accumulator's value by one (1).
 ;;   ..................................................................
-;;   |       | Copies the accumulator value into the current tape cell.
+;;   l       | Copies the accumulator value into the current tape cell.
 ;;   ..................................................................
 ;;   -       | Copies the current tape cell's value into the
 ;;           | accumulator.
@@ -659,7 +659,7 @@
         (#\}
           (decf (accumulator-state accumulator)))
         
-        (#\|
+        (#\l
           (setf (current-cell-value tape)
             (accumulator-state accumulator)))
         
