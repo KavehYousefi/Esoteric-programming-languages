@@ -1135,12 +1135,12 @@
 
 ;;; -------------------------------------------------------
 
-;; A counter which counts up from inclusive one (1) to 256, ere
-;; wrapping around in order to pursue its olamic aspirations.
+;; A counter which counts up from inclusive one (1) to inclusive 255,
+;; ere wrapping around in order to pursue its olamic aspirations.
 ;; 
 ;; Please heed that an overflow on the stack's transpiration constitutes
 ;; a tenable sequela from the nimiety in recursive invocations.
-(execute-a-single-deadbird-program "(U/ioU)U")
+(execute-a-single-deadbird-program "(U/foiU)U")
 
 ;;; -------------------------------------------------------
 
