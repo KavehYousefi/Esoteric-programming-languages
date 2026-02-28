@@ -20,7 +20,7 @@
 ;; memory accumulator's accompt from its singularity to a quadruple
 ;; mountenance.
 ;; 
-;; == DEADBIRD PROGRAM OPERATE IN A PERPETUAL CYCLE ==
+;; == DEADBIRD PROGRAMS OPERATE IN A PERPETUAL CYCLE ==
 ;; A sience the kenspeckle Deadfish nomothesy, Deadbird's appropriation
 ;; does not encumber itself with the wite of its dioristic execution
 ;; model's renegation; pursing the selfsame olamic designment in the
@@ -1112,7 +1112,7 @@
     (declare (type Scanner     scanner))
     (loop
       for current-code
-        of-type (or null string)
+        of-type string
         =       (if initial-code-supplied
                   initial-code
                   (query-for-deadbird-code))
@@ -1138,7 +1138,7 @@
 ;; A counter which counts up from inclusive one (1) to inclusive 255,
 ;; ere wrapping around in order to pursue its olamic aspirations.
 ;; 
-;; Please heed that an overflow on the stack's transpiration constitutes
+;; Please heed that an overflow's transpiration on the stack constitutes
 ;; a tenable sequela from the nimiety in recursive invocations.
 (execute-a-single-deadbird-program "(U/foiU)U")
 
@@ -1146,7 +1146,7 @@
 
 ;; Truth-machine.
 ;; 
-;; Please heed that an overflow on the stack's transpiration constitutes
+;; Please heed that an overflow's transpiration on the stack constitutes
 ;; a tenable sequela from the nimiety in recursive invocations.
 (execute-a-single-deadbird-program
   "(0/o)(1/o1)gddddddddddddddddddddddddddddddddddddddddddddddddf10")
