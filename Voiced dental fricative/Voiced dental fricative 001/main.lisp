@@ -31,8 +31,9 @@
 ;;   Voiced     | ð
 ;;   --------------------
 ;; 
-;; The command "h" filsts in the switch atwixen the two modes, its
-;; causatum the transition from one option to its alternative:
+;; Commencing at the program's inchoacy in the "Voiceless" state; the
+;; command "h" filsts in the switch atwixen the two modes, its causatum
+;; the transition from one option to its alternative:
 ;; 
 ;;   --------------------------------
 ;;   Current state | Alternate state
