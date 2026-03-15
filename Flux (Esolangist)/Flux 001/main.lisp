@@ -804,6 +804,25 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of the program loading operations.            -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun read-the-flux-code-from-the-stream (source)
+  "Consumes the SOURCE stream's lines, concatenates these, and returns
+   a fresh simple string comprehending their content."
+  (declare (type stream source))
+  (the simple-string
+    (apply #'concatenate-the-lines
+      (loop
+        for current-line
+          of-type (or null string)
+          =       (read-line source NIL NIL)
+        while   current-line
+        collect current-line))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of the location operations.                   -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1950,6 +1969,41 @@
       (arrange-the-code-in-a-playfield
         (apply #'concatenate-the-lines code-lines))))
   (values))
+
+;;; -------------------------------------------------------
+
+(defgeneric interpret-the-flux-file (source)
+  (:documentation
+    "Loads the Flux code from the external SOURCE, usually a stream or a
+     file, interprets the same, and returns no value.")
+  
+  (:method ((source pathname))
+    (declare (type pathname source))
+    (with-open-file (input-stream source
+                     :direction         :input
+                     :element-type      'character
+                     :if-does-not-exist :error)
+      (declare (type file-stream input-stream))
+      (interpret-the-flux-code
+        (read-the-flux-code-from-the-stream input-stream)))
+    (values))
+  
+  (:method ((source stream))
+    (declare (type stream source))
+    (interpret-the-flux-code
+      (read-the-flux-code-from-the-stream source))
+    (values))
+  
+  (:method ((source string))
+    (declare (type string source))
+    (with-open-file (input-stream source
+                     :direction         :input
+                     :element-type      'character
+                     :if-does-not-exist :error)
+      (declare (type file-stream input-stream))
+      (interpret-the-flux-code
+        (read-the-flux-code-from-the-stream input-stream)))
+    (values)))
 
 
 
