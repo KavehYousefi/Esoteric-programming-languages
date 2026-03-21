@@ -152,12 +152,7 @@
 ;;   end if
 ;; 
 ;; Exceptional situations:
-;;   - If the line tallies more than one instance of the "=" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
-;;   - If the line tallies one or more instances of the "-" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
-;;   - If the line tallies one or more instances of the ":" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
+;;   - None.
 ;; 
 ;; Side effects:
 ;;   - If the {delendum} exists in the memory string, its first
@@ -225,12 +220,7 @@
 ;;   end if
 ;; 
 ;; Exceptional situations:
-;;   - If the line tallies more than one instance of the "-" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
-;;   - If the line tallies one or more instances of the "=" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
-;;   - If the line tallies one or more instances of the ":" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
+;;   - None.
 ;; 
 ;; Side effects:
 ;;   - If the {delendum} exists in the memory string, it its printed to
@@ -296,12 +286,7 @@
 ;;   end if
 ;; 
 ;; Exceptional situations:
-;;   - If the line tallies more than one instance of the "-" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
-;;   - If the line tallies one or more instances of the "=" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
-;;   - If the line tallies one or more instances of the ":" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
+;;   - None.
 ;; 
 ;; Side effects:
 ;;   - The standard input conduit is queried for a line.
@@ -345,12 +330,6 @@
 ;;   labelTable[label] <- position of label in program
 ;; 
 ;; Exceptional situations:
-;;   - If the line tallies one or more instances of the "=" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
-;;   - If the line tallies one or more instances of the "-" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
-;;   - If the line tallies one or more instances of the ":" symbol, an
-;;     error of the type "AmbiguousLineError" is signaled.
 ;;   - If a label amenable to the name {label} is defined twice or more
 ;;     times in the program, an error of the type "DuplicateLabelError"
 ;;     is signaled.
@@ -658,6 +637,30 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; -- Implementation of the bespoke condition types.               -- ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define-condition ABCstr-Error (simple-error)
+  ()
+  (:documentation
+    "The ``ABCstr-Error'' condition type serves as a firmament
+     entreparted by all conditions ordained to the agency of a severe
+     anomalous situation's communication whose etiology appertains to
+     any stage of an ABCstr program's execution."))
+
+;;; -------------------------------------------------------
+
+(define-condition Duplicate-Label-Error (ABCstr-Error)
+  ()
+  (:documentation
+    "The ``Duplicate-Label-Error'' condition type serves in the
+     apprizal about an anomalous situation whose etiology emerges from
+     the attempt to define a program label by a name already dedicated
+     to this purpose at a prevenient location in the code."))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; -- Implementation of the command classes.                       -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -850,10 +853,17 @@
       for current-command     of-type Command across program
       and current-line-number of-type fixnum  from   0 by 1
       when (label-definition-command-p current-command) do
-        (setf (gethash
-                (label-definition-command-name current-command)
-                labels)
-              current-line-number))
+        (let ((label-name
+                (label-definition-command-name current-command)))
+          (declare (type simple-string label-name))
+          (if (gethash label-name labels)
+            (error 'Duplicate-Label-Error
+              :format-control
+                "A label with the name ~s has already been defined at ~
+                 a prevenient position in the program."
+              :format-arguments
+                (list label-name))
+            (setf (gethash label-name labels) current-line-number))))
     (the label-table labels)))
 
 
