@@ -353,9 +353,8 @@
 ;;   ADJ var1 lit  var2  | Increment {var1} by {lit} and jump to
 ;;       **** ***  ****  | one-based line number {var2}.
 ;;   ..................................................................
-;;   ADJ var  lit1 lit2  | Increment {var1} by {lit12} and jump to
+;;   ADJ var  lit1 lit2  | Increment {var1} by {lit1} and jump to
 ;;       ***  **** ****  | one-based line number {lit2}.
-;;   
 ;;   ==================================================================
 ;;   OUTPUT OF VARIABLE
 ;;   ------------------------------------------------------------------
@@ -393,11 +392,11 @@
 ;;   ADJ 1    var  label | Input into {var} and jump to {label} name.
 ;;            ***  ***** | 
 ;;   ..................................................................
-;;   ADJ 1    var1 var2  | Input into {var1} and jump to one-based line
-;;            **** ****  | number {var2}.
+;;   ADJ 1    var1 var2  | Input into {var1} and jump to one-based
+;;            **** ****  | line number {var2}.
 ;;   ..................................................................
-;;   ADJ 1    var  lit   | Intput into {var} and jump to one-based line
-;;            ***  ***   | {lit}.
+;;   ADJ 1    var  lit   | Intput into {var} and jump to one-based
+;;            ***  ***   | line {lit}.
 ;;   ------------------------------------------------------------------
 ;; 
 ;; 
