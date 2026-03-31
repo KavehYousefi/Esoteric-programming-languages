@@ -130,19 +130,20 @@
 ;;                        |  inputOnlyCommand
 ;;                        |  labelDefinition
 ;;                        ;
-;;   addAndJumpCommand    := ADJ , variable , operand  , labelName ;
-;;   addOnlyCommand       := ADJ , variable , operand  , X         ;
-;;   jumpOnlyCommand      := ADJ , X        , X        , labelName ;
-;;   outputAndJumpCommand := ADJ , "0"      , operand  , labelName ;
-;;   outputOnlyCommand    := ADJ , "0"      , operand  , X         ;
-;;   inputAndJumpCommand  := ADJ , "1"      , variable , labelName ;
-;;   inputOnlyCommand     := ADJ , "1"      , variable , X         ;
-;;   
+;;   addAndJumpCommand    := ADJ , variable , operand  , jumpTarget ;
+;;   addOnlyCommand       := ADJ , variable , operand  , X          ;
+;;   jumpOnlyCommand      := ADJ , X        , X        , jumpTarget ;
+;;   outputAndJumpCommand := ADJ , "0"      , operand  , jumpTarget ;
+;;   outputOnlyCommand    := ADJ , "0"      , operand  , X          ;
+;;   inputAndJumpCommand  := ADJ , "1"      , variable , jumpTarget ;
+;;   inputOnlyCommand     := ADJ , "1"      , variable , X          ;
 ;;   labelDefinition      := labelName , ":" ;
+;;   
+;;   jumpTarget           := labelName | variable | integerLiteral ;
 ;;   labelName            := potentialLabelName - invalidLabelNames ;
 ;;   potentialLabelName   := labelCharacter , { labelCharacter } ;
 ;;   labelCharacter       := character - ( whitespace | ":" ) ;
-;;   invalidLabelNames    := ADJ | X | variable | integer ;
+;;   invalidLabelNames    := ADJ | X | variable | integerLiteral ;
 ;;   
 ;;   ADJ                  := "ADJ" ;
 ;;   X                    := "X"   ;
