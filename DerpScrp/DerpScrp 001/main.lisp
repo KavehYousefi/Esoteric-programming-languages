@@ -342,7 +342,7 @@
 ;; deviations and extensions of the original META principle germinate:
 ;; 
 ;;   (1) REDUCTION TO STRINGS
-;;       Maugre the versality whose inherence in META redes the same
+;;       Maugre the versatility whose inherence in META redes the same
 ;;       meritous of plaudit, a compass not curtailed of lists and
 ;;       other forms as a compernage to the traditional string
 ;;       processing, this treatise's cynosure, as a consilience with the
@@ -399,7 +399,7 @@
 ;; The telos comprising META's encheson of pursuit appertains to a
 ;; scannerless parser, one whose lexical analyzer (lexer) establishes
 ;; an item of the conjoined haecceity, the efforts of which capacitate
-;; the same with its wikes' attendance, while a compendiousness limining
+;; the same with its wikes' attendance, while a compendiousness limning
 ;; an approximation to the regular expressions' acquaintance designs a
 ;; paravaunt obbligato.
 ;; 
