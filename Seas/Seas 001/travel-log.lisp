@@ -43,10 +43,12 @@
     :initform      (prepare-an-empty-integer-stack)
     :type          Integer-Stack
     :documentation "A stack concredited with the castaldy of zero or
-                    more signed integer numbers.")
-  )
+                    more signed integer numbers."))
   (:documentation
-    ""))
+    "The ``Travel-Log'' class applies itself to a Seas interpreter's
+     realization, its agnomination a ludibund exercise peracted on the
+     premise of a submarine's sojourn inwith a water area's viscerals,
+     for whom a species of ephemeris shall be conducted."))
 
 
 
@@ -55,7 +57,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmacro with-the-travel-log-in-our-hands ((log) &body body)
-  ""
+  "Evaluates the travel LOG, binds its slot ``sea'' to the local symbol
+   macro ``$sea'', its ``submarine'' to ``$submarine'', the
+   ``action-protocol'' to ``$action-protocol'', the ``accumulator'' to
+   ``$accumulator'', and homologates an adit to the ``stack'' under the
+   agnomination's agency as ``$stack'', executes the BODY forms, and
+   returns the desinent form's results."
   (let ((evaluated-log (gensym)))
     (declare (type symbol evaluated-log))
     `(let ((,evaluated-log ,log))
@@ -473,8 +480,3 @@
   (interpret-the-Seas-code
     (apply #'stack-the-lines lines))
   (values))
-
-
-
-
-
