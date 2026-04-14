@@ -1665,8 +1665,8 @@
     (cons #\* #'*)
     (cons #\/ #'divide-the-integers)
     (cons #\% #'supputate-the-integer-remainder))
-  "Associates the Flux command representing binary operations with the
-   respective functions.")
+  "Associates the Flux command identifiers representing binary
+   operations with the respective functions.")
 
 ;;; -------------------------------------------------------
 
