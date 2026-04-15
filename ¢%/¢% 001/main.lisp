@@ -1,8 +1,138 @@
-﻿;; Author: Kaveh Yousefi
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; This program implements an interpreter for the esoteric programming
+;; language "¢%", invented by the Esolang user "AmNow" and presented on
+;; June 28th, 2021, its existency's indicium wones in the representation
+;; of its hexadecimal accompt of competences by combinations of the
+;; character twissel "¢" and "%", their coefficient entelechy's
+;; phenotype such facilities as to seize the homologation of the
+;; memory's integer-valued stack's content, the peracting of basic
+;; arithmetics, input and output communications, as well as the
+;; navigation athwart the code per procurationem of a jump-based
+;; conditional mechanism.
+;; 
+;; 
+;; Concept
+;; =======
+;; The ¢% programming language's firmament is edified upon its
+;; instructions' representation by four-letter identifiers of such
+;; componency as to merely admit the symbols "¢" and "%", their telos
+;; the manipulation of a stack dedicated to the castaldy of signed
+;; integer numbers.
+;; 
+;; == "¢%": TWO CHARACTERS, SIXTEEN INSTRUCTIONS ==
+;; The "¢%" agnominations engages in a bewrayment of the syntaxis'
+;; foundational conformation, the operative expressions of which derive
+;; from catenae, of uniform quadruple dispansion, of the "¢" and "%"
+;; symbols, their tally's coalescence into 16 specimens.
+;; 
+;; == THE MEMORY: A STACK OF SIGNED INTEGER NUMBERS ==
+;; The language's memory model is realized in a stack, the currency of
+;; which relates of signed integers to whom neither a mear anent the
+;; polarity nor the mickleness exercises its purview.
+;; 
+;; 
+;; Instructions
+;; ============
+;; The ¢% programming language's instruction set enumerates a
+;; hexadecimal accompt of members, its attrectation's bailiwicks the
+;; manipulation of the memory stack, basic arithmetics, input and output
+;; communications, as well as an aefauld jump-based control flow
+;; construct.
+;; 
+;; == OVERVIEW ==
+;; A requisite nortelry's adhibition concerning the language's operative
+;; warklumes shall establish the following apercu's entelechy:
+;; 
+;;   ------------------------------------------------------------------
+;;   Command | Effect
+;;   ==================================================================
+;;   STACK INSERTION AND REMOVAL
+;;   ------------------------------------------------------------------
+;;   %%¢¢    | Pushes the number one (1) onto the stack.
+;;   ..................................................................
+;;   ¢¢¢¢    | Pops the top stack element and discard the same.
+;;   ==================================================================
+;;   STACK ORDER MANIPULATION
+;;   ------------------------------------------------------------------
+;;   ¢¢¢%    | Swaps the positions of the two top stack elements.
+;;   ..................................................................
+;;   ¢¢%¢    | Duplicates the top stack element.
+;;   ..................................................................
+;;   ¢¢%%    | Moves the element at the stack's bottom to the top
+;;           | position.
+;;   ..................................................................
+;;   ¢%¢%    | Moves the element at the stack top to the bottom
+;;           | position.
+;;   ==================================================================
+;;   ARITHMETICS
+;;   ------------------------------------------------------------------
+;;   ¢%%¢    | Pops the top stack element, here nevened "a", removes
+;;           | the new top element, "b", supputates the sum of (a + b),
+;;           | and pushes the same onto the stack.
+;;   ..................................................................
+;;   ¢%%%    | Pops the top stack element, here nevened "a", removes
+;;           | the new top element, "b", supputates the difference of
+;;           | (a - b), and pushes the same onto the stack.
+;;   ..................................................................
+;;   %¢¢¢    | Pops the top stack element, here nevened "a", removes
+;;           | the new top element, "b", supputates the product of
+;;           | (a * b), and pushes the same onto the stack.
+;;   ..................................................................
+;;   %¢¢%    | Pops the top stack element, here nevened "a", removes
+;;           | the new top element, "b", supputates the quotient of
+;;           | (a / b), rounded to the nearest integer, and pushes the
+;;           | same onto the stack.
+;;   ==================================================================
+;;   INPUT AND OUTPUT
+;;   ------------------------------------------------------------------
+;;   %¢%¢    | Queries the standard input conduit for a signed or
+;;           | unsigned integer number and pushes the same onto the
+;;           | stack.
+;;   ..................................................................
+;;   %¢%%    | Queries the standard input conduit for a Unicode
+;;           | character and pushes its code point onto the stack.
+;;   ..................................................................
+;;   %%¢%    | Pops the top stack element and prints the same in its
+;;           | verbatim numeric form to the standard output.
+;;   ..................................................................
+;;   %%%¢    | Pops the top stack element and prints the Unicode
+;;           | character whose code point concurs with the same to the
+;;           | standard output conduit.
+;;   ==================================================================
+;;   CONTROL FLOW DUCTION
+;;   ------------------------------------------------------------------
+;;   ¢%¢¢    | If the top stack element equals zero (0), moves the
+;;           | instruction pointer (IP) forward to the position
+;;           | immediately succeeding the matching "%%%%" instruction;
+;;           | otherwise, proceeds as usual.
+;;   ..................................................................
+;;   %%%%    | If the top stack element does not equal zero (0), moves
+;;           | the instruction pointer (IP) backwards to the position
+;;           | immediately succeeding the matching "¢%¢¢" instruction;
+;;           | otherwise, proceeds as usual.
+;;   ------------------------------------------------------------------
+;; 
+;; 
+;; Implementation
+;; ==============
+;; This interpreter's implementation constitutes a chevisance peracted
+;; in the programming language Common Lisp, its operation as twyfold
+;; gestion; ensuing, imprimis, from an extraction of the ensconced
+;; instructions in a more covenable format, ere their actual execution's
+;; ultimity in the desinent stage.
+;; 
+;; --------------------------------------------------------------------
+;; 
+;; Author: Kaveh Yousefi
 ;; Date:   2022-02-25
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/%C2%A2%25"
+;;   [esolang:2021:¢%]
+;;   The Esolang contributors, "¢%", June 28th, 2021
+;;   URL: "https://esolangs.org/wiki/%C2%A2%25"
+;; 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
 
