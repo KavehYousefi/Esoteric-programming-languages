@@ -5,7 +5,8 @@
 ;; "EvyLah" and presented on December 23rd, 2023, itself a derivation of
 ;; the user "Harpyon"'s "><>" ("Fish"), the two-dimensional
 ;; conformation's designment experiences a curtailment to an aefauld
-;; dimense, operating like its entheus on a stack of real-valued number.
+;; dimense, operating like its entheus on a stack of
+;; real-valued numbers.
 ;; 
 ;; 
 ;; Concept
@@ -49,7 +50,7 @@
 ;;   <interpreterPath> signifies the interpreter's executable program
 ;;                     path on the operating system.
 ;;   
-;;   <sourceFile>      designates the 1Fish program file to load and
+;;   <sourceFile>      designates the 1><> program file to load and
 ;;                     execute in the interpreter's context.
 ;;   
 ;;   <inputs>          represents a sequence of zero or more characters
@@ -733,7 +734,9 @@
 ;;; -------------------------------------------------------
 
 (defun build-the-iterance-table-for (code)
-  "Creates and returns a fresh ``iterance-table'' which "
+  "Creates and returns a fresh ``iterance-table'' which complects the
+   matching conditional and iterative demarcation symbols' zero-based
+   positions in the piece of 1><> source CODE."
   (declare (type simple-string code))
   (the iterance-table
     (complect-the-jump-points
@@ -848,7 +851,7 @@
     (force-output *query-io*))
     (the (or null character)
       (prog1
-        (read-char *query-io* NIL NIL)
+        (read-char   *query-io* NIL NIL)
         (clear-input *query-io*))))
 
 
@@ -893,7 +896,8 @@
     :initarg       :input-source
     :initform      +DEFAULT-INPUT-SOURCE+
     :type          Input-Source
-    :documentation "The provenance of the input characters' reception."))
+    :documentation "The provenance of the input characters'
+                    reception."))
   (:documentation
     "The ``Interpreter'' class is apportioned the dever of a context's
      accoutrement for a 1><> program's execution."))
@@ -1151,7 +1155,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Definition of the 1><> instruction processing interface.    -- ;;
+;; -- Definition of the 1><> instruction processing interface.     -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defgeneric process-the-symbol (interpreter symbol)
@@ -1162,7 +1166,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of the 1><> arithmetic instructions.         -- ;;
+;; -- Implementation of the 1><> arithmetic instructions.          -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod process-the-symbol ((interpreter Interpreter)
@@ -1236,7 +1240,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of the 1><> comparison instructions.         -- ;;
+;; -- Implementation of the 1><> comparison instructions.          -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod process-the-symbol ((interpreter Interpreter)
@@ -1270,7 +1274,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of the 1><> stack handling instructions.     -- ;;
+;; -- Implementation of the 1><> stack handling instructions.      -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod process-the-symbol ((interpreter Interpreter)
@@ -1345,7 +1349,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of the 1><> input and output instructions.   -- ;;
+;; -- Implementation of the 1><> input and output instructions.    -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod process-the-symbol ((interpreter Interpreter)
@@ -1418,7 +1422,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; -- Implementation of the 1><> navigational instructions.       -- ;;
+;; -- Implementation of the 1><> navigational instructions.        -- ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod process-the-symbol ((interpreter Interpreter)
@@ -1575,7 +1579,7 @@
   "Proceeding from the inclusive START point into the SOURCE, reads a
    word concluding in a space, horizontal tab, or the SOURCE's desition,
    and returns two values:
-     (1) A fresh string compact of the word's character.
+     (1) A fresh string compact of the word's characters.
      (2) The position into the SOURCE immediately succeeding the
          extracted word's desinent character."
   (declare (type string source))
@@ -1690,8 +1694,7 @@
   (declare (type string       code))
   (declare (type Input-Source input-source))
   (launch-the-interpreter
-    (make-an-interpreter-for code
-      :input-source input-source))
+    (make-an-interpreter-for code :input-source input-source))
   (values))
 
 ;;; -------------------------------------------------------
