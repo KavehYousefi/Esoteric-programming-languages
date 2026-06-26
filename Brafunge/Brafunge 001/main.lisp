@@ -380,8 +380,9 @@
    ``boolean'' value of ``T'', otherwise ``NIL''."
   (declare (type string source))
   (the boolean
-    (zerop
-      (length source))))
+    (convert-into-a-boolean-value
+      (zerop
+        (length source)))))
 
 ;;; -------------------------------------------------------
 
