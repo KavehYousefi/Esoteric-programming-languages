@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
 ;; This program implements an interpreter for the esoteric programming
-;; language "Spain without the S", also yclepts, in a mode of enhaused
+;; language "Spain without the S", also yclept, in a mode of enhaused
 ;; compendiousness, as "Pain", invented by the Esolang user
 ;; "Timothytomato" and presented on October 20th, 2024, its diorism's
 ;; woning the instructions' representation in a forbisen following
@@ -116,6 +116,27 @@
 ;;                           | "Spain without the S" instruction;
 ;;                           | otherwise proceeds as usual.
 ;;   ------------------------------------------------------------------
+;; 
+;; A treatise's plasmature concerning the instruction syntaxis
+;; vouchsafed a more pleasing visualization shall be ostended alow:
+;; 
+;;   Spain without the _
+;;                     |
+;;                     +--> p     ==> decrement accumulator
+;;                     |
+;;                     +--> a     ==> select next accumulator
+;;                     |
+;;                     +--> n     ==> create new accumulator
+;;                     |
+;;                     |
+;;                     +--> Spain ==> print accumulator
+;;                     |
+;;                     +--> pain  ==> input into accumulator
+;;                     |
+;;                     |
+;;                     +--> S     ==> start loop
+;;                     |
+;;                     +--> i     ==> repeat loop
 ;; 
 ;; 
 ;; Implementation
@@ -433,6 +454,8 @@
        (declare (type fixnum        ,end-index-name))
        (flet
            ((,driver-name ()
+              "Returns the next token from the SOURCE, or, upon the
+               same's exhaustion, responds with an empty string."
               (multiple-value-setq (,start-index-name ,end-index-name)
                 (demarcate-the-next-word
                   ,evaluated-source
