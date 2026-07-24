@@ -2049,7 +2049,7 @@
      -------------------------
    ---
    As parhedral adminicula, two adscititious local symbol macro bindings
-   complemented the avails:
+   serve in the establishment of the avails' pleroma:
      ------------------------------------------------------------------
      Symbol macro     | Role
      -----------------+------------------------------------------------
