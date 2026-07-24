@@ -122,12 +122,26 @@
 ;; instructions in a more covenable format, ere their actual execution's
 ;; ultimity in the desinent stage.
 ;; 
+;; == UNICODE SUPPORT IS IMPLEMENTATION-DEPENDENT ==
+;; Please note that the concrete character set deployed constitutes a
+;; dependency on the Common Lisp implementation; in corollary, Unicode
+;; support may or may not be a feature incorporated in the personal
+;; environment. The interpreter at hand has been developed and tested
+;; with "Steel Bank Common Lisp" (SBCL) version 1.1.4 as part of the
+;; "Lisp Cabinet 0.3.5" bundle [christensen:2013:lispcabinet035].
+;; 
 ;; --------------------------------------------------------------------
 ;; 
 ;; Author: Kaveh Yousefi
 ;; Date:   2022-02-25
 ;; 
 ;; Sources:
+;;   [christensen:2013:lispcabinet035]
+;;   G. Christensen, "Lisp Cabinet 0.3.5", 2013
+;;   URL: "https://sourceforge.net/projects/lispcabinet/"
+;;   Notes:
+;;     - Download page of the "Lisp Cabinet" project.
+;;   
 ;;   [esolang:2021:¢%]
 ;;   The Esolang contributors, "¢%", June 28th, 2021
 ;;   URL: "https://esolangs.org/wiki/%C2%A2%25"
