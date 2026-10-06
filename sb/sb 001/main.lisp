@@ -1951,14 +1951,6 @@
 
 ;;; -------------------------------------------------------
 
-(defun reset-the-program (program)
-  "Restores the PROGRAM to its state of inchoacy and returns no value."
-  (declare (type Program program))
-  (setf (slot-value program 'ip) 0)
-  (values))
-
-;;; -------------------------------------------------------
-
 (defmethod print-object ((program Program) (destination T))
   (declare (type Program program))
   (declare (type stream  destination))
@@ -2119,7 +2111,7 @@
 ;;; -------------------------------------------------------
 
 (defun executes-the-main-program-p (interpreter)
-  "Determines whether the INTERPRETER's currently executes program
+  "Determines whether the INTERPRETER's currently executed program
    represents the main specimen, returning on confirmation a ``boolean''
    value of ``T'', otherwise ``NIL''."
   (declare (type Interpreter interpreter))
@@ -2154,13 +2146,11 @@
 ;;; -------------------------------------------------------
 
 (defun terminate-the-current-program (interpreter)
-  "Concludes the INTERPRETER's currently executed program, concomitantly
-   restoring its state to the inchoate configuration, changes to the
-   preveniently operative program, and returns no value."
+  "Concludes the INTERPRETER's currently executed program, changes to
+   the preveniently operative program, and returns no value."
   (declare (type Interpreter interpreter))
   (with-the-interpreter (interpreter)
-    ;(reset-the-program $current-program)
-    (pop               $programs))
+    (pop $programs))
   (values))
 
 ;;; -------------------------------------------------------
@@ -2292,8 +2282,8 @@
 ;;; -------------------------------------------------------
 
 (defun determine-the-tape-bounding-indices (interpreter)
-  "Determines whether the INTERPRETER memory tape's bounding indices
-   and returns two values:
+  "Determines the INTERPRETER memory tape's bounding indices and
+   returns two values:
      (1) The inclusive minimum index explicitly set in the tape.
      (2) The inclusive maximum index explicitly set in the tape."
   (declare (type Interpreter interpreter))
@@ -2340,8 +2330,8 @@
 
 (defgeneric dispatch-on-the-command-kind (kind command interpreter)
   (:documentation
-    "Evaluates the COMMAND in the INTERPRETER, dispatcing on the
-     COMMAND's kind, and returns no value."))
+    "Evaluates the COMMAND in the INTERPRETER's context, dispatching on
+     the COMMAND's KIND, and returns no value."))
 
 ;;; -------------------------------------------------------
 
@@ -2600,11 +2590,14 @@
 ;;; -------------------------------------------------------
 
 (defun launch-the-interpreter (interpreter)
+  "Instigates the INTERPRETER's gestion by its main program's execution
+   and returns no value."
   (declare (type Interpreter interpreter))
   (with-the-interpreter (interpreter)
     (loop do
       (cond
         ;; Main program has been completed?
+        ;; => Conclude the interpretation process.
         ((main-program-is-complete-p interpreter)
           (loop-finish))
         
@@ -2614,6 +2607,7 @@
           (terminate-the-current-program interpreter))
         
         ;; Current program still possedes commands?
+        ;; => Perpetuate their execution.
         (T
           (process-the-current-command interpreter)))))
   (print-the-stack interpreter)
@@ -2658,7 +2652,7 @@
 
 ;;; -------------------------------------------------------
 
-;; Read a line from the standard input and execute thilk as a
+;; Read a line from the standard input conduit and execute thilk as a
 ;; sub-program.
 (interpret-the-sb-code "$;")
 

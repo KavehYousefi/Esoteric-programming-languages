@@ -1,26 +1,86 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; 
-;; Line numbering
-;; ==============
-;; Yielded as a conjecture by perusal of the infinite loop example,
-;; instructions are enumerated starting at one (1); a fact endowed with
-;; pertinence in regard to the goto or jump command "^".
+;; This program implements an interpreter for the esoteric programming
+;; language "Xaxa", invented by the Esolang user "ChuckEsoteric08" and
+;; presented on March 26th, 2022, the hupokeimenon of its conception
+;; maintains its commorancy in a derivation from Urban Mueller's
+;; "brainfuck", upon whom is adhibited a mickleness of modulations,
+;; in particular concerning the control flow mechanisms.
 ;; 
-;; Confrontend with a deficiency regarding the behavior of a goto
-;; destination outside of the range [1, number_of_instructions], the
-;; adjudgment have been concluded that an infringement upon the lower
-;; bound, that is, a destination less than or equal to zero, shall
-;; default to one (1), whereas a contralateral transgression terminates
-;; the program in the exact same manner as a usual progression of the
-;; instruction pointer beyond the desinent instruction would incur.
+;; 
+;; Concept
+;; =======
+;; The Xaxa programming language's firmament ostends an establishment
+;; upon the brainfuck programming language's foundational principles,
+;; including the bilaterally infinite dispansion of cells, the
+;; expression of behests by adminiculum of one-symbol identifiers, as
+;; well as the zero-based conditionals.
+;; 
+;; Maugre its entheus' influence, a certain set of deviations do not
+;; escape their involvement: The tape wists of a vouchsafement in the
+;; single cells' capacity from the unsigned byte realm to the bournless
+;; mickleness of arbitrary integer objects, as well as both
+;; lateralities' homologation for the numbers' polarity.
+;; 
+;; A further aspect of peisant novelty wones in the control flow
+;; ductions' transformation from the stock-father's zero-based iterance
+;; construct towards the twissel of unbridled jumping to zero-based
+;; instruction positions, as well as a command skipping facility.
+;; 
+;; 
+;; Instructions
+;; ============
+;; Xaxa's instruction set entertains an octuple cardinality of operative
+;; warklumes, the bailiwicks of their attrectation wisting of such
+;; subjects as memory management, basic arithmetics, input and output
+;; commerce, as well as a twissel of navigational avails.
+;; 
+;;   ------------------------------------------------------------------
+;;   Command | Description
+;;   --------+---------------------------------------------------------
+;;   >       | Translates the cell pointer one step to the right and
+;;           | increments the newly selected cell's value by a
+;;           | mountance of one (1).
+;;   ..................................................................
+;;   -       | Decrements the current cell's value by a mountance of
+;;           | one (1).
+;;   ..................................................................
+;;   <       | Translates the cell pointer one step to the left.
+;;   ..................................................................
+;;   ?       | Prints the current cell's value in its verbatim numeric
+;;           | form to the standard output conduit.
+;;   ..................................................................
+;;   ,       | Queries the standard input conduit for a signed or
+;;           | unsigned integer number and stores the response in the
+;;           | currently selected cell.
+;;   ..................................................................
+;;   ?       | If the current cell value equals zero (0), skips all
+;;           | subsequent commands, until the next "!" token is
+;;           | encountered; otherwise, for a non-zero cell content,
+;;           | perges as usual.
+;;   ..................................................................
+;;   !       | Demarcates the desinence of the prevenient "?"
+;;           | instruction.
+;;   ..................................................................
+;;   ^       | Relocates the instruction pointer (IP) to the n-th
+;;           | instruction, with n constituting the current cell value.
+;;           |---------------------------------------------------------
+;;           | The commands are enumerated commence with the inclusive
+;;           | subscript zero (0).
+;;           |---------------------------------------------------------
+;;           | In a pseudocode diction, it holds:
+;;           |   ip <- memory[cellPointer]
+;;   ------------------------------------------------------------------
 ;; 
 ;; --------------------------------------------------------------------
 ;; 
 ;; Author: Kaveh Yousefi
-;; Date:   2022-05-28
+;; Date:   2026-10-06
 ;; 
 ;; Sources:
-;;   -> "https://esolangs.org/wiki/Xaxa"
+;;   [esolang:2026:Xaxa]
+;;   The Esolang contributors, "Xaxa", October 4th, 2026
+;;   URL: "https://esolangs.org/wiki/Xaxa"
 ;; 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -52,22 +112,28 @@
   "Extracts from the piece of Xaxa CODE the incorporated instructions
    and returns these in a one-dimensional simple array."
   (declare (type string code))
-  (let ((instructions NIL))
-    (declare (type list instructions))
-    (loop for token of-type character across code do
-      (case token
-        (#\> (push :move-right instructions))
-        (#\- (push :decrement  instructions))
-        (#\< (push :move-left  instructions))
-        (#\? (push :start-skip instructions))
-        (#\! (push :end-skip   instructions))
-        (#\^ (push :jump       instructions))
-        (#\. (push :output     instructions))
-        (#\, (push :input      instructions))
-        ((#\Space #\Tab #\Newline) NIL)
-        (otherwise (error "Invalid character '~c'." token))))
-    (the (simple-array command (*))
-      (coerce (nreverse instructions) '(simple-array command (*))))))
+  (the (simple-array command (*))
+    (let ((instructions NIL))
+      (declare (type list instructions))
+      (loop for token of-type character across code do
+        (case token
+          (#\> (push :move-right instructions))
+          (#\- (push :decrement  instructions))
+          (#\< (push :move-left  instructions))
+          (#\? (push :start-skip instructions))
+          (#\! (push :end-skip   instructions))
+          (#\^ (push :jump       instructions))
+          (#\. (push :output     instructions))
+          (#\, (push :input      instructions))
+          ((#\Space #\Tab #\Newline) NIL)
+          (otherwise
+            (error
+              "The character \"~c\" does not designate a Xaxa ~
+               instruction."
+              token))))
+      (coerce
+        (nreverse instructions)
+        '(simple-array command (*))))))
 
 
 
@@ -88,7 +154,7 @@
       (declare (type hash-table        memory))
       (declare (type fixnum            pointer))
       
-      (labels
+      (flet
           ((advance ()
             "Moves the instruction pointer IP to the next instruction,
              if possible, updates the current INSTRUCTION, and returns
@@ -99,11 +165,11 @@
             (values))
            
            (jump-to (new-position)
-            "Moves the instruction pointer IP to the one-based
+            "Moves the instruction pointer IP to the zero-based
              NEW-POSITION, updates the current INSTRUCTION, and returns
              no value."
             (declare (type fixnum new-position))
-            (setf ip (1- (max 1 new-position)))
+            (setf ip (max 0 new-position))
             (setf instruction
               (when (array-in-bounds-p instructions ip)
                 (aref instructions ip)))
@@ -111,7 +177,8 @@
            
            (current-cell ()
             "Returns the value stored in the active cell."
-            (the integer (gethash pointer memory 0)))
+            (the integer
+              (gethash pointer memory 0)))
            
            ((setf current-cell) (new-value)
             "Sets the active cell's content to the NEW-VALUE and returns
@@ -127,8 +194,8 @@
             ((NIL)
               (loop-finish))
             
-            ;; Move the cell pointer one cell to the right and increment
-            ;; the active cell's value.
+            ;; Move the cell pointer one cell to the right and
+            ;; increment the new active cell's value.
             (:move-right
               (incf pointer)
               (incf (current-cell))
@@ -147,21 +214,23 @@
             ;; If the active cell value equals zero, skip the
             ;; instructions up until and including the next "!".
             (:start-skip
-              (cond
-                ((zerop (current-cell))
-                  (advance)
-                  (loop do
+              (if (zerop (current-cell))
+                (loop
+                  initially
+                    (advance)
+                  do
                     (case instruction
                       ((NIL)
-                        (error "Unterminated '?'. No matching '!' ~
-                                found."))
+                        (error
+                          "An unterminated \"?\" instruction has been ~
+                           processed: No matching \"!\" could be ~
+                           located."))
                       (:end-skip
                         (advance)
                         (loop-finish))
                       (otherwise
-                        (advance)))))
-                (T
-                  (advance))))
+                        (advance))))
+                  (advance)))
             
             ;; Only significant in conjunction with the "?" instruction
             ;; as a demarcation of the section to skip.
@@ -175,21 +244,24 @@
             
             ;; Output the active cell's value verbatim.
             (:output
-              (format T "~d" (current-cell))
+              (format T "~&~d" (current-cell))
               (advance))
             
             ;; Input an integer number and store it in the active cell.
             (:input
               (format T "~&Please input an integer: ")
+              (force-output)
               (let ((input (parse-integer (read-line))))
                 (declare (type integer input))
                 (clear-input)
                 (setf (current-cell) input))
               (advance))
             
-            ;; Invalid instruction encountered? => Error.
+            ;; Invalid instruction encountered?
+            ;; => Error.
             (otherwise
-              (error "Invalid instruction '~s' at position ~d."
+              (error "An invalid instruction, \"~s\", has been ~
+                      encountered at the position ~d."
                 instruction ip)))))))
   
   (values))
@@ -211,12 +283,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Move one cell to the right, increment its value, and print it.
-(process-instructions
-  (extract-instructions ">."))
-
-;;; -------------------------------------------------------
-
-;; Move one cell to the right, increment its value, and print it.
 (interpret-Xaxa ">.")
 
 ;;; -------------------------------------------------------
@@ -227,10 +293,7 @@
 ;;; -------------------------------------------------------
 
 ;; Infinite cat program.
-;; Please note that for each user query a new cell is appended to the
-;; memory, thus elicitating a contingency for the environment memory's
-;; exhaustion.
-(interpret-Xaxa ",.>^")
+(interpret-Xaxa ">,.<^")
 
 ;;; -------------------------------------------------------
 
@@ -247,4 +310,4 @@
 ;;; -------------------------------------------------------
 
 ;; Truth-machine.
-(interpret-Xaxa ",?><>-.<>^!")
+(interpret-Xaxa ",?.^!.")
